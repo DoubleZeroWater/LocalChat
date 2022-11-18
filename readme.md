@@ -66,6 +66,7 @@ python3 main.py
 
 项目的难点主要是多线程之间的嵌套调用，由于使用到了Qt的库，如果在不同的线程中调用窗口的话，会出现错误`Can not open child at different parent`，最终导致程序崩溃。解决这个问题，将Qt函数和线程进行分离，将函数以参数的形式传入线程，让线程去调用。
 
+Test a commit and push.
 
 
 
