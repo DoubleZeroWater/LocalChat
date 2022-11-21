@@ -1,10 +1,11 @@
-from UI import untitled
-from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QApplication
+from MyUI.TwoConnect import TwoConnectUI
 import sys
 import argparse
-from message.UI_message import Messager
-from UI import Dialog
 
+from Windows.Controller import Controller
+from message.UI_message import Messager
+from PyQt5 import QtCore, QtWidgets
 
 def argu_setting():
     # 参数设置
@@ -30,4 +31,11 @@ class UI(object):
 
 if __name__ == '__main__':
     # import reInterpreter as inter
-    ui = UI()
+    app = QtWidgets.QApplication(sys.argv)
+    controller = Controller()  # 控制器实例
+    controller.show_hello()  # 默认展示的是 hello 页面
+    sys.exit(app.exec_())
+
+#if __name__ == '__main__':
+    # import reInterpreter as inter
+    #ui = UI()

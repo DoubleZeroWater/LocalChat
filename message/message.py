@@ -3,8 +3,6 @@ from threading import Thread
 from socket import *
 import sys
 from time import gmtime, strftime
-import win32api
-import win32con
 
 
 class Messager(Thread):
@@ -35,14 +33,13 @@ class Messager(Thread):
                 self.sock.close()
                 self.connect_end = True
                 print('\n---> 与 {} 断开的连接已中断... '.format(self.receiverIP))
-                win32api.keybd_event(13, 0, 0, 0)
                 sys.exit(0)
                 break
             elif recv_data:
                 print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(
                     self.receiverIP, recv_data,
                     strftime("%Y/%m/%d %H:%M:%S", gmtime())),
-                      end="")
+                    end="")
 
     def run(self):
         print('---> 初始化服务中...')
@@ -66,6 +63,8 @@ class Messager(Thread):
         except:
             print('---> 服务已断开...')
             self.sock.close()
+
+
 if __name__ == '__main__':
     port = 12345
     version = 4
