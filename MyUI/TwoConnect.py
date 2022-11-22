@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'untitled.ui'
+# Form implementation generated from reading ui file 'TwoConnect.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -9,8 +9,6 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QMainWindow
 
 
 class TwoConnectUI(object):
@@ -18,11 +16,8 @@ class TwoConnectUI(object):
         TwoConnectUI.setObjectName("TwoConnectUI")
         TwoConnectUI.resize(400, 300)
         self.currentIP = QtWidgets.QTextBrowser(TwoConnectUI)
-        self.currentIP.setGeometry(QtCore.QRect(30, 60, 351, 31))
+        self.currentIP.setGeometry(QtCore.QRect(30, 30, 351, 31))
         self.currentIP.setObjectName("currentIP")
-        self.connectPort = QtWidgets.QTextEdit(TwoConnectUI)
-        self.connectPort.setGeometry(QtCore.QRect(220, 110, 161, 31))
-        self.connectPort.setObjectName("connectPort")
         self.label = QtWidgets.QLabel(TwoConnectUI)
         self.label.setGeometry(QtCore.QRect(30, 110, 141, 31))
         self.label.setObjectName("label")
@@ -32,12 +27,6 @@ class TwoConnectUI(object):
         self.label_3 = QtWidgets.QLabel(TwoConnectUI)
         self.label_3.setGeometry(QtCore.QRect(30, 190, 161, 31))
         self.label_3.setObjectName("label_3")
-        self.connectIP = QtWidgets.QTextEdit(TwoConnectUI)
-        self.connectIP.setGeometry(QtCore.QRect(220, 150, 161, 31))
-        self.connectIP.setObjectName("connectIP")
-        self.openPort = QtWidgets.QTextEdit(TwoConnectUI)
-        self.openPort.setGeometry(QtCore.QRect(220, 190, 161, 31))
-        self.openPort.setObjectName("openPort")
         self.pushButton = QtWidgets.QPushButton(TwoConnectUI)
         self.pushButton.setGeometry(QtCore.QRect(260, 250, 93, 28))
         self.pushButton.setCheckable(False)
@@ -48,7 +37,7 @@ class TwoConnectUI(object):
         self.pushButton.setFlat(False)
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(TwoConnectUI)
-        self.pushButton_2.setGeometry(QtCore.QRect(80, 250, 93, 28))
+        self.pushButton_2.setGeometry(QtCore.QRect(50, 250, 93, 28))
         self.pushButton_2.setCheckable(False)
         self.pushButton_2.setAutoRepeat(False)
         self.pushButton_2.setAutoExclusive(False)
@@ -56,6 +45,28 @@ class TwoConnectUI(object):
         self.pushButton_2.setDefault(False)
         self.pushButton_2.setFlat(False)
         self.pushButton_2.setObjectName("pushButton_2")
+        self.portToConnect = QtWidgets.QPlainTextEdit(TwoConnectUI)
+        self.portToConnect.setGeometry(QtCore.QRect(210, 110, 171, 31))
+        self.portToConnect.setObjectName("portToConnect")
+        self.ipToConnect = QtWidgets.QPlainTextEdit(TwoConnectUI)
+        self.ipToConnect.setGeometry(QtCore.QRect(210, 150, 171, 31))
+        self.ipToConnect.setObjectName("ipToConnect")
+        self.openPort = QtWidgets.QPlainTextEdit(TwoConnectUI)
+        self.openPort.setGeometry(QtCore.QRect(210, 190, 171, 31))
+        self.openPort.setObjectName("openPort")
+        self.label_4 = QtWidgets.QLabel(TwoConnectUI)
+        self.label_4.setGeometry(QtCore.QRect(160, 230, 101, 21))
+        font = QtGui.QFont()
+        font.setFamily("Agency FB")
+        font.setPointSize(9)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.label_5 = QtWidgets.QLabel(TwoConnectUI)
+        self.label_5.setGeometry(QtCore.QRect(30, 70, 141, 31))
+        self.label_5.setObjectName("label_5")
+        self.nickNameInput = QtWidgets.QPlainTextEdit(TwoConnectUI)
+        self.nickNameInput.setGeometry(QtCore.QRect(210, 70, 171, 31))
+        self.nickNameInput.setObjectName("nickNameInput")
 
         self.retranslateUi(TwoConnectUI)
         QtCore.QMetaObject.connectSlotsByName(TwoConnectUI)
@@ -63,32 +74,15 @@ class TwoConnectUI(object):
     def retranslateUi(self, TwoConnectUI):
         _translate = QtCore.QCoreApplication.translate
         TwoConnectUI.setWindowTitle(_translate("TwoConnectUI", "Form"))
-        self.currentIP.setHtml(_translate("TwoConnectUI",
-                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          "p, li { white-space: pre-wrap; }\n"
-                                          "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">你的当前IP是:</p></body></html>"))
-        self.connectPort.setHtml(_translate("TwoConnectUI",
-                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                            "p, li { white-space: pre-wrap; }\n"
-                                            "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                            "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+        self.currentIP.setHtml(_translate("TwoConnectUI", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">你的当前IP是:</p></body></html>"))
         self.label.setText(_translate("TwoConnectUI", "你想要连接的端口是："))
         self.label_2.setText(_translate("TwoConnectUI", "你想要连接的IP是："))
         self.label_3.setText(_translate("TwoConnectUI", "你想要开放连接端口是："))
-        self.connectIP.setHtml(_translate("TwoConnectUI",
-                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                          "p, li { white-space: pre-wrap; }\n"
-                                          "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                          "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.openPort.setHtml(_translate("TwoConnectUI",
-                                         "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                                         "p, li { white-space: pre-wrap; }\n"
-                                         "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-                                         "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.pushButton.setText(_translate("TwoConnectUI", "确定连接"))
         self.pushButton_2.setText(_translate("TwoConnectUI", "返回"))
+        self.label_4.setText(_translate("TwoConnectUI", "等待连接中..."))
+        self.label_5.setText(_translate("TwoConnectUI", "你的昵称是："))

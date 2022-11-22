@@ -7,7 +7,7 @@ from time import gmtime, strftime
 
 class Messager(Thread):
 
-    def __init__(self, ip, port, version):
+    def __init__(self, ip, port, serverip):
         super().__init__()
         self.connect_end = False
         self.ip = ip

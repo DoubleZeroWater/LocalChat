@@ -1,24 +1,44 @@
-from Windows.MyWindows import HelloWindow, TwoConnectWindow
+from functools import partial
+from threading import Thread
+
+from Logic.Message2 import Message2
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow
 
 
 class Controller:
     def __init__(self):
+        self.message = None
         self.hello = None
-        self.login = None
+        self.twoConnect = None
 
-    # 跳转到 hello 窗口
+    # Hello Window
     def show_hello(self):
         self.hello = HelloWindow()
         self.hello.goTwoConnectSignal.connect(self.show_two_connect)
         self.hello.show()
 
-    # 跳转到 login 窗口, 注意关闭原页面
+    # Two Connect Window
     def show_two_connect(self):
-        self.login = TwoConnectWindow()
-        self.login.fromTwoConnectToMainSignal.connect(self.back_hello)
+        self.twoConnect = TwoConnectWindow()
+        self.twoConnect.fromTwoConnectToMainSignal.connect(self.back_hello)
+        self.twoConnect.goMessageSignal.connect(self.show_message)
         self.hello.close()
-        self.login.show()
+        self.twoConnect.show()
 
     def back_hello(self):
         self.hello.show()
-        self.login.close()
+        self.twoConnect.close()
+    # Message Window
+    def show_message(self, openPort, ipToConnect, portToConnect, nickName, Queue):
+        MessageThread = Thread(target=Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue).go)
+        MessageThread.start()
+        if Queue.get(False) == "Connected":
+            self.message = MessageWindow()
+            self.message.show()
+            self.twoConnect.close()
+        else:
+            self.twoConnect.label_4.hide()
+            MessageThread.join()
+
+
+
