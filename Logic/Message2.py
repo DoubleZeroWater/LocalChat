@@ -3,10 +3,15 @@ from socket import socket, AF_INET, SOCK_STREAM
 from threading import Thread
 from time import strftime, gmtime, sleep
 
+from PyQt5.QtCore import QThread, pyqtSignal
 
-class Message2():
+
+class Message2(QThread):
+    socketReadySignal = pyqtSignal()
+    sendMessageSignal = pyqtSignal(str)
+
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
-        super().__init__()
+        super(Message2, self).__init__()
         self.serverInstant = None
         self.clientInstant = None
         self.connect_end = None
@@ -16,7 +21,7 @@ class Message2():
         self.nickName = nickName
         self.data = Queue
 
-    def go(self):
+    def run(self):
         Thread(target=self.server).start()
         Thread(target=self.client).start()
 
@@ -31,7 +36,7 @@ class Message2():
                 continue
             else:
                 break
-        self.data.put("Connected")
+        self.socketReadySignal.emit()
         try:
             while True:
                 # 发送
