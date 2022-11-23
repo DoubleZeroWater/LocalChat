@@ -40,6 +40,9 @@ class Controller:
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
+        self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
+        self.message.videoButton.clicked.connect(self.message.startVideoRequest)
+        self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
 
 
     def socket_ok(self):

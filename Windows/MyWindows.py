@@ -11,6 +11,7 @@ from Logic.Message2 import Message2
 from MyUI.LocalChatTools import LocalChatToolsUI
 from MyUI.Message import MessageUI
 from MyUI.TwoConnect import TwoConnectUI
+from video.vchat import Video_Client, Video_Server
 
 ShareData = Queue()
 
@@ -58,13 +59,35 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
     def __init__(self):
         super(MessageWindow, self).__init__()
+        self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
+        self.videoButton.clicked.connect(self.startVideoRequest)
 
     def showMessage(self):
         message = self.toSend.toPlainText()
         self.toSend.clear()
         self.sendMessageSignal.emit(f"{self.nickname} >>:  {message}")
         self.textBrowser.append(f"{self.nickname} >>:  {message}")
+
     def receiveMessage(self, message):
         self.textBrowser.append(message)
+
+    def videoRequestCheck(self, ip):
+        reply = QtWidgets.QMessageBox.question(self, '视频聊天', '是否接受视频聊天请求？',
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            vClient = Video_Client(ip, 9632, 1, 4)
+            vClient.start()
+        else:
+            self.sendMessageSignal.emit("VIDEO_DENY")
+
+    def startVideoRequest(self):
+        self.vServer = Video_Server(9632, 4)
+        self.vServer.start()
+        self.sendMessageSignal.emit("VIDEO_REQUEST")
+
+    def closeVideoRequest(self):
+        self.vServer.terminate()
+

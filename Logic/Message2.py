@@ -9,7 +9,8 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class Message2(QThread):
     socketReadySignal = pyqtSignal()
     recvMessageSignal = pyqtSignal(str)
-
+    videoRequestSignal = pyqtSignal(str)
+    videoDenySignal = pyqtSignal(str)
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
         self.serverInstant = None
@@ -20,7 +21,6 @@ class Message2(QThread):
         self.portToConnect = portToConnect
         self.nickName = nickName
         self.data = Queue
-
 
     def run(self):
         Thread(target=self.server).start()
@@ -54,9 +54,14 @@ class Message2(QThread):
                 print('\n---> 与 {} 断开的连接已中断... '.format(self.addr))
                 sys.exit(0)
                 break
+            elif recv_data == "VIDEO_REQUEST":
+                self.videoRequestSignal.emit(self.ipToConnect)
+            elif recv_data == "VIDEO_DENY":
+                self.videoDenySignal.emit()
             elif recv_data:
                 self.recvMessageSignal.emit(recv_data)
-                #print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")
+                # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")
+
     def sendMessages(self, message: str):
         try:
             self.clientInstant.send(bytes(message, encoding='utf-8'))

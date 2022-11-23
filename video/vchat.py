@@ -1,3 +1,4 @@
+from multiprocessing import Process
 from socket import *
 from threading import Thread
 import cv2
@@ -11,7 +12,7 @@ import zlib
 import wave
 
 
-class Video_Client(Thread):
+class Video_Client(Process):
     # 视频客户端
     def __init__(self ,ip, port, level, version):
         super().__init__()
