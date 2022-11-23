@@ -13,11 +13,11 @@ import wave
 
 
 class Video_Client(Process):
+    cap = None
     # 视频客户端
     def __init__(self ,ip, port, level, version):
         super().__init__()
         # self.setDaemon(True)    # 守护进程
-        self.setName('Video Client')
         self.ADDR = (ip, port)  # 连接地址
         if level <= 3:
             self.interval = level
@@ -30,11 +30,11 @@ class Video_Client(Process):
             self.sock = socket(AF_INET, SOCK_STREAM)
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
-        self.cap = cv2.VideoCapture(0)
+        Video_Client.cap = cv2.VideoCapture(0)
 
     def __del__(self) :
         self.sock.close()
-        self.cap.release()
+        Video_Client.cap.release()
 
     def close_listener(self):
         # 监听服务器发过来的摄像头关闭事件
@@ -44,19 +44,20 @@ class Video_Client(Process):
                 if msg == 'CLOSE_VIDEO_SESSION':
                     print('Receive close request, try to close')
                     self.sock.close()
-                    self.cap.release()
+                    Video_Client.cap.release()
                     print('Close done')
                     # break
             except:
                 self.sock.close()
-                self.cap.release()
+                Video_Client.cap.release()
             finally:
-                print('self.cap.isOpened(): ', self.cap.isOpened())
+                print('Video_Client.cap.isOpened(): ', Video_Client.cap.isOpened())
                 break
                 pass
                 # break
 
     def run(self):
+
         print("VEDIO client starts...")
         while True:
             # 循环连接，如果连接不上，间隔一秒后再次连接
@@ -69,12 +70,11 @@ class Video_Client(Process):
         print("VEDIO client connected...")
         
         # 同步监听摄像头关闭请求
-        cl = Thread(target=self.close_listener)
-        cl.setName('Close listener')
+        cl = Process(target=self.close_listener)
         cl.start()
 
-        while self.cap.isOpened():
-            ret, frame = self.cap.read()
+        while Video_Client.cap.isOpened():
+            ret, frame = Video_Client.cap.read()
             # 一个矩形窗口，即相机所拍摄的窗口大小
             sframe = cv2.resize(frame, (1280,720), fx=self.fx, fy=self.fx)
             data = pickle.dumps(sframe)
@@ -85,15 +85,14 @@ class Video_Client(Process):
             except:
                 break
             for i in range(self.interval):
-                self.cap.read()
+                Video_Client.cap.read()
 
-class Video_Server(Thread):
+class Video_Server(Process):
     # 服务器端最终代码如下，增加了对接收到数据的解压缩处理。
     # 服务器是用来接收Client发送的图像数据并且显示的
     def __init__(self, port, version) :
         super().__init__()
         # self.setDaemon(True)
-        self.setName('Video Server')
         self.ADDR = ('', port)
         if version == 4:
             self.sock = socket(AF_INET ,SOCK_STREAM)
@@ -149,6 +148,6 @@ if __name__ == "__main__":
     # This is the demo to test the video chat file
     vServer = Video_Server(5556, 4)
     vServer.start()
-    vClient = Video_Client('192.168.43.242', 5556, 1, 4)
+    vClient = Video_Client('127.0.0.1', 5556, 1, 4)
     vClient.start()
     print('Main thread OK.')
