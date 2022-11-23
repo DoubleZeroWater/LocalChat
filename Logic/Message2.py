@@ -10,7 +10,7 @@ class Message2(QThread):
     socketReadySignal = pyqtSignal()
     recvMessageSignal = pyqtSignal(str)
     videoRequestSignal = pyqtSignal(str)
-    videoDenySignal = pyqtSignal(str)
+    videoDenySignal = pyqtSignal()
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
         self.serverInstant = None

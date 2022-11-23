@@ -62,7 +62,6 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
-        self.videoButton.clicked.connect(self.startVideoRequest)
 
     def showMessage(self):
         message = self.toSend.toPlainText()
@@ -89,5 +88,5 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("VIDEO_REQUEST")
 
     def closeVideoRequest(self):
-        self.vServer.terminate()
+        self.vServer.raise_exception()
 
