@@ -38,7 +38,7 @@ class Controller:
         self.Message2Instance.start()
 
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
-        self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest,ipToConnect))
+        self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
