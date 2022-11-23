@@ -4,6 +4,7 @@ from multiprocessing import Queue
 from threading import Thread
 
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import pyqtSignal
 
 from Logic.LocalIPGet import getIP
 from Logic.Message2 import Message2
@@ -52,6 +53,18 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 
 
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
+    sendMessageSignal = pyqtSignal(str)
+    nickname = None
+
     def __init__(self):
         super(MessageWindow, self).__init__()
         self.setupUi(self)
+        self.sendButton.clicked.connect(self.showMessage)
+
+    def showMessage(self):
+        message = self.toSend.toPlainText()
+        self.toSend.clear()
+        self.sendMessageSignal.emit(f"{self.nickname} >>:  {message}")
+        self.textBrowser.append(f"{self.nickname} >>:  {message}")
+    def receiveMessage(self, message):
+        self.textBrowser.append(message)

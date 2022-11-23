@@ -7,7 +7,7 @@ from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow
 
 class Controller:
     def __init__(self):
-        self.MessageThread = None
+        self.Message2Instance = None
         self.message = None
         self.hello = None
         self.twoConnect = None
@@ -33,9 +33,14 @@ class Controller:
     # Message Window
     def show_message(self, openPort, ipToConnect, portToConnect, nickName, Queue):
         self.message = MessageWindow()
-        self.MessageThread = Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue)
-        self.MessageThread.start()
-        self.MessageThread.socketReadySignal.connect(self.socket_ok)
+        self.message.nickname = nickName
+        self.Message2Instance = Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue)
+        self.Message2Instance.start()
+
+        self.Message2Instance.socketReadySignal.connect(self.socket_ok)
+        self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
+        self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
+
 
     def socket_ok(self):
         self.message.show()

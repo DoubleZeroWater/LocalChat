@@ -8,7 +8,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 class Message2(QThread):
     socketReadySignal = pyqtSignal()
-    sendMessageSignal = pyqtSignal(str)
+    recvMessageSignal = pyqtSignal(str)
 
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
@@ -20,6 +20,7 @@ class Message2(QThread):
         self.portToConnect = portToConnect
         self.nickName = nickName
         self.data = Queue
+
 
     def run(self):
         Thread(target=self.server).start()
@@ -37,20 +38,6 @@ class Message2(QThread):
             else:
                 break
         self.socketReadySignal.emit()
-        try:
-            while True:
-                # 发送
-                msg = self.data.get(True)
-                self.clientInstant.send(bytes(msg, encoding='utf-8'))
-                if msg == '##':
-                    self.clientInstant.close()
-                    self.serverInstant.close()
-                    self.connect_end = True
-                    sys.exit(0)
-                    break
-        except:
-            print('---> 服务已断开...')
-            self.serverInstant.close()
 
     def server(self):
         self.serverInstant = socket(AF_INET, SOCK_STREAM)
@@ -68,7 +55,16 @@ class Message2(QThread):
                 sys.exit(0)
                 break
             elif recv_data:
-                print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(
-                    self.receiverIP, recv_data,
-                    strftime("%Y/%m/%d %H:%M:%S", gmtime())),
-                    end="")
+                self.recvMessageSignal.emit(recv_data)
+                #print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")
+    def sendMessages(self, message: str):
+        try:
+            self.clientInstant.send(bytes(message, encoding='utf-8'))
+            if message == '##':
+                self.clientInstant.close()
+                self.serverInstant.close()
+                self.connect_end = True
+                sys.exit(0)
+        except:
+            print('---> 服务已断开...')
+            self.serverInstant.close()
