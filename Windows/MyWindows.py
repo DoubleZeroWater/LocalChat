@@ -59,6 +59,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
     def __init__(self):
         super(MessageWindow, self).__init__()
+        self.vClient = None
         self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
@@ -77,16 +78,21 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
-            vClient = Video_Client(ip, 9632, 1, 4)
-            vClient.start()
+            self.vServer = Video_Server(9632,4)
+            self.vServer.start()
+            self.vClient = Video_Client(ip, 9632, 1, 4)
+            self.vClient.start()
         else:
             self.sendMessageSignal.emit("VIDEO_DENY")
 
-    def startVideoRequest(self):
+    def startVideoRequest(self,ip):
         self.vServer = Video_Server(9632, 4)
         self.vServer.start()
+        self.vClient = Video_Client(ip, 9632, 1, 4)
+        self.vClient.start()
         self.sendMessageSignal.emit("VIDEO_REQUEST")
 
     def closeVideoRequest(self):
         self.vServer.raise_exception()
+        self.vClient.raise_exception()
 

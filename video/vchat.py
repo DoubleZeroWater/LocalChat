@@ -13,7 +13,7 @@ import zlib
 import wave
 
 
-class Video_Client(Process):
+class Video_Client(Thread):
     # 视频客户端
     def __init__(self, ip, port, level, version):
         super().__init__()
@@ -58,35 +58,55 @@ class Video_Client(Process):
                 # break
 
     def run(self):
-        print("VEDIO client starts...")
-        while True:
-            # 循环连接，如果连接不上，间隔一秒后再次连接
-            try:
-                self.sock.connect(self.ADDR)
-                break
-            except:
-                time.sleep(1)
-                # continue
-        print("VEDIO client connected...")
+        try:
+            print("VEDIO client starts...")
+            while True:
+                # 循环连接，如果连接不上，间隔一秒后再次连接
+                try:
+                    self.sock.connect(self.ADDR)
+                    break
+                except:
+                    time.sleep(1)
+                    # continue
+            print("VEDIO client connected...")
 
-        # 同步监听摄像头关闭请求
-        cl = Thread(target=self.close_listener)
-        cl.setName('Close listener')
-        cl.start()
+            # 同步监听摄像头关闭请求
+            cl = Thread(target=self.close_listener)
+            cl.setName('Close listener')
+            cl.start()
 
-        while self.cap.isOpened():
-            ret, frame = self.cap.read()
-            # 一个矩形窗口，即相机所拍摄的窗口大小
-            sframe = cv2.resize(frame, (1280, 720), fx=self.fx, fy=self.fx)
-            data = pickle.dumps(sframe)
-            zdata = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
-            try:
-                # 将图像数据压缩后发送到服务端
-                self.sock.sendall(struct.pack("L", len(zdata)) + zdata)
-            except:
-                break
-            for i in range(self.interval):
-                self.cap.read()
+            while self.cap.isOpened():
+                ret, frame = self.cap.read()
+                # 一个矩形窗口，即相机所拍摄的窗口大小
+                sframe = cv2.resize(frame, (1280, 720), fx=self.fx, fy=self.fx)
+                data = pickle.dumps(sframe)
+                zdata = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
+                try:
+                    # 将图像数据压缩后发送到服务端
+                    self.sock.sendall(struct.pack("L", len(zdata)) + zdata)
+                except:
+                    break
+                for i in range(self.interval):
+                    self.cap.read()
+        except:
+            pass
+
+    def get_id(self):
+        # returns id of the respective thread
+        if hasattr(self, '_thread_id'):
+            return self._thread_id  # type: ignore
+        for id, thread in threading._active.items():  # type: ignore
+            if thread is self:
+                return id
+
+    def raise_exception(self):
+        thread_id = self.get_id()
+        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
+                                                         ctypes.py_object(SystemExit))
+        if res > 1:
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+            print('Exception raise failure')
 
 
 class Video_Server(Thread):
