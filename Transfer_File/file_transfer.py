@@ -30,9 +30,9 @@ class File_Server(Thread):
 			# 连接客户端
 			print("waiting for connection......\n")
 			clientSock, addr = sever.accept()
-			print("connected with ", end='')
-			print(addr)
-			print()
+			# print("connected with ", end='')
+			# print(addr)
+			# print()
 			# 开始通信
 			while True:
 				# 接收客户端发送的报头长度
@@ -68,6 +68,9 @@ class File_Server(Thread):
 				# 向用户发送信号，文件已经上传完毕
 				completed = "1"
 				clientSock.send(bytes(completed, "utf-8"))
+				clientSock.close()
+				break
+			break
 		sever.close()
 
 class File_Client(Thread):
@@ -114,6 +117,8 @@ class File_Client(Thread):
 			completed = client.recv(buffSize).decode("utf-8")
 			if completed == "1":
 				print("发送成功")
+			client.close()
+			break
 
 
 if __name__ == '__main__':
