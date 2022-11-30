@@ -6,6 +6,7 @@ import os
 import sys
 import time
 
+# 接收端的路径
 FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
 # 服务器端
@@ -74,8 +75,6 @@ class File_Server(Thread):
 		sever.close()
 
 class File_Client(Thread):
-	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
-
 	def __init__(self):
 		pass
 
@@ -93,8 +92,9 @@ class File_Client(Thread):
 		# 开始通信
 		while True:
 			# 上传文件
-			fileName = input("请输入要上传的文件名加后缀：").strip()
-			fileInfor = FILEPATH + fileName
+			fileInfor = input("请输入要上传的文件路径（文件名加后缀）：").strip()
+			num = fileInfor.rfind('\\')
+			fileName = fileInfor[num+1:]
 			# 得到文件的大小
 			filesize_bytes = os.path.getsize(fileInfor)
 			# 创建复制文件
