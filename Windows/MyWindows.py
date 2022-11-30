@@ -1,10 +1,12 @@
 # 主窗口
+import os
 import time
 from multiprocessing import Queue
 from threading import Thread
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QFileDialog
 
 from Logic.LocalIPGet import getIP
 from Logic.Message2 import Message2
@@ -12,6 +14,8 @@ from MyUI.LocalChatTools import LocalChatToolsUI
 from MyUI.Message import MessageUI
 from MyUI.TwoConnect import TwoConnectUI
 from video.vchat import Video_Client, Video_Server
+from MyUI.File import FileUI
+from Transfer_File.file_transfer import File_Client,File_Server
 
 ShareData = Queue()
 
@@ -55,6 +59,7 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
+    goFileSignal = QtCore.pyqtSignal(str, str, str)
     nickname = None
 
     def __init__(self):
@@ -63,6 +68,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
+        self.FileButton.clicked.connect(self.goFileUI)
 
     def showMessage(self):
         message = self.toSend.toPlainText()
@@ -95,4 +101,34 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def closeVideoRequest(self):
         self.vServer.raise_exception()
         self.vClient.raise_exception()
+
+    def goFileUI(self,openPort,ipToConnect,portToConnect):
+        self.goFileSignal.emit(openPort, ipToConnect, portToConnect)
+
+
+
+class FileWindow(QtWidgets.QMainWindow, FileUI):
+    sendFileSignal = pyqtSignal(str)
+
+    def __init__(self,openPort: int, ipToConnect: str, portToConnect: int):
+        super(FileWindow, self).__init__()
+        self.setupUi(self)
+        self.videoButton_2.clicked.connect(self.uploadFile)
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+
+
+    def uploadFile(self,openPort,ipToConnect,portToConnect):
+        self.fServer = File_Server()
+        self.fServer.run()
+        self.fClient = File_Client()
+        self.fClient.run()
+        self.sendFileSignal.emit("File_REQUEST")
+        filename = QFileDialog.getOpenFileNames(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
+        # 输出文件，查看文件路径
+        print(filename)
+        # 根据输出结果选取对应的文件名
+
+
 

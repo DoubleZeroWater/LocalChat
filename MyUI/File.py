@@ -11,11 +11,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_File(object):
-    def setupUi(self, File):
-        File.setObjectName("File")
-        File.resize(497, 400)
-        self.centralwidget = QtWidgets.QWidget(File)
+class FileUI(object):
+    def setupUi(self, FileUI):
+        FileUI.setObjectName("FileUI")
+        FileUI.resize(497, 400)
+        self.centralwidget = QtWidgets.QWidget(FileUI)
         self.centralwidget.setObjectName("centralwidget")
         self.videoButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.videoButton_2.setGeometry(QtCore.QRect(170, 280, 121, 41))
@@ -23,19 +23,19 @@ class Ui_File(object):
         self.textBrowser_2 = QtWidgets.QTextBrowser(self.centralwidget)
         self.textBrowser_2.setGeometry(QtCore.QRect(40, 10, 381, 241))
         self.textBrowser_2.setObjectName("textBrowser_2")
-        File.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(File)
+        FileUI.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(FileUI)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 497, 22))
         self.menubar.setObjectName("menubar")
-        File.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(File)
+        FileUI.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(FileUI)
         self.statusbar.setObjectName("statusbar")
-        File.setStatusBar(self.statusbar)
+        FileUI.setStatusBar(self.statusbar)
 
-        self.retranslateUi(File)
-        QtCore.QMetaObject.connectSlotsByName(File)
+        self.retranslateUi(FileUI)
+        QtCore.QMetaObject.connectSlotsByName(FileUI)
 
-    def retranslateUi(self, File):
+    def retranslateUi(self, FileUI):
         _translate = QtCore.QCoreApplication.translate
-        File.setWindowTitle(_translate("File", "MainWindow"))
+        FileUI.setWindowTitle(_translate("File", "MainWindow"))
         self.videoButton_2.setText(_translate("File", "选择文件并发送"))

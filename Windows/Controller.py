@@ -2,7 +2,7 @@ from functools import partial
 from threading import Thread
 
 from Logic.Message2 import Message2
-from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow,FileWindow
 
 
 class Controller:
@@ -47,3 +47,13 @@ class Controller:
     def socket_ok(self):
         self.message.show()
         self.twoConnect.close()
+        self.message.goFileSignal.connect(self.show_file)
+
+   # File Window
+    def show_file(self, openPort, ipToConnect, portToConnect):
+        self.file = FileWindow(openPort, ipToConnect, portToConnect)
+        self.file.show()
+        print(openPort,ipToConnect,portToConnect)
+        # self.file.openPort = int(openPort)
+        # self.file.ipToConnect = ipToConnect
+        # self.file.portToConnect = int(portToConnect)
