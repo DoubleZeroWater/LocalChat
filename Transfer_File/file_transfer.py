@@ -78,12 +78,13 @@ class File_Server(Thread):
 
 class File_Client(Thread):
 
-	def __init__(self,name,openPort,ipToConnect,portToConnect):
+	def __init__(self, name, ip, openPort,ipToConnect,portToConnect):
 		super().__init__()
-		self.openPort=openPort
-		self.ipToConnect=ipToConnect
-		self.portToConnect=portToConnect
-		self.name=name
+		self.openPort = openPort
+		self.ipToConnect = ipToConnect
+		self.portToConnect = portToConnect
+		self.name = name
+		self.ip = ip
 
 	def run(self):
 		Thread(target=self.client).start()
@@ -92,7 +93,7 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.1.111', 5354)
+		ip_port = (self.ip, 5354)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")

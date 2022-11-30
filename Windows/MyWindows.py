@@ -124,17 +124,18 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     def uploadFile(self,openPort, ipToConnect, portToConnect):
         fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
         # 输出文件，查看文件路径
-        print(fileName[0])
         name1=fileName[0]
         name =name1.replace('/', '\\')
         print(name)
+        ip=getIP()
+        print(ip)
 
         self.fServer = File_Server(int(openPort), ipToConnect, int(portToConnect))
         self.fServer.run()
-        self.fClient = File_Client(name,int(openPort), ipToConnect, int(portToConnect))
+        self.fClient = File_Client(name, ip, int(openPort), ipToConnect, int(portToConnect))
         self.fClient.run()
         self.sendFileSignal.emit("File_REQUEST")
-        self.textBrowser_2.append("已成功发送文件："+name)
+        self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
 
 
 
