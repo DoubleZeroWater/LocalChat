@@ -21,7 +21,7 @@ class File_Server(Thread):
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.116.152', 12345)
+		ip_port = ('192.168.116.152', 5354)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -84,7 +84,7 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.116.160', 12345)
+		ip_port = ('192.168.116.160', 5354)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
