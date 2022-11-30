@@ -7,13 +7,13 @@ import sys
 import time
 
 # 接收端的路径
-FILEPATH = "E:/wenjian/12345"
+FILEPATH = "E:/Pythonproject/LocalChat/Transfer_File/"
 
 # 服务器端
 class File_Server(Thread):
 
 	def __init__(self):
-		pass
+		super().__init__()
 
 	def run(self):
 		Thread(target=self.server).start()
@@ -21,7 +21,7 @@ class File_Server(Thread):
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.69.152', 12345)
+		ip_port = ('192.168.116.152', 12345)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -75,7 +75,7 @@ class File_Server(Thread):
 
 class File_Client(Thread):
 	def __init__(self):
-		pass
+		super().__init__()
 
 	def run(self):
 		Thread(target=self.client).start()
@@ -84,7 +84,7 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.69.190', 12345)
+		ip_port = ('192.168.116.160', 12345)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
@@ -122,6 +122,6 @@ class File_Client(Thread):
 
 if __name__ == '__main__':
 	sev = File_Server()
-	sev.run()
+	sev.start()
 	clt = File_Client()
-	clt.run()
+	clt.start()
