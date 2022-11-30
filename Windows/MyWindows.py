@@ -110,7 +110,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendFileSignal = pyqtSignal(str)
 
-    def __init__(self,openPort, ipToConnect, portToConnect):
+    def __init__(self, openPort, ipToConnect, portToConnect):
         super(FileWindow, self).__init__()
         self.setupUi(self)
         self.videoButton_2.clicked.connect(self.uploadFile)
