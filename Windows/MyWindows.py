@@ -102,7 +102,10 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vServer.raise_exception()
         self.vClient.raise_exception()
 
-    def goFileUI(self,openPort,ipToConnect,portToConnect):
+    def goFileUI(self):
+        openPort=Message2Instance.openPort
+        ipToConnect = Message2Instance.ipToConnect
+        portToConnect = Message2Instance.portToConnect
         self.goFileSignal.emit(openPort, ipToConnect, portToConnect)
 
 
@@ -110,7 +113,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendFileSignal = pyqtSignal(str)
 
-    def __init__(self,openPort: int, ipToConnect: str, portToConnect: int):
+    def __init__(self,openPort, ipToConnect, portToConnect):
         super(FileWindow, self).__init__()
         self.setupUi(self)
         self.videoButton_2.clicked.connect(self.uploadFile)

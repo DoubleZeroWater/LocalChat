@@ -51,9 +51,9 @@ class Controller:
 
    # File Window
     def show_file(self, openPort, ipToConnect, portToConnect):
-        self.file = FileWindow(openPort, ipToConnect, portToConnect)
+        self.file = FileWindow()
         self.file.show()
-        print(openPort,ipToConnect,portToConnect)
+        # print(openPort,ipToConnect,portToConnect)
         # self.file.openPort = int(openPort)
         # self.file.ipToConnect = ipToConnect
         # self.file.portToConnect = int(portToConnect)
