@@ -5,29 +5,23 @@ import json
 import os
 import sys
 import time
-from PyQt5.QtCore import QThread, pyqtSignal
 
-FILEPATH = "C:/Users/TangZH/Desktop/LocalChat/file_transfer-master/"
+FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
 # 服务器端
 class File_Server(Thread):
-	# socketReadySignal = pyqtSignal()
-	# recvMessageSignal = pyqtSignal(str)
-	# videoRequestSignal = pyqtSignal(str)
-	# videoDenySignal = pyqtSignal()
 	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
 	def __init__(self):
-		super().__init__()
+		pass
 
 	def run(self):
 		Thread(target=self.server).start()
-		ip_port = ('192.168.43.242', 5354)
 
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		# ip_port = (ip, 5354)
+		ip_port = ('192.168.31.190', 5354)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -83,7 +77,7 @@ class File_Client(Thread):
 	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
 	def __init__(self):
-		super().__init__()
+		pass
 
 	def run(self):
 		Thread(target=self.client).start()
@@ -92,7 +86,7 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ("192.168.43.242", 5354)
+		ip_port = ('192.168.31.190', 5354)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
@@ -127,8 +121,8 @@ class File_Client(Thread):
 			break
 
 
-# if __name__ == '__main__':
-# 	sev = File_Server()
-# 	sev.run()
-# 	clt = File_Client()
-# 	clt.run()
+if __name__ == '__main__':
+	sev = File_Server()
+	sev.run()
+	clt = File_Client()
+	clt.run()
