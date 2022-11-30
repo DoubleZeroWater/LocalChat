@@ -43,17 +43,18 @@ class Controller:
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
+        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect))
 
     def socket_ok(self):
         self.message.show()
         self.twoConnect.close()
-        self.message.goFileSignal.connect(self.show_file)
+
 
    # File Window
     def show_file(self, openPort, ipToConnect, portToConnect):
         self.file = FileWindow()
         self.file.show()
-        # print(openPort,ipToConnect,portToConnect)
-        # self.file.openPort = int(openPort)
-        # self.file.ipToConnect = ipToConnect
-        # self.file.portToConnect = int(portToConnect)
+        print(openPort,ipToConnect,portToConnect)
+        self.file.openPort = openPort
+        self.file.ipToConnect = ipToConnect
+        self.file.portToConnect = portToConnect

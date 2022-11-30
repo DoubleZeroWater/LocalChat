@@ -103,10 +103,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vClient.raise_exception()
 
     def goFileUI(self):
-        openPort=Message2Instance.openPort
-        ipToConnect = Message2Instance.ipToConnect
-        portToConnect = Message2Instance.portToConnect
-        self.goFileSignal.emit(openPort, ipToConnect, portToConnect)
+        self.goFileSignal.emit()
 
 
 
