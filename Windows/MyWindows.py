@@ -16,6 +16,7 @@ from MyUI.TwoConnect import TwoConnectUI
 from video.vchat import Video_Client, Video_Server
 from MyUI.File import FileUI
 from Transfer_File.file_transfer import File_Client,File_Server
+from functools import partial
 
 ShareData = Queue()
 
@@ -59,7 +60,7 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
-    goFileSignal = QtCore.pyqtSignal(str, str, str)
+    goFileSignal = QtCore.pyqtSignal()
     nickname = None
 
     def __init__(self):
@@ -110,25 +111,31 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendFileSignal = pyqtSignal(str)
 
-    def __init__(self, openPort, ipToConnect, portToConnect):
+    def __init__(self,openPort, ipToConnect, portToConnect):
         super(FileWindow, self).__init__()
         self.setupUi(self)
-        self.videoButton_2.clicked.connect(self.uploadFile)
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
+        self.videoButton_2.clicked.connect(partial(self.uploadFile, openPort, ipToConnect, portToConnect))
+        print(openPort, ipToConnect, portToConnect)
 
 
-    def uploadFile(self,openPort,ipToConnect,portToConnect):
-        self.fServer = File_Server()
+    def uploadFile(self,openPort, ipToConnect, portToConnect):
+        fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
+        # 输出文件，查看文件路径
+        print(fileName[0])
+        name1=fileName[0]
+        name =name1.replace('/', '\\')
+        print(name)
+
+        self.fServer = File_Server(int(openPort), ipToConnect, int(portToConnect))
         self.fServer.run()
-        self.fClient = File_Client()
+        self.fClient = File_Client(name,int(openPort), ipToConnect, int(portToConnect))
         self.fClient.run()
         self.sendFileSignal.emit("File_REQUEST")
-        filename = QFileDialog.getOpenFileNames(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
-        # 输出文件，查看文件路径
-        print(filename)
-        # 根据输出结果选取对应的文件名
+        self.textBrowser_2.append("已成功发送文件："+name)
+
 
 
 

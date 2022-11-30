@@ -6,14 +6,17 @@ import os
 import sys
 import time
 
-FILEPATH = "E:/Pythonproject/file_transfer-master/"
+# 接收端的路径
+FILEPATH = "C:/Users/TangZH/Desktop/check/"
 
 # 服务器端
 class File_Server(Thread):
-	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
-	def __init__(self):
-		pass
+	def __init__(self,openPort,ipToConnect,portToConnect):
+		super().__init__()
+		self.openPort=openPort
+		self.ipToConnect=ipToConnect
+		self.portToConnect=portToConnect
 
 	def run(self):
 		Thread(target=self.server).start()
@@ -21,7 +24,7 @@ class File_Server(Thread):
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.31.190', 5354)
+		ip_port = (self.ipToConnect, 5354)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -74,10 +77,13 @@ class File_Server(Thread):
 		sever.close()
 
 class File_Client(Thread):
-	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
-	def __init__(self):
-		pass
+	def __init__(self,name,openPort,ipToConnect,portToConnect):
+		super().__init__()
+		self.openPort=openPort
+		self.ipToConnect=ipToConnect
+		self.portToConnect=portToConnect
+		self.name=name
 
 	def run(self):
 		Thread(target=self.client).start()
@@ -86,15 +92,16 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.31.190', 5354)
+		ip_port = ('192.168.1.111', 5354)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
 		# 开始通信
 		while True:
 			# 上传文件
-			fileName = input("请输入要上传的文件名加后缀：").strip()
-			fileInfor = FILEPATH + fileName
+			fileInfor = self.name
+			num = fileInfor.rfind('\\')
+			fileName = fileInfor[num+1:]
 			# 得到文件的大小
 			filesize_bytes = os.path.getsize(fileInfor)
 			# 创建复制文件
@@ -121,8 +128,8 @@ class File_Client(Thread):
 			break
 
 
-if __name__ == '__main__':
-	sev = File_Server()
-	sev.run()
-	clt = File_Client()
-	clt.run()
+# if __name__ == '__main__':
+# 	sev = File_Server()
+# 	sev.start()
+# 	clt = File_Client()
+# 	clt.start()
