@@ -6,11 +6,11 @@ import os
 import sys
 import time
 
-FILEPATH = "E:/Pythonproject/file_transfer-master/"
+# 接收端的路径
+FILEPATH = "E:/wenjian/12345"
 
 # 服务器端
 class File_Server(Thread):
-	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
 
 	def __init__(self):
 		pass
@@ -21,7 +21,7 @@ class File_Server(Thread):
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.31.190', 5354)
+		ip_port = ('192.168.69.152', 12345)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -74,8 +74,6 @@ class File_Server(Thread):
 		sever.close()
 
 class File_Client(Thread):
-	# FILEPATH = "E:/Pythonproject/file_transfer-master/"
-
 	def __init__(self):
 		pass
 
@@ -86,15 +84,16 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = ('192.168.31.190', 5354)
+		ip_port = ('192.168.69.190', 12345)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
 		# 开始通信
 		while True:
 			# 上传文件
-			fileName = input("请输入要上传的文件名加后缀：").strip()
-			fileInfor = FILEPATH + fileName
+			fileInfor = input("请输入要上传的文件路径（文件名加后缀）：").strip()
+			num = fileInfor.rfind('\\')
+			fileName = fileInfor[num+1:]
 			# 得到文件的大小
 			filesize_bytes = os.path.getsize(fileInfor)
 			# 创建复制文件
