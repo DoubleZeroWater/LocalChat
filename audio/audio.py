@@ -12,6 +12,7 @@ class Audio(Thread):  # 发送声音
 
     def __init__(self, name, ip, openPort, ipToConnect, portToConnect):
         super().__init__()
+        self.name = name  # 我的用户名
         self.ip = ip  # 我本机的ip
         self.openPort = openPort  # 我要开放的端口
         self.ipToConnect = ipToConnect  # 我要连接的ip
@@ -26,6 +27,7 @@ class Audio(Thread):  # 发送声音
 
     def run(self):
         Thread(target=self.server).start()
+        Thread(target=self.client).start()
 
     def server(self):  # 发送声音
         server = socket(AF_INET, SOCK_STREAM)
@@ -65,3 +67,8 @@ class Audio(Thread):  # 发送声音
                 playing_stream.write(data)
             except:
                 pass
+
+
+if __name__ == '__main__':
+    audio = Audio("132", "192.168.43.242", 12345, "192.168.43.20", 12345)
+    audio.run()
