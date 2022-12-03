@@ -34,18 +34,17 @@ class Audio(Thread):  # 发送声音
         ip_port = ("", self.openPort)  # 开放openport等待iptoconnect来连接
         server.bind(ip_port)
         server.listen(60)  # 等待60s
-        print("waiting for connection......\n")
+        print("Server bind.")
         clientSock, addr = server.accept()
 
         recording_stream = self.p.open(format=self.audio_format,
                                        channels=self.channels,
                                        rate=self.rate, input=True,
                                        frames_per_buffer=self.chunk_size)
-        print("Connected to Server")
         while True:
             try:
                 data = recording_stream.read(1024)
-                server.sendall(data)
+                clientSock.sendall(data)
             except:
                 pass
 
@@ -53,9 +52,8 @@ class Audio(Thread):  # 发送声音
         # 创建服务器
         client = socket(AF_INET, SOCK_STREAM)
         ip_port = (self.ipToConnect, self.portToConnect)
-        client.connect(ip_port)
         print("connecting...")
-
+        client.connect(ip_port)
         playing_stream = self.p.open(format=self.audio_format,
                                      channels=self.channels,
                                      rate=self.rate, output=True,
@@ -70,5 +68,5 @@ class Audio(Thread):  # 发送声音
 
 
 if __name__ == '__main__':
-    audio = Audio("132","192.168.43.20", 9808, "192.168.43.242", 9808)
+    audio = Audio("132", "192.168.43.20", 9808, "192.168.43.242", 9808)
     audio.run()
