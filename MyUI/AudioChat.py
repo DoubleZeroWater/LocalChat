@@ -11,11 +11,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_AudioChat(object):
+class AudioUI(object):
     def setupUi(self, AudioChat):
-        AudioChat.setObjectName("AudioChat")
+        AudioChat.setObjectName("AudioUI")
         AudioChat.resize(396, 321)
-        self.centralwidget = QtWidgets.QWidget(AudioChat)
+        self.centralwidget = QtWidgets.QWidget(AudioUI)
         self.centralwidget.setObjectName("centralwidget")
         self.videoButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.videoButton_2.setGeometry(QtCore.QRect(40, 200, 91, 41))
@@ -26,21 +26,21 @@ class Ui_AudioChat(object):
         self.toSend = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.toSend.setGeometry(QtCore.QRect(40, 30, 311, 151))
         self.toSend.setObjectName("toSend")
-        AudioChat.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(AudioChat)
+        AudioUI.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(AudioUI)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 396, 22))
         self.menubar.setObjectName("menubar")
-        AudioChat.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(AudioChat)
+        AudioUI.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(AudioUI)
         self.statusbar.setObjectName("statusbar")
-        AudioChat.setStatusBar(self.statusbar)
+        AudioUI.setStatusBar(self.statusbar)
 
-        self.retranslateUi(AudioChat)
-        QtCore.QMetaObject.connectSlotsByName(AudioChat)
+        self.retranslateUi(AudioUI)
+        QtCore.QMetaObject.connectSlotsByName(AudioUI)
 
-    def retranslateUi(self, AudioChat):
+    def retranslateUi(self, AudioUI):
         _translate = QtCore.QCoreApplication.translate
-        AudioChat.setWindowTitle(_translate("AudioChat", "MainWindow"))
-        self.videoButton_2.setText(_translate("AudioChat", "点击发言"))
-        self.videoButton_3.setText(_translate("AudioChat", "结束发言"))
-        self.toSend.setPlainText(_translate("AudioChat", "当前发言人为："))
+        AudioUI.setWindowTitle(_translate("AudioUI", "MainWindow"))
+        self.videoButton_2.setText(_translate("AudioUI", "点击发言"))
+        self.videoButton_3.setText(_translate("AudioUI", "结束发言"))
+        self.toSend.setPlainText(_translate("AudioUI", "当前发言人为："))

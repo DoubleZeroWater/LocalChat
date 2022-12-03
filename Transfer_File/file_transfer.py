@@ -7,16 +7,16 @@ import sys
 import time
 
 # 接收端的路径
-FILEPATH = "C:/Users/TangZH/Desktop/check/"
+FILEPATH = "./test/"
 
 # 服务器端
 class File_Server(Thread):
 
 	def __init__(self,openPort,ipToConnect,portToConnect):
 		super().__init__()
-		self.openPort=openPort
-		self.ipToConnect=ipToConnect
-		self.portToConnect=portToConnect
+		self.openPort=5353
+		self.ipToConnect=5353
+		self.portToConnect=5353
 
 	def run(self):
 		Thread(target=self.server).start()
@@ -24,7 +24,7 @@ class File_Server(Thread):
 	def server(self):
 		# 创建sever服务器
 		sever = socket(AF_INET, SOCK_STREAM)
-		ip_port = (self.ipToConnect, 5354)
+		ip_port = ("", 5353)
 		buffSize = 1024
 		# 监听
 		sever.bind(ip_port)
@@ -93,7 +93,7 @@ class File_Client(Thread):
 	def client(self):
 		# 创建客户端
 		client = socket(AF_INET, SOCK_STREAM)
-		ip_port = (self.ip, 5354)
+		ip_port = (self.ipToConnect, 5353)
 		buffSize = 1024
 		client.connect(ip_port)
 		print("connecting...")
@@ -130,7 +130,7 @@ class File_Client(Thread):
 
 
 # if __name__ == '__main__':
-# 	sev = File_Server()
-# 	sev.start()
-# 	clt = File_Client()
-# 	clt.start()
+#    sev = File_Server(5353,"192.168.43.242",5353)
+#    sev.start()
+#    clt = File_Client(r"C:\Users\TangZH\Desktop\check\readme.md","192.168.43.242",5353,"192.168.43.20",5353)
+#    clt.start()

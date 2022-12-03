@@ -77,3 +77,9 @@ class AudioClient(Thread):  # 接收声音
                 playing_stream.write(data)
             except:
                 pass
+
+if __name__ == '__main__':
+    server = AudioServer(12345, "192.168.43.242" , 12345)
+    server.run()
+    client = AudioServer("132", "192.168.43.20", 12345, "192.168.43.242" , 12345)
+    client.run()
