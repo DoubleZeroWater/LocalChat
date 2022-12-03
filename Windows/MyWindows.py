@@ -15,7 +15,7 @@ from MyUI.Message import MessageUI
 from MyUI.TwoConnect import TwoConnectUI
 from video.vchat import Video_Client, Video_Server
 from MyUI.File import FileUI
-from Transfer_File.file_transfer import File_Client,File_Server
+from Transfer_File.file_transfer import File_Transfer
 from functools import partial
 
 ShareData = Queue()
