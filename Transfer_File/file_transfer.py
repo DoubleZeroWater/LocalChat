@@ -7,7 +7,7 @@ import sys
 import time
 
 # 接收端的路径
-FILEPATH = "./test/"
+FILEPATH = "E:/test/"
 
 # 服务器端
 class File_Server(Thread):
@@ -73,7 +73,7 @@ class File_Server(Thread):
 				clientSock.send(bytes(completed, "utf-8"))
 				clientSock.close()
 				break
-			break
+			# break
 		sever.close()
 
 class File_Client(Thread):
