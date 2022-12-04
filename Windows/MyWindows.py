@@ -61,6 +61,8 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
     goFileSignal = QtCore.pyqtSignal()
+    refuseFileSignal = QtCore.pyqtSignal()
+    requestFileSignal = QtCore.pyqtSignal()
     nickname = None
 
     def __init__(self):
@@ -106,36 +108,64 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def goFileUI(self):
         self.goFileSignal.emit()
 
+    def fileRequestCheck(self, ip):
+        reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否同意进行文件传输？',
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.goFileUI()
+        else:
+            self.sendFileSignal.emit("FILE_DENY")
 
+    def startFileRequest(self):
+        self.sendFileSignal.emit("FILE_REQUEST")
+        self.goFileUI()
+
+    def closeFileRequest(self):
+        self.File_Transfer.raise_exception()
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
-    sendFileSignal = pyqtSignal(str)
 
-    def __init__(self,openPort, ipToConnect, portToConnect):
+    def __init__(self,openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
         self.setupUi(self)
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
-        self.videoButton_2.clicked.connect(partial(self.uploadFile, openPort, ipToConnect, portToConnect))
-        print(openPort, ipToConnect, portToConnect)
+        self.nickname = nickname
+        ip=getIP()
+        self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5454)
+        self.fileTransfer.server()
+        self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
+        print(openPort, ipToConnect, portToConnect, nickname)
 
 
-    def uploadFile(self,openPort, ipToConnect, portToConnect):
+
+    def fileTransfer(self, ipToConnect):
+        ip = getIP()
         fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
         # 输出文件，查看文件路径
-        name1=fileName[0]
-        name =name1.replace('/', '\\')
+        name1 = fileName[0]
+        name = name1.replace('/', '\\')
         print(name)
-        ip=getIP()
-        print(ip)
-
-        self.fServer = File_Server(int(openPort), ipToConnect, int(portToConnect))
-        self.fServer.run()
-        self.fClient = File_Client(name, ip, int(openPort), ipToConnect, int(portToConnect))
-        self.fClient.run()
-        self.sendFileSignal.emit("File_REQUEST")
+        self.fileTransfer = File_Transfer("", ipToConnect, 5454, ip, 5453)
+        self.fileTransfer.client()
+        self.fileTransfer.server()
         self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+
+    def closeFileRequest(self):
+        self.fileTransfer.raise_exception()
+
+    def receiveFile(self, ipToConnect):
+        self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+    #
+    # def uploadFile(self,openPort, ipToConnect, portToConnect)
+    #
+    #     self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, self.ip, 5453)
+    #     self.fileTransfer.client()
+    #     self.fileTransfer.server()
+    #     self.sendFileSignal.emit("File_REQUEST")
+    #     self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
 
 
 

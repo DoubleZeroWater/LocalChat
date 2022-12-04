@@ -2,6 +2,7 @@ from functools import partial
 from threading import Thread
 
 from Logic.Message2 import Message2
+from Logic.Message3 import Message3
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow,FileWindow
 
 
@@ -43,7 +44,16 @@ class Controller:
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
-        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect))
+
+        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
+
+        self.Message3Instance = Message3(13245, ipToConnect, 54231, nickName)
+        self.Message3Instance.start()
+        self.Message3Instance.fileDenySignal.connect(self.message.closeFileRequest)
+        self.Message3Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
+
+
+
 
     def socket_ok(self):
         self.message.show()
@@ -51,6 +61,7 @@ class Controller:
 
 
    # File Window
-    def show_file(self, openPort, ipToConnect, portToConnect):
-        self.file = FileWindow(openPort, ipToConnect, portToConnect)
+    def show_file(self, openPort, ipToConnect, portToConnect, nickName):
+        self.file = FileWindow(openPort, ipToConnect, portToConnect, nickName)
+        self.file.nickname = nickName
         self.file.show()
