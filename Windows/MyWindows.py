@@ -119,8 +119,10 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.goFileUI()
 
     def closeFileRequest(self):
-        reply = QtWidgets.QMessageBox.information(self,"Information","对方已拒绝",QMessageBox.Ok)
+        print("你被拒绝了！")
+        reply = QtWidgets.QMessageBox.about(self,'提示','你的发送文件请求已被拒绝' )
         print(reply)
+
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
 
@@ -151,12 +153,9 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.fileTransfer.server()
         self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
 
-    def closeFileRequest(self):
-        self.fileTransfer.raise_exception()
-
-    def receiveFile(self, ipToConnect):
-        ip = getIP()
-        self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+    # def receiveFile(self, ipToConnect):
+        # ip = getIP()
+        # self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
     #
     # def uploadFile(self,openPort, ipToConnect, portToConnect)
     #
@@ -165,6 +164,24 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     #     self.fileTransfer.server()
     #     self.sendFileSignal.emit("File_REQUEST")
     #     self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+
+
+class AudioWindow(QtWidgets.QMainWindow, AudioUI):
+
+    def __init__(self,openPort, ipToConnect, portToConnect, nickname):
+        super(AudioWindow, self).__init__()
+        self.setupUi(self)
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+        self.nickname = nickname
+        ip=getIP()
+        # self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5454)
+        # self.fileTransfer.server()
+        # self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
+        # print(openPort, ipToConnect, portToConnect, nickname)
+
+
 
 
 

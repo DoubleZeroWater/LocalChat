@@ -40,6 +40,7 @@ class Controller:
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
         self.message.FileButton.clicked.connect(self.message.startFileRequest)
+        # self.message.audioButton.clicked.connect(self.message.startAudioRequest)
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
@@ -49,9 +50,9 @@ class Controller:
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
         self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
 
-
-
-
+        # self.Message2Instance.audioDenySignal.connect(self.message.closeAudioRequest)
+        # self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
+        # self.message.goAudioSignal.connect(partial(self.show_audio, openPort, ipToConnect, portToConnect, self.message.nickname))
 
     def socket_ok(self):
         self.message.show()
@@ -63,3 +64,9 @@ class Controller:
         self.file = FileWindow(openPort, ipToConnect, portToConnect, nickName)
         self.file.nickname = nickName
         self.file.show()
+
+   # # Audio Window
+   #  def show_audio(self, openPort, ipToConnect, portToConnect, nickName):
+   #      self.audio = FileWindow(openPort, ipToConnect, portToConnect, nickName)
+   #      self.audio.nickname = nickName
+   #      self.audio.show()
