@@ -60,7 +60,6 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
-    goFileSignal = QtCore.pyqtSignal()
     nickname = None
 
     def __init__(self):
@@ -105,7 +104,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def goFileUI(self):
         self.goFileSignal.emit()
 
-    def fileRequestCheck(self, ip):
+    def fileRequestCheck(self):
         reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否同意进行文件传输？',
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
@@ -119,7 +118,8 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.goFileUI()
 
     def closeFileRequest(self):
-        self.File_Transfer.raise_exception()
+        QtWidgets.QMessageBox.information(self,"Information","对方已拒绝",QMessageBox.Ok)
+        self.File_transfer.raise_exception()
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
 

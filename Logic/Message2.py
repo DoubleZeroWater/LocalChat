@@ -13,6 +13,8 @@ class Message2(QThread):
     videoDenySignal = pyqtSignal()
     fileRequestSignal = pyqtSignal(str)
     fileDenySignal = pyqtSignal()
+    goFileSignal = pyqtSignal()
+
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
         self.serverInstant = None
