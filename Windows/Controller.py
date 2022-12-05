@@ -2,7 +2,6 @@ from functools import partial
 from threading import Thread
 
 from Logic.Message2 import Message2
-from Logic.Message3 import Message3
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow,FileWindow
 
 
@@ -40,6 +39,7 @@ class Controller:
 
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
+        self.message.FileButton.clicked.connect(self.message.startFileRequest)
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)

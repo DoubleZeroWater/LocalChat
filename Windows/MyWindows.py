@@ -61,8 +61,6 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
     goFileSignal = QtCore.pyqtSignal()
-    refuseFileSignal = QtCore.pyqtSignal()
-    requestFileSignal = QtCore.pyqtSignal()
     nickname = None
 
     def __init__(self):
@@ -71,7 +69,6 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
-        self.FileButton.clicked.connect(self.goFileUI)
 
     def showMessage(self):
         message = self.toSend.toPlainText()
@@ -115,10 +112,10 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         if reply == QtWidgets.QMessageBox.Yes:
             self.goFileUI()
         else:
-            self.sendFileSignal.emit("FILE_DENY")
+            self.sendMessageSignal.emit("FILE_DENY")
 
     def startFileRequest(self):
-        self.sendFileSignal.emit("FILE_REQUEST")
+        self.sendMessageSignal.emit("FILE_REQUEST")
         self.goFileUI()
 
     def closeFileRequest(self):
