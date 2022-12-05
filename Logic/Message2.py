@@ -11,6 +11,8 @@ class Message2(QThread):
     recvMessageSignal = pyqtSignal(str)
     videoRequestSignal = pyqtSignal(str)
     videoDenySignal = pyqtSignal()
+    fileRequestSignal = pyqtSignal(str)
+    fileDenySignal = pyqtSignal()
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
         self.serverInstant = None
@@ -46,6 +48,7 @@ class Message2(QThread):
         self.conn, self.addr = self.serverInstant.accept()
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
+            print(recv_data)
             if recv_data == "##":
                 # 自身连接
                 self.clientInstant.close()
@@ -58,6 +61,10 @@ class Message2(QThread):
                 self.videoRequestSignal.emit(self.ipToConnect)
             elif recv_data == "VIDEO_DENY":
                 self.videoDenySignal.emit()
+            elif recv_data == "FILE_REQUEST":
+                self.fileRequestSignal.emit(self.ipToConnect)
+            elif recv_data == "FILE_DENY":
+                self.fileDenySignal.emit()
             elif recv_data:
                 self.recvMessageSignal.emit(recv_data)
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")

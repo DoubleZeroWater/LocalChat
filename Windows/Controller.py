@@ -47,10 +47,8 @@ class Controller:
 
         self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
 
-        self.Message3Instance = Message3(13245, ipToConnect, 54231, nickName)
-        self.Message3Instance.start()
-        self.Message3Instance.fileDenySignal.connect(self.message.closeFileRequest)
-        self.Message3Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
+        self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
+        self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
 
 
 

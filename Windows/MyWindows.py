@@ -157,6 +157,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.fileTransfer.raise_exception()
 
     def receiveFile(self, ipToConnect):
+        ip = getIP()
         self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
     #
     # def uploadFile(self,openPort, ipToConnect, portToConnect)
