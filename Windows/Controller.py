@@ -47,7 +47,7 @@ class Controller:
 
         self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
-        self.Message2Instance.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
+        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
 
 
 
