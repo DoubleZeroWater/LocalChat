@@ -1,6 +1,7 @@
 from functools import partial
 
 from Logic.Message2 import Message2
+from Transfer_File import File_Transfer
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow
 
 
@@ -60,3 +61,6 @@ class Controller:
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
         self.file.nickname = self.nickName
         self.file.show()
+        self.fileInstance=File_Transfer(self.ipToConnect, 5453, getIP(), 5453)
+        self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
+        self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)

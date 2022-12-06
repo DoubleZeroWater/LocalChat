@@ -14,8 +14,11 @@ FILEPATH = "E:/test/"
 
 
 class File_Transfer(QThread):
+	receiveStartSignal = pyqtSignal()
+	receiveEndSignal = pyqtSignal(str)
+
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
-        super().__init__()
+		super(File_Transfer, self).__init__()
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
@@ -63,7 +66,7 @@ class File_Transfer(QThread):
             head_len = struct.unpack('i', head_struct)[0]
             # 接收大小为head_len的报头内容（报头内容包括文件大小，文件名内容）
             data = self.clientSock.recv(head_len)
-
+			self.receiveStartSignal.emit()
             # 解析报头的内容, 报头为一个字典其中包含上传文件的大小和文件名，
             head_dir = json.loads(data.decode("utf-8"))  # 将JSON字符串解码为python对象
             filesize_b = head_dir["fileSize"]
@@ -91,6 +94,7 @@ class File_Transfer(QThread):
             # 向用户发送信号，文件已经上传完毕
             completed = "1"
             self.clientSock.send(bytes(completed, "utf-8"))
+		    self.receiveEndSignal.emit(fileName)
 
     # self.clientSock.close()
     # break
