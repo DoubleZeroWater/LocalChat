@@ -1,16 +1,21 @@
 from functools import partial
-from threading import Thread
+
+from PyQt5.QtWidgets import QWidget
 
 from Logic.Message2 import Message2
-from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow,FileWindow
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow
 
 
-class Controller:
+class Controller(QWidget):
     def __init__(self):
         self.Message2Instance = None
         self.message = None
         self.hello = None
         self.twoConnect = None
+        self.openPort = None
+        self.ipToConnect = None
+        self.portToConnect = None
+        self.nickName = None
 
     # Hello Window
     def show_hello(self):
@@ -36,6 +41,10 @@ class Controller:
         self.message.nickname = nickName
         self.Message2Instance = Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue)
         self.Message2Instance.start()
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+        self.nickName = nickName
 
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
@@ -50,9 +59,9 @@ class Controller:
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
         self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
 
-        # self.Message2Instance.audioDenySignal.connect(self.message.closeAudioRequest)
-        # self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
-        # self.message.goAudioSignal.connect(partial(self.show_audio, openPort, ipToConnect, portToConnect, self.message.nickname))
+
+
+
 
     def socket_ok(self):
         self.message.show()
@@ -64,9 +73,3 @@ class Controller:
         self.file = FileWindow(openPort, ipToConnect, portToConnect, nickName)
         self.file.nickname = nickName
         self.file.show()
-
-   # # Audio Window
-   #  def show_audio(self, openPort, ipToConnect, portToConnect, nickName):
-   #      self.audio = FileWindow(openPort, ipToConnect, portToConnect, nickName)
-   #      self.audio.nickname = nickName
-   #      self.audio.show()
