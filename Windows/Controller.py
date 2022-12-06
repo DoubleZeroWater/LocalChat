@@ -35,7 +35,10 @@ class Controller:
         self.message.nickname = nickName
         self.Message2Instance = Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue)
         self.Message2Instance.start()
-
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+        self.nickName = nickName
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
         self.message.FileButton.clicked.connect(self.message.startFileRequest)
@@ -46,19 +49,14 @@ class Controller:
 
         self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
-        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
-
-
-
-
+        self.message.goFileSignal.connect(self.show_file)
 
     def socket_ok(self):
         self.message.show()
         self.twoConnect.close()
 
-
-   # File Window
-    def show_file(self, openPort, ipToConnect, portToConnect, nickName):
-        self.file = FileWindow(openPort, ipToConnect, portToConnect, nickName)
-        self.file.nickname = nickName
+    # File Window
+    def show_file(self):
+        self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
+        self.file.nickname = self.nickName
         self.file.show()
