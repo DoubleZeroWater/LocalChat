@@ -128,8 +128,8 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
         self.nickname = nickname
-        ip=getIP()
-        self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5454)
+        ip = getIP()
+        self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5453)
         self.fileTransfer.server()
         self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
         print(openPort, ipToConnect, portToConnect, nickname)
@@ -143,9 +143,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         name1 = fileName[0]
         name = name1.replace('/', '\\')
         print(name)
-        self.fileTransfer = File_Transfer("", ipToConnect, 5454, ip, 5453)
         self.fileTransfer.client()
-        self.fileTransfer.server()
         self.textBrowser_2.append(">>>" + ip + "已成功发送文件：" + name + "至" + ipToConnect)
 
     def closeFileRequest(self):
