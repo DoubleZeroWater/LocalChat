@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import time
+import ctypes
 
 from PyQt5.QtCore import QThread
 
@@ -122,6 +123,22 @@ class File_Transfer(QThread):
         completed = self.clint.recv(buffSize).decode("utf-8")
         if completed == "1":
             print("发送成功")
+    def get_id(self):
+        # returns id of the respective thread
+        if hasattr(self, '_thread_id'):
+            return self._thread_id  # type: ignore
+        for id, thread in threading._active.items():  # type: ignore
+            if thread is self:
+                return id
+
+    def raise_exception(self):
+        thread_id = self.get_id()
+        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
+                                                         ctypes.py_object(SystemExit))
+        if res > 1:
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+            print('Exception raise failure')
 
 # if __name__ == '__main__':
 # 	sev = File_Server(5353,"192.168.31.190",5353)
