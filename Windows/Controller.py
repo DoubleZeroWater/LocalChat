@@ -1,16 +1,21 @@
 from functools import partial
-from threading import Thread
+
+from PyQt5.QtWidgets import QWidget
 
 from Logic.Message2 import Message2
-from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow,FileWindow
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow
 
 
-class Controller:
+class Controller(QWidget):
     def __init__(self):
         self.Message2Instance = None
         self.message = None
         self.hello = None
         self.twoConnect = None
+        self.openPort = None
+        self.ipToConnect = None
+        self.portToConnect = None
+        self.nickName = None
 
     # Hello Window
     def show_hello(self):
@@ -36,6 +41,10 @@ class Controller:
         self.message.nickname = nickName
         self.Message2Instance = Message2(int(openPort), ipToConnect, int(portToConnect), nickName, Queue)
         self.Message2Instance.start()
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+        self.nickName = nickName
 
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
@@ -44,22 +53,16 @@ class Controller:
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
-
+        self.message.goFileSignal.connect(self.show_file)
         self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
-        self.message.goFileSignal.connect(partial(self.show_file, openPort, ipToConnect, portToConnect, self.message.nickname))
-
-
-
-
 
     def socket_ok(self):
         self.message.show()
         self.twoConnect.close()
 
-
-   # File Window
-    def show_file(self, openPort, ipToConnect, portToConnect, nickName):
-        self.file = FileWindow(openPort, ipToConnect, portToConnect, nickName)
-        self.file.nickname = nickName
+    # File Window
+    def show_file(self):
+        self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
+        self.file.nickname = self.nickName
         self.file.show()

@@ -1,22 +1,19 @@
 # 主窗口
 import os
-import time
+from functools import partial
 from multiprocessing import Queue
-from threading import Thread
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from Logic.LocalIPGet import getIP
-from Logic.Message2 import Message2
+from MyUI.File import FileUI
 from MyUI.LocalChatTools import LocalChatToolsUI
 from MyUI.Message import MessageUI
 from MyUI.TwoConnect import TwoConnectUI
-from video.vchat import Video_Client, Video_Server
-from MyUI.File import FileUI
 from Transfer_File.file_transfer import File_Transfer
-from functools import partial
+from video.vchat import Video_Client, Video_Server
 
 ShareData = Queue()
 
@@ -84,14 +81,14 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
-            self.vServer = Video_Server(9632,4)
+            self.vServer = Video_Server(9632, 4)
             self.vServer.start()
             self.vClient = Video_Client(ip, 9632, 1, 4)
             self.vClient.start()
         else:
             self.sendMessageSignal.emit("VIDEO_DENY")
 
-    def startVideoRequest(self,ip):
+    def startVideoRequest(self, ip):
         self.vServer = Video_Server(9632, 4)
         self.vServer.start()
         self.vClient = Video_Client(ip, 9632, 1, 4)
@@ -119,25 +116,24 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.goFileUI()
 
     def closeFileRequest(self):
-        reply = QtWidgets.QMessageBox.information(self,"Information","对方已拒绝",QMessageBox.Ok)
+        reply = QtWidgets.QMessageBox.information(self, "Information", "对方已拒绝", QMessageBox.Ok)
         print(reply)
+
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
 
-    def __init__(self,openPort, ipToConnect, portToConnect, nickname):
+    def __init__(self, openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
         self.setupUi(self)
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
         self.nickname = nickname
-        ip=getIP()
+        ip = getIP()
         self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5454)
         self.fileTransfer.server()
         self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
         print(openPort, ipToConnect, portToConnect, nickname)
-
-
 
     def fileTransfer(self, ipToConnect):
         ip = getIP()
@@ -149,14 +145,14 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.fileTransfer = File_Transfer("", ipToConnect, 5454, ip, 5453)
         self.fileTransfer.client()
         self.fileTransfer.server()
-        self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+        self.textBrowser_2.append(">>>" + ip + "已成功发送文件：" + name + "至" + ipToConnect)
 
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
 
     def receiveFile(self, ipToConnect):
         ip = getIP()
-        self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+        self.textBrowser_2.append(">>>" + ip + "已成功发送文件：" + name + "至" + ipToConnect)
     #
     # def uploadFile(self,openPort, ipToConnect, portToConnect)
     #
@@ -165,7 +161,3 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     #     self.fileTransfer.server()
     #     self.sendFileSignal.emit("File_REQUEST")
     #     self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
-
-
-
-
