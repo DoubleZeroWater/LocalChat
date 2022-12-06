@@ -12,16 +12,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class AudioUI(object):
-    def setupUi(self, AudioChat):
+    def setupUi(self, AudioUI):
         AudioChat.setObjectName("AudioUI")
         AudioChat.resize(396, 321)
         self.centralwidget = QtWidgets.QWidget(AudioUI)
         self.centralwidget.setObjectName("centralwidget")
-        self.videoButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.videoButton_2.setGeometry(QtCore.QRect(40, 200, 91, 41))
-        self.videoButton_2.setObjectName("videoButton_2")
         self.videoButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.videoButton_3.setGeometry(QtCore.QRect(260, 200, 91, 41))
+        self.videoButton_3.setGeometry(QtCore.QRect(150, 210, 91, 41))
         self.videoButton_3.setObjectName("videoButton_3")
         self.toSend = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.toSend.setGeometry(QtCore.QRect(40, 30, 311, 151))
@@ -40,7 +37,6 @@ class AudioUI(object):
 
     def retranslateUi(self, AudioUI):
         _translate = QtCore.QCoreApplication.translate
-        AudioUI.setWindowTitle(_translate("AudioUI", "MainWindow"))
-        self.videoButton_2.setText(_translate("AudioUI", "点击发言"))
-        self.videoButton_3.setText(_translate("AudioUI", "结束发言"))
-        self.toSend.setPlainText(_translate("AudioUI", "当前发言人为："))
+        AudioUI.setWindowTitle(_translate("AudioChat", "MainWindow"))
+        self.videoButton_3.setText(_translate("AudioChat", "挂断"))
+        self.toSend.setPlainText(_translate("AudioChat", "您已成功进入语音通话"))

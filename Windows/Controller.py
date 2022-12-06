@@ -52,6 +52,10 @@ class Controller:
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
         self.message.goFileSignal.connect(self.show_file)
 
+        self.Message2Instance.audioDenySignal.connect(self.message.closeAudioRequest)
+        self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
+        self.message.goAudioSignal.connect(self.show_audio)
+
     def socket_ok(self):
         self.message.show()
         self.twoConnect.close()
@@ -64,3 +68,8 @@ class Controller:
         self.fileInstance=File_Transfer(self.ipToConnect, 5453, getIP(), 5453)
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
+
+    def show_audio(self):
+        self.audio = AudioWindow(self.openPort, self.ipToConnect, self.portToConnect)
+        self.audio.show()
+

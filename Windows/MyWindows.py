@@ -12,6 +12,7 @@ from MyUI.File import FileUI
 from MyUI.LocalChatTools import LocalChatToolsUI
 from MyUI.Message import MessageUI
 from MyUI.TwoConnect import TwoConnectUI
+from MyUI.AudioChat import AudioUI
 from Transfer_File.file_transfer import File_Transfer
 from video.vchat import Video_Client, Video_Server
 
@@ -115,9 +116,23 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("FILE_REQUEST")
         self.goFileUI()
 
-    def closeFileRequest(self):
-        reply = QtWidgets.QMessageBox.information(self, "Information", "对方已拒绝", QMessageBox.Ok)
-        print(reply)
+
+    def goAudioUI(self):
+        self.goAudioSignal.emit()
+
+    def audioRequestCheck(self):
+        reply = QtWidgets.QMessageBox.question(self, '语音通话', '是否同意进行语音通话？',
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.goAudioUI()
+        else:
+            self.sendMessageSignal.emit("AUDIO_DENY")
+
+    def startAudioRequest(self):
+        self.sendMessageSignal.emit("AUDIO_REQUEST")
+        self.goAudioUI()
+
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
 
@@ -145,17 +160,32 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
+        print(reply)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")
 
     def receiveEnd(self, fileName):
         self.textBrowser_2.append(">>>您已成功接受文件"+fileName)
-    #
-    # def uploadFile(self,openPort, ipToConnect, portToConnect)
-    #
-    #     self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, self.ip, 5453)
-    #     self.fileTransfer.client()
-    #     self.fileTransfer.server()
-    #     self.sendFileSignal.emit("File_REQUEST")
-    #     self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
+
+class AudioWindow(QtWidgets.QMainWindow, AudioUI):
+
+    def __init__(self,openPort, ipToConnect, portToConnect):
+        super(AudioWindow, self).__init__()
+        self.setupUi(self)
+        self.openPort = openPort
+        self.ipToConnect = ipToConnect
+        self.portToConnect = portToConnect
+        ip = getIP()
+        self.audioConnect = Audio("", ip, 9808,  self.ipToConnect, 9808)
+        self.audioConnect.start()
+        self.videoButton_3.clicked.connect(self.closeAudio)
+
+    def closeAudioRequest(self):
+        self.audioConnect.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
+        print(reply)
+
+    def closeAudio(self):
+        self.audioConnect.raise_exception()
