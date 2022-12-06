@@ -2,6 +2,7 @@
 import os
 from functools import partial
 from multiprocessing import Queue
+from threading import Thread
 
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
@@ -130,7 +131,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.nickname = nickname
         ip = getIP()
         self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5453)
-        self.fileTransfer.server()
+        Thread(target=self.fileTransfer.server).start()
         self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
         print(openPort, ipToConnect, portToConnect, nickname)
 
@@ -143,7 +144,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         name1 = fileName[0]
         name = name1.replace('/', '\\')
         print(name)
-        self.fileTransfer.client()
+        Thread(target=self.fileTransfer.client).start()
         self.textBrowser_2.append(">>>" + ip + "已成功发送文件：" + name + "至" + ipToConnect)
 
     def closeFileRequest(self):
