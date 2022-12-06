@@ -181,9 +181,3 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         # self.fileTransfer.server()
         # self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
         # print(openPort, ipToConnect, portToConnect, nickname)
-
-
-
-
-
-
