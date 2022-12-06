@@ -1,13 +1,11 @@
-from socket import*
-from threading import Thread
-import struct
 import json
 import os
-import sys
-import time
+import struct
+from socket import *
+from threading import Thread
 
 # 接收端的路径
-FILEPATH = "E:/test/"
+FILEPATH = "./data/"
 
 class File_Transfer(Thread):
 	def __init__(self, name, ip, openPort, ipToConnect, portToConnect):
@@ -120,5 +118,5 @@ if __name__ == '__main__':
 #	sev.start()
 #	clt = File_Client(r"E:\Pythonproject\LocalChat\video\achat.py","192.168.31.190",5353,"192.168.31.190",5353)
 #	clt.start()
-	trans = File_Transfer(r"E:\Pythonproject\LocalChat\video\achat.py","192.168.43.32",5453,"192.168.43.242",5453)
+trans = File_Transfer("F:\文档\Project\predict_pm2.5\main.ipynb", "172.20.10.3", 5453, "172.20.10.9", 5453)
 	trans.start()
