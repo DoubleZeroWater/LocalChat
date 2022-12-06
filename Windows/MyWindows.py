@@ -166,16 +166,17 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     #     self.textBrowser_2.append(">>>"+ip+"已成功发送文件："+name+"至"+ipToConnect)
 
 
-class AudioWindow(QtWidgets.QMainWindow, AudioUI):
-
-    def __init__(self,openPort, ipToConnect, portToConnect, nickname):
-        super(AudioWindow, self).__init__()
-        self.setupUi(self)
-        self.openPort = openPort
-        self.ipToConnect = ipToConnect
-        self.portToConnect = portToConnect
-        self.nickname = nickname
-        ip=getIP()
+# class AudioWindow(QtWidgets.QMainWindow, AudioUI):
+#
+#     def __init__(self,openPort, ipToConnect, portToConnect, nickname):
+#         super(AudioWindow, self).__init__()
+#         self.setupUi(self)
+#         self.openPort = openPort
+#         self.ipToConnect = ipToConnect
+#         self.portToConnect = portToConnect
+#         self.nickname = nickname
+#         ip=getIP()
+        #
         # self.fileTransfer = File_Transfer("", self.ipToConnect, 5453, ip, 5454)
         # self.fileTransfer.server()
         # self.videoButton_2.clicked.connect(partial(self.fileTransfer, ipToConnect))
