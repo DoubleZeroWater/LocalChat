@@ -2,7 +2,7 @@
 import os
 from functools import partial
 from multiprocessing import Queue
-
+from threading import Thread
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
@@ -146,6 +146,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
+    sendNameSignal = pyqtSignal(str)
 
     def __init__(self,openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
@@ -153,7 +154,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
-        self.nickname = nickname
+        self.filename = ""
         ip = getIP()
         self.fileTransfer = File_Transfer(self.ipToConnect, 5453, ip, 5453)
         self.fileTransfer.start()
@@ -164,9 +165,9 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
         # 输出文件，查看文件路径
         name1 = fileName[0]
-        name = name1.replace('/', '\\')
-        self.textBrowser_2.append(">>>您已成功发送文件：" + name)
-        Thread(target=File_Transfer.send,args=name).start()
+        self.filename = name1.replace('/', '\\')
+        self.textBrowser_2.append(">>>您已选取文件：" + self.filename + "请点击发送键")
+        self.sendNameSignal.emit(self.filename)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")

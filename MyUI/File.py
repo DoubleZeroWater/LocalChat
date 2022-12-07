@@ -18,11 +18,14 @@ class FileUI(object):
         self.centralwidget = QtWidgets.QWidget(FileUI)
         self.centralwidget.setObjectName("centralwidget")
         self.videoButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.videoButton_2.setGeometry(QtCore.QRect(170, 280, 121, 41))
+        self.videoButton_2.setGeometry(QtCore.QRect(80, 280, 121, 41))
         self.videoButton_2.setObjectName("videoButton_2")
         self.textBrowser_2 = QtWidgets.QTextBrowser(self.centralwidget)
         self.textBrowser_2.setGeometry(QtCore.QRect(40, 10, 381, 241))
         self.textBrowser_2.setObjectName("textBrowser_2")
+        self.videoButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.videoButton_3.setGeometry(QtCore.QRect(280, 280, 121, 41))
+        self.videoButton_3.setObjectName("videoButton_3")
         FileUI.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(FileUI)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 497, 22))
@@ -37,5 +40,6 @@ class FileUI(object):
 
     def retranslateUi(self, FileUI):
         _translate = QtCore.QCoreApplication.translate
-        FileUI.setWindowTitle(_translate("File", "MainWindow"))
-        self.videoButton_2.setText(_translate("File", "选择文件并发送"))
+        FileUI.setWindowTitle(_translate("FileUI", "MainWindow"))
+        self.videoButton_2.setText(_translate("FileUI", "选择文件"))
+        self.videoButton_3.setText(_translate("FileUI", "发送文件"))

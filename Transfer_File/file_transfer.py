@@ -24,6 +24,7 @@ class File_Transfer(QThread):
         self.portToConnect = portToConnect
         # self.name = name
         self.ip = ip
+        self.clint = None
 
     def run(self):
         Thread(target=self.server).start()
@@ -99,10 +100,10 @@ class File_Transfer(QThread):
     # self.clientSock.close()
     # break
 
-    def send(self, name: str):
+    def send(self, filename):
         buffSize = 1024
         # 上传文件
-        fileInfor = name
+        fileInfor = filename
         num = fileInfor.rfind('\\')
         fileName = fileInfor[num + 1:]
         # 得到文件的大小
@@ -146,9 +147,6 @@ class File_Transfer(QThread):
             print('Exception raise failure')
 
 # if __name__ == '__main__':
-# 	sev = File_Server(5353,"192.168.31.190",5353)
-# 	sev.start()
-# 	clt = File_Client(r"E:\Pythonproject\LocalChat\video\achat.py","192.168.31.190",5353,"192.168.31.190",5353)
-# 	clt.start()
-# 	trans = File_Transfer(r"E:\Pythonproject\LocalChat\video\achat.py","172.20.10.9",5453,"172.20.10.3",5453)
-# 	trans.start()
+
+def transfer(inClass,name):
+    inClass.send(name)
