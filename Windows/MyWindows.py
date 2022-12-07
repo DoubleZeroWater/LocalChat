@@ -16,6 +16,9 @@ from MyUI.AudioChat import AudioUI
 from Transfer_File.file_transfer import File_Transfer
 from video.vchat import Video_Client, Video_Server
 
+import tkinter as tk
+from tkinter import filedialog
+
 ShareData = Queue()
 
 
@@ -162,7 +165,11 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
 
     def fileSend(self):
-        fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
+        root = tk.Tk()
+        root.overrideredirect(True)
+        root.attributes("-alpha", 0)
+        fileName = filedialog.askopenfilename(root, title='选择文件', filetypes=[('EXE', '*.exe'), ('All Files', '*')])
+        root.destroy()
         # 输出文件，查看文件路径
         name1 = fileName[0]
         self.filename = name1.replace('/', '\\')
