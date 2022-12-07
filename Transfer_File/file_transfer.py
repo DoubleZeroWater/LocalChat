@@ -127,6 +127,7 @@ class File_Transfer(QThread):
         completed = self.clint.recv(buffSize).decode("utf-8")
         if completed == "1":
             print("发送成功")
+
     def get_id(self):
         # returns id of the respective thread
         if hasattr(self, '_thread_id'):

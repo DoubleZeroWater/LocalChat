@@ -59,6 +59,7 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
 class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     sendMessageSignal = pyqtSignal(str)
     goFileSignal = pyqtSignal()
+    goAudioSignal = pyqtSignal()
     nickname = None
 
     def __init__(self):
