@@ -133,6 +133,16 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("AUDIO_REQUEST")
         self.goAudioUI()
 
+    def closeAudioRequest(self):
+        self.audioConnect.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
+        print(reply)
+
+    def closeFileRequest(self):
+        self.fileTransfer.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
+        print(reply)
+
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
 
@@ -149,7 +159,6 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.videoButton_2.clicked.connect(self.fileSend)
 
 
-
     def fileSend(self):
         fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
         # 输出文件，查看文件路径
@@ -157,11 +166,6 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         name = name1.replace('/', '\\')
         self.textBrowser_2.append(">>>您已成功发送文件：" + name)
         Thread(target=File_Transfer.send,args=name).start()
-
-    def closeFileRequest(self):
-        self.fileTransfer.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
-        print(reply)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")
@@ -182,10 +186,7 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         self.audioConnect.start()
         self.videoButton_3.clicked.connect(self.closeAudio)
 
-    def closeAudioRequest(self):
-        self.audioConnect.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
-        print(reply)
+
 
     def closeAudio(self):
         self.audioConnect.raise_exception()
