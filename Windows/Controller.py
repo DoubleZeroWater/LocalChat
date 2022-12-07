@@ -1,8 +1,9 @@
 from functools import partial
 
 from Logic.Message2 import Message2
-from Transfer_File import File_Transfer
-from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow
+from Logic.LocalIPGet import getIP
+from Transfer_File.file_transfer import File_Transfer
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow
 
 
 class Controller:
