@@ -6,5 +6,5 @@ __pycache__
 *.exe
 build
 dist
-/data/
+/data/*
 /Transfer_File/data/
