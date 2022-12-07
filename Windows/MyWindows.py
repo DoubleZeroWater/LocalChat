@@ -156,7 +156,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.portToConnect = portToConnect
         self.filename = ""
         ip = getIP()
-        self.fileTransfer = File_Transfer(self.ipToConnect, 5453, ip, 5453)
+        self.fileTransfer = File_Transfer(ip, 5453, self.ipToConnect, 5453)
         self.fileTransfer.start()
         self.videoButton_2.clicked.connect(self.fileSend)
 

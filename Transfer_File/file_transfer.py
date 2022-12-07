@@ -10,7 +10,7 @@ import ctypes
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # 接收端的路径
-FILEPATH = "E:/test/"
+FILEPATH = "./data/"
 
 
 class File_Transfer(QThread):
@@ -37,6 +37,8 @@ class File_Transfer(QThread):
         sever.bind(ip_port)
         sever.listen()
         self.clientSock, addr = sever.accept()
+        Thread(target=self.receive).start()
+
 
     # while True:
     # 	# 连接客户端
@@ -55,7 +57,7 @@ class File_Transfer(QThread):
     # self.send(clint)
     # clint.close()
 
-    def receive(self, sever: socket):
+    def receive(self):
         # print("waiting for connection......\n")
         # clientSock, addr = sever.accept()
         # 开始通信
