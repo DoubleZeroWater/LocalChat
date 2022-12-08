@@ -179,7 +179,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         root = tk.Tk()
         root.overrideredirect(True)
         root.attributes("-alpha", 0)
-        fileName = filedialog.askopenfilename(root, title='选择文件', filetypes=[('EXE', '*.exe'), ('All Files', '*')])
+        fileName = filedialog.askopenfilename(title='选择文件', filetypes=[('EXE', '*.exe'), ('All Files', '*')])
         root.destroy()
         # 输出文件，查看文件路径
         name1 = fileName[0]

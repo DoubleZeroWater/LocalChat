@@ -113,7 +113,7 @@ class Controller:
         self.fileInstance = self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
-        Thread(target=self.client, args=(self.filename,)).start()
+        Thread(target=transfer, args=(self.fileInstance, self.filename,)).start()
         # self.file.sendNameSignal.connect(self.send_file)
 
     # def send_file(self, filename):
