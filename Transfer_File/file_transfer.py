@@ -154,4 +154,4 @@ if __name__ == '__main__':
 
 
 def transfer(inClass,name):
-    inClass.send(name)
+    Thread(target=inClass.send,args=(name,)).start()
