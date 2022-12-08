@@ -185,7 +185,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         name1 = fileName[0]
         self.filename = name1.replace('/', '\\')
         self.textBrowser_2.append(">>>您已选取文件：" + self.filename + "请点击发送键")
-        self.sendNameSignal.emit(self.filename)
+        # self.sendNameSignal.emit(self.filename)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")

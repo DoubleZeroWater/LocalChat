@@ -1,11 +1,9 @@
-from socket import *
-from threading import Thread
-import struct
+import ctypes
 import json
 import os
-import sys
-import time
-import ctypes
+import struct
+from socket import *
+from threading import Thread
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -87,6 +85,7 @@ class File_Transfer(QThread):
                     recv_mesg = self.clientSock.recv(buffSize)
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
+                    print(f"{recv_len / filesize_b}")
                 else:
                     # 需要传输的文件数据小于最大传输数据大小
                     recv_mesg = self.clientSock.recv(filesize_b - recv_len)
@@ -148,7 +147,11 @@ class File_Transfer(QThread):
             ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
             print('Exception raise failure')
 
-# if __name__ == '__main__':
+
+if __name__ == '__main__':
+    file_Transfer = File_Transfer("172.20.10.3", 5354, "172.20.10.9", 5354)
+    file_Transfer.run()
+
 
 def transfer(inClass,name):
     inClass.send(name)

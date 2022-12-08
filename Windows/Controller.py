@@ -1,9 +1,9 @@
 from functools import partial
+from threading import Thread
 
 from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
-from Transfer_File.file_transfer import transfer
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
 
@@ -108,17 +108,18 @@ class Controller:
     # File Window
     def show_file(self):
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
-        self.file.nickname = self.nickName
+        self.file.filename = self.filename
         self.file.show()
         self.fileInstance = self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
-        self.file.sendNameSignal.connect(self.send_file)
+        Thread(target=self.client, args=(self.filename,)).start()
+        # self.file.sendNameSignal.connect(self.send_file)
 
-    def send_file(self, filename):
-        fileInstance = self.fileInstance
-        fileName = filename
-        self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
+    # def send_file(self, filename):
+    #     fileInstance = self.fileInstance
+    #     fileName = filename
+    #     self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
 
     def show_audio(self):
         self.audio = AudioWindow(self.openPort, self.ipToConnect, self.portToConnect)
