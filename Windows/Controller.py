@@ -1,4 +1,5 @@
 from functools import partial
+from threading import Thread
 
 from Logic.Message2 import Message2
 from Logic.LocalIPGet import getIP
@@ -68,13 +69,13 @@ class Controller:
         self.fileInstance= self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
-        self.file.sendNameSignal.connect(self.send_file)
+        # self.file.sendNameSignal.connect(self.send_file)
 
-
-    def send_file(self, filename):
-        fileInstance = self.fileInstance
-        fileName= filename
-        self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
+    #
+    # def send_file(self, filename):
+    #     fileInstance = self.fileInstance
+    #     fileName= filename
+    #     self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
 
 
     def show_audio(self):

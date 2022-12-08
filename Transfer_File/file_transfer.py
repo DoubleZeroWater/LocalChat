@@ -110,6 +110,7 @@ class File_Transfer(QThread):
         fileName = fileInfor[num + 1:]
         # 得到文件的大小
         filesize_bytes = os.path.getsize(fileInfor)
+        print(filesize_bytes)
         # 创建复制文件
         fileName = "new" + fileName
         # 创建字典用于报头
@@ -148,7 +149,12 @@ class File_Transfer(QThread):
             ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
             print('Exception raise failure')
 
-# if __name__ == '__main__':
+
+if __name__ == '__main__':
+    trans = File_Transfer("172.20.10.9", 5354, "172.20.10.3", 5354)
+    trans.run()
+    time.sleep(10)
+    trans.send("E:\\PycharmPythonProject\\U-2-Net-master.zip")
 
 def transfer(inClass,name):
     inClass.send(name)

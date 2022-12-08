@@ -15,6 +15,8 @@ from MyUI.TwoConnect import TwoConnectUI
 from MyUI.AudioChat import AudioUI
 from Transfer_File.file_transfer import File_Transfer
 from video.vchat import Video_Client, Video_Server
+import tkinter as tk
+from tkinter import filedialog
 
 ShareData = Queue()
 
@@ -146,7 +148,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
-    sendNameSignal = pyqtSignal(str)
+    # sendNameSignal = pyqtSignal(str)
 
     def __init__(self,openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
@@ -162,12 +164,16 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
 
     def fileSend(self):
-        fileName = QFileDialog.getOpenFileName(self, '选择文件', os.getcwd(), "All Files(*);;Text Files(*.txt)")
+        root = tk.Tk()
+        root.overrideredirect(True)
+        root.attributes("-alpha", 0)
+        fileName = filedialog.askopenfilename(title='选择文件', filetypes=[('EXE', '*.exe'), ('All Files', '*')])
+        root.destroy()
         # 输出文件，查看文件路径
-        name1 = fileName[0]
-        self.filename = name1.replace('/', '\\')
-        self.textBrowser_2.append(">>>您已选取文件：" + self.filename + "请点击发送键")
-        self.sendNameSignal.emit(self.filename)
+        self.filename = fileName.replace('/', '\\')
+        self.textBrowser_2.append(">>>您已选取文件：" + self.filename)
+        Thread(target=self.send, args=(self.filename,)).start()
+        # self.sendNameSignal.emit(self.filename)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")
