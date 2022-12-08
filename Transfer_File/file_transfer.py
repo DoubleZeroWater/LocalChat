@@ -1,11 +1,9 @@
-from socket import *
-from threading import Thread
-import struct
+import ctypes
 import json
 import os
-import sys
-import time
-import ctypes
+import struct
+from socket import *
+from threading import Thread
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -87,6 +85,7 @@ class File_Transfer(QThread):
                     recv_mesg = self.clientSock.recv(buffSize)
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
+                    print(f"{recv_len / filesize_b}")
                 else:
                     # 需要传输的文件数据小于最大传输数据大小
                     recv_mesg = self.clientSock.recv(filesize_b - recv_len)
@@ -110,7 +109,6 @@ class File_Transfer(QThread):
         fileName = fileInfor[num + 1:]
         # 得到文件的大小
         filesize_bytes = os.path.getsize(fileInfor)
-        print(filesize_bytes)
         # 创建复制文件
         fileName = "new" + fileName
         # 创建字典用于报头
@@ -151,10 +149,9 @@ class File_Transfer(QThread):
 
 
 if __name__ == '__main__':
-    trans = File_Transfer("172.20.10.9", 5354, "172.20.10.3", 5354)
-    trans.run()
-    time.sleep(10)
-    trans.send("E:\\PycharmPythonProject\\U-2-Net-master.zip")
+    file_Transfer = File_Transfer("172.20.10.3", 5354, "172.20.10.9", 5354)
+    file_Transfer.run()
+
 
 def transfer(inClass,name):
     inClass.send(name)

@@ -1,19 +1,22 @@
 # 主窗口
-import os
-from functools import partial
+import tkinter as tk
 from multiprocessing import Queue
-from threading import Thread
+from tkinter import filedialog
+
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QFileDialog
 
 from Logic.LocalIPGet import getIP
+from MyUI.AudioChat import AudioUI
 from MyUI.File import FileUI
 from MyUI.LocalChatTools import LocalChatToolsUI
 from MyUI.Message import MessageUI
+from MyUI.MultiClient import MultiClientUI
+from MyUI.MultiHost import MultiHostUI
+from MyUI.MultiMessage import MultiMessageUI
 from MyUI.TwoConnect import TwoConnectUI
-from MyUI.AudioChat import AudioUI
 from Transfer_File.file_transfer import File_Transfer
+from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
 import tkinter as tk
 from tkinter import filedialog
@@ -23,14 +26,27 @@ ShareData = Queue()
 
 class HelloWindow(QtWidgets.QMainWindow, LocalChatToolsUI):
     goTwoConnectSignal = QtCore.pyqtSignal()  # 跳转信号
+    goMultiConnectSignalHost = QtCore.pyqtSignal()
+    goMultiConnectSignalClient = QtCore.pyqtSignal()
 
     def __init__(self):
         super(HelloWindow, self).__init__()
         self.setupUi(self)
         self.Button2Mode.clicked.connect(self.goTwoConnectUI)
+        self.ButtonMutiMode.clicked.connect(self.goMultiConnectUI)
 
     def goTwoConnectUI(self):
         self.goTwoConnectSignal.emit()
+
+    def goMultiConnectUI(self):
+
+        reply = QtWidgets.QMessageBox.question(self, '多人聊天', '你是否想成为房主？',
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.goMultiConnectSignalHost.emit()
+        else:
+            self.goMultiConnectSignalClient.emit()
 
 
 # 登录窗口
@@ -85,14 +101,14 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
-            self.vServer = Video_Server(9632,4)
+            self.vServer = Video_Server(9632, 4)
             self.vServer.start()
             self.vClient = Video_Client(ip, 9632, 1, 4)
             self.vClient.start()
         else:
             self.sendMessageSignal.emit("VIDEO_DENY")
 
-    def startVideoRequest(self,ip):
+    def startVideoRequest(self, ip):
         self.vServer = Video_Server(9632, 4)
         self.vServer.start()
         self.vClient = Video_Client(ip, 9632, 1, 4)
@@ -118,7 +134,6 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def startFileRequest(self):
         self.sendMessageSignal.emit("FILE_REQUEST")
         self.goFileUI()
-
 
     def goAudioUI(self):
         self.goAudioSignal.emit()
@@ -150,7 +165,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     # sendNameSignal = pyqtSignal(str)
 
-    def __init__(self,openPort, ipToConnect, portToConnect, nickname):
+    def __init__(self, openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
         self.setupUi(self)
         self.openPort = openPort
@@ -161,7 +176,6 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.fileTransfer = File_Transfer(ip, 5453, self.ipToConnect, 5453)
         self.fileTransfer.start()
         self.videoButton_2.clicked.connect(self.fileSend)
-
 
     def fileSend(self):
         root = tk.Tk()
@@ -179,22 +193,80 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.textBrowser_2.append(">>>正在接受文件")
 
     def receiveEnd(self, fileName):
-        self.textBrowser_2.append(">>>您已成功接受文件"+fileName)
+        self.textBrowser_2.append(">>>您已成功接受文件" + fileName)
+
 
 class AudioWindow(QtWidgets.QMainWindow, AudioUI):
 
-    def __init__(self,openPort, ipToConnect, portToConnect):
+    def __init__(self, openPort, ipToConnect, portToConnect):
         super(AudioWindow, self).__init__()
         self.setupUi(self)
         self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
         ip = getIP()
-        self.audioConnect = Audio("", ip, 9808,  self.ipToConnect, 9808)
+        self.audioConnect = Audio("", ip, 9808, self.ipToConnect, 9808)
         self.audioConnect.start()
         self.videoButton_3.clicked.connect(self.closeAudio)
 
-
-
     def closeAudio(self):
         self.audioConnect.raise_exception()
+
+
+class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
+    goBackHelloSignal = QtCore.pyqtSignal()
+    goMessage0Signal = QtCore.pyqtSignal(int, str)  #
+
+    def __init__(self):
+        super(MultiHostWindow, self).__init__()
+        self.setupUi(self)
+        self.lineEdit.setText(getIP())
+        self.pushButton.clicked.connect(self.goMessage0)
+        self.pushButton_2.clicked.connect(self.goBackHello)
+
+    def goBackHello(self):
+        self.goBackHelloSignal.emit()
+
+    def goMessage0(self):
+        port = self.lineEdit_2.text()
+        nickname = self.lineEdit_3.text()
+        self.goMessage0Signal.emit(int(port), nickname)
+
+    def closeMultiHost(self):
+        self.close()
+
+
+class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
+    sendButtonSignal = QtCore.pyqtSignal(str)
+
+    def __init__(self):
+        super(MultiMessageWindow, self).__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.pushButtonSlot)
+
+    def pushButtonSlot(self):
+        self.sendButtonSignal.emit(self.lineEdit.text())
+        self.lineEdit.setText("")
+
+    def addMoreMessage(self, message):
+        self.textBrowser.append(message)
+
+
+class MultiClientWindow(QtWidgets.QMainWindow, MultiClientUI):
+    goBackHelloSignal = QtCore.pyqtSignal()
+    goMultiMessageSignal = QtCore.pyqtSignal(str, int, str)
+
+    def __init__(self):
+        super(MultiClientWindow, self).__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.goMultiMessage)
+        self.pushButton_2.clicked.connect(self.goBackHello)
+
+    def goBackHello(self):
+        self.goBackHelloSignal.emit()
+
+    def goMultiMessage(self):
+        ip = self.lineEdit.text()
+        port = self.lineEdit_2.text()
+        nickname = self.lineEdit_3.text()
+        self.goMultiMessageSignal.emit(ip, int(port), nickname)
