@@ -148,9 +148,9 @@ class File_Transfer(QThread):
             print('Exception raise failure')
 
 
-if __name__ == '__main__':
-    file_Transfer = File_Transfer("172.20.10.3", 5354, "172.20.10.9", 5354)
-    file_Transfer.run()
+# if __name__ == '__main__':
+#     file_Transfer = File_Transfer("172.20.10.3", 5354, "172.20.10.9", 5354)
+#     file_Transfer.run()
 
 
 def transfer(inClass,name):

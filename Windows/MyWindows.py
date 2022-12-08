@@ -1,6 +1,7 @@
 # 主窗口
 import tkinter as tk
 from multiprocessing import Queue
+from threading import Thread
 from tkinter import filedialog
 
 from PyQt5 import QtWidgets, QtCore
@@ -163,7 +164,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
-    # sendNameSignal = pyqtSignal(str)
+    sendNameSignal = pyqtSignal(str)
 
     def __init__(self, openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
@@ -186,8 +187,8 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         # 输出文件，查看文件路径
         self.filename = fileName.replace('/', '\\')
         self.textBrowser_2.append(">>>您已选取文件：" + self.filename)
-        Thread(target=self.send, args=(self.filename,)).start()
-        # self.sendNameSignal.emit(self.filename)
+        # Thread(target=self.send, args=(self.filename,)).start()
+        self.sendNameSignal.emit(self.filename)
 
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")

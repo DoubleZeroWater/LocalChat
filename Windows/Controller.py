@@ -118,7 +118,7 @@ class Controller:
     def send_file(self, filename):
         fileInstance = self.fileInstance
         fileName = filename
-        self.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
+        self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
 
     def show_audio(self):
         self.audio = AudioWindow(self.openPort, self.ipToConnect, self.portToConnect)
