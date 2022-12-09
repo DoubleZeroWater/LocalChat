@@ -4,8 +4,9 @@ from multiprocessing import Queue
 from threading import Thread
 from tkinter import filedialog
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtGui import QCloseEvent
 
 from Logic.LocalIPGet import getIP
 from MyUI.AudioChat import AudioUI
@@ -152,18 +153,14 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("AUDIO_REQUEST")
         self.goAudioUI()
 
-    def closeAudioRequest(self):
-        self.audioConnect.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
-        print(reply)
 
-    def closeFileRequest(self):
-        self.fileTransfer.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
-        print(reply)
+
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendNameSignal = pyqtSignal(str)
+    closeFileSignal = pyqtSignal()
+    closeFileSignal2 = pyqtSignal()
+
 
     def __init__(self, openPort, ipToConnect, portToConnect, nickname):
         super(FileWindow, self).__init__()
@@ -195,8 +192,23 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     def receiveEnd(self, fileName):
         self.textBrowser_2.append(">>>您已成功接受文件" + fileName)
 
+    def closeFileRequest(self):
+        self.fileTransfer.raise_exception()
+        self.closeFileSignal.emit()
+        reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
+        print(reply)
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        super().closeEvent(a0)
+        self.fileTransfer.raise_exception()
+        self.closeFileSignal2.emit()
+
+
+
 
 class AudioWindow(QtWidgets.QMainWindow, AudioUI):
+    closeAudioSignal = pyqtSignal()
+    closeAudioSignal2 = pyqtSignal()
 
     def __init__(self, openPort, ipToConnect, portToConnect):
         super(AudioWindow, self).__init__()
@@ -211,7 +223,18 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
 
     def closeAudio(self):
         self.audioConnect.raise_exception()
+        self.closeAudioSignal.emit()
 
+    def closeAudioRequest(self):
+        self.audioConnect.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
+        self.closeAudioSignal2.emit()
+        print(reply)
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        super().closeEvent(a0)
+        self.audioConnect.raise_exception()
+        self.closeAudioSignal2.emit()
 
 
 class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):

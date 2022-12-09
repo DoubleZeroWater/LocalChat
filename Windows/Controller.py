@@ -4,6 +4,8 @@ from threading import Thread
 from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
+from MyUI.AudioChat import AudioUI
+from MyUI.File import FileUI
 from Transfer_File.file_transfer import File_Transfer,transfer
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
@@ -94,11 +96,11 @@ class Controller:
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
-        self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
+
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
         self.message.goFileSignal.connect(self.show_file)
 
-        self.Message2Instance.audioDenySignal.connect(self.message.closeAudioRequest)
+
         self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
         self.message.goAudioSignal.connect(self.show_audio)
 
@@ -115,14 +117,28 @@ class Controller:
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
         self.file.sendNameSignal.connect(self.send_file)
 
+        self.Message2Instance.fileDenySignal.connect(self.file.closeFileRequest)
+
+        self.file.closeFileSignal.connect(self.close_file)
+        self.file.closeFileSignal2.connect(self.close_file)
+
     def send_file(self, filename):
         fileInstance = self.fileInstance
         fileName = filename
         self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
 
+    def close_file(self):
+        self.file.close()
+
     def show_audio(self):
         self.audio = AudioWindow(self.openPort, self.ipToConnect, self.portToConnect)
         self.audio.show()
+        self.Message2Instance.audioDenySignal.connect(self.audio.closeAudioRequest)
+        self.audio.closeAudioSignal.connect(self.close_audio)
+        self.audio.closeAudioSignal2.connect(self.close_audio)
+
+    def close_audio(self):
+        self.audio.close()
 
     def showMultiMessage(self):
         self.multiMessage = MultiMessageWindow()
