@@ -35,5 +35,5 @@ class Message1(QThread):  # for the host
         Thread(target=self.repeatReceive).start()
 
     def sendMyMessage(self, message):
-        self.send(f"{self.nickname}@{strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>{message}")
-        self.haveMessageSignal.emit(f"{self.nickname}@{strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>{message}")
+        self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+        self.haveMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>{message}")

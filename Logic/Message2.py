@@ -1,7 +1,7 @@
-import sys
+import time
 from socket import socket, AF_INET, SOCK_STREAM
 from threading import Thread
-from time import strftime, gmtime, sleep
+from time import strftime, sleep
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
@@ -51,14 +51,12 @@ class Message2(QThread):
         self.conn, self.addr = self.serverInstant.accept()
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
-            print(recv_data)
             if recv_data == "##":
                 # 自身连接
                 self.clientInstant.close()
                 self.serverInstant.close()
-                self.connect_end = True
-                print('\n---> 与 {} 断开的连接已中断... '.format(self.addr))
-                sys.exit(0)
+                self.recvMessageSignal.emit(
+                    f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方已经断开了连接")
                 break
             elif recv_data == "VIDEO_REQUEST":
                 self.videoRequestSignal.emit(self.ipToConnect)
@@ -79,11 +77,21 @@ class Message2(QThread):
     def sendMessages(self, message: str):
         try:
             self.clientInstant.send(bytes(message, encoding='utf-8'))
-            if message == '##':
-                self.clientInstant.close()
-                self.serverInstant.close()
-                self.connect_end = True
-                sys.exit(0)
         except:
-            print('---> 服务已断开...')
+            self.recvMessageSignal.emit(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方无响应")
             self.serverInstant.close()
+            self.clientInstant.close()
+
+    def close(self):
+        if self.serverInstant:
+            self.serverInstant.close()
+        if self.clientInstant:
+            try:
+                self.clientInstant.send(bytes("##", encoding='utf-8'))
+            except OSError:
+                pass
+            self.clientInstant.close()
+
+    def closeEvent(self, event):
+        super().closeEvent(event)
+        self.close()

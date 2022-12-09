@@ -1,10 +1,11 @@
 # 主窗口
+import time
 import tkinter as tk
 from multiprocessing import Queue
-from threading import Thread
+from time import strftime
 from tkinter import filedialog
 
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QCloseEvent
 
@@ -20,8 +21,6 @@ from MyUI.TwoConnect import TwoConnectUI
 from Transfer_File.file_transfer import File_Transfer
 from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
-import tkinter as tk
-from tkinter import filedialog
 
 ShareData = Queue()
 
@@ -92,8 +91,8 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def showMessage(self):
         message = self.toSend.toPlainText()
         self.toSend.clear()
-        self.sendMessageSignal.emit(f"{self.nickname} >>:  {message}")
-        self.textBrowser.append(f"{self.nickname} >>:  {message}")
+        self.sendMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+        self.textBrowser.append(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
 
     def receiveMessage(self, message):
         self.textBrowser.append(message)

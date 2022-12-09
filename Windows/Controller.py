@@ -1,12 +1,9 @@
 from functools import partial
-from threading import Thread
 
 from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
-from MyUI.AudioChat import AudioUI
-from MyUI.File import FileUI
-from Transfer_File.file_transfer import File_Transfer,transfer
+from Transfer_File.file_transfer import transfer
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
 
@@ -53,6 +50,8 @@ class Controller:
     def back_hello(self):
         self.hello.show()
         self.twoConnect.close()
+        if self.Message2Instance is not None:
+            self.Message2Instance.close()
 
     def back_hello_from_multi_host(self):
         self.hello.show()
@@ -78,6 +77,12 @@ class Controller:
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
 
+    def backTwoConnectFromMessage(self):
+        self.twoConnect.show()
+        self.message.close()
+        self.Message2Instance.close()
+        self.twoConnect.label_4.hide()
+
     # Message Window
     def show_message(self, openPort, ipToConnect, portToConnect, nickName, Queue):
         self.message = MessageWindow()
@@ -92,6 +97,7 @@ class Controller:
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
         self.message.FileButton.clicked.connect(self.message.startFileRequest)
         self.message.audioButton.clicked.connect(self.message.startAudioRequest)
+        self.message.backButton.clicked.connect(self.backTwoConnectFromMessage)
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
