@@ -156,4 +156,4 @@ if __name__ == '__main__':
      file_Transfer = File_Transfer1("192.168.198.152", 5354, "192.168.198.190", 5354)
      file_Transfer.run()
      time.sleep(5)
-     file_Transfer.send(r"E:\biancheng\0")
+     file_Transfer.send(r"E:\PycharmPythonProject\U-2-Net-master1.zip")
