@@ -152,4 +152,3 @@ class Controller:
 
     def showMultiMessage(self):
         self.multiMessage = MultiMessageWindow()
-        self.multiMessage.show()

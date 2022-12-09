@@ -211,6 +211,11 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.closeFileSignal.emit()
         self.closeFileSignal2.emit()
 
+    def closeFileMsg(self):
+        self.fileTransfer.raise_exception()
+        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已结束文件传输')
+        self.closeFileSignal.emit()
+
 
 
 
@@ -236,7 +241,8 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
 
     def closeAudioMsg(self):
         self.audioConnect.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断，请点击关闭按钮退出')
+        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断')
+        self.closeAudioSignal.emit()
 
     def closeAudioRequest(self):
         self.audioConnect.raise_exception()
