@@ -13,8 +13,8 @@ from PyQt5 import QtCore, QtWidgets
 
 class AudioUI(object):
     def setupUi(self, AudioUI):
-        AudioChat.setObjectName("AudioUI")
-        AudioChat.resize(396, 321)
+        AudioUI.setObjectName("AudioUI")
+        AudioUI.resize(396, 321)
         self.centralwidget = QtWidgets.QWidget(AudioUI)
         self.centralwidget.setObjectName("centralwidget")
         self.videoButton_3 = QtWidgets.QPushButton(self.centralwidget)
