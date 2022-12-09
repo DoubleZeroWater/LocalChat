@@ -162,7 +162,6 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
         print(reply)
 
-
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendNameSignal = pyqtSignal(str)
 

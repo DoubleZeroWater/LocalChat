@@ -94,7 +94,6 @@ class Controller:
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
-
         self.Message2Instance.fileDenySignal.connect(self.message.closeFileRequest)
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
         self.message.goFileSignal.connect(self.show_file)
