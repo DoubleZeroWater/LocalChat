@@ -15,6 +15,9 @@ class Message2(QThread):
     fileDenySignal = pyqtSignal()
     audioRequestSignal = pyqtSignal(str)
     audioDenySignal = pyqtSignal()
+    audioCloseMsgSignal = pyqtSignal()
+    fileCloseMsgSignal = pyqtSignal()
+
 
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
         super(Message2, self).__init__()
@@ -26,15 +29,21 @@ class Message2(QThread):
         self.portToConnect = portToConnect
         self.nickName = nickName
         self.data = Queue
+        self.closeSign = False
 
     def run(self):
-        Thread(target=self.server).start()
-        Thread(target=self.client).start()
+        try:
+            Thread(target=self.server).start()
+            Thread(target=self.client).start()
+        except Exception as e:
+            print(e)
 
     def client(self):
         self.clientInstant = socket(AF_INET, SOCK_STREAM)
         while 1:
             try:
+                if self.closeSign:
+                    break
                 self.clientInstant.connect((self.ipToConnect, self.portToConnect))
             except ConnectionRefusedError:
                 sleep(2)
@@ -70,6 +79,10 @@ class Message2(QThread):
                 self.audioRequestSignal.emit(self.ipToConnect)
             elif recv_data == "AUDIO_DENY":
                 self.audioDenySignal.emit()
+            elif recv_data == "AUDIO_CLOSE":
+                self.audioCloseMsgSignal.emit(self.ipToConnect)
+            elif recv_data == "FILE_CLOSE":
+                self.fileCloseMsgSignal.emit()
             elif recv_data:
                 self.recvMessageSignal.emit(recv_data)
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")
@@ -78,11 +91,13 @@ class Message2(QThread):
         try:
             self.clientInstant.send(bytes(message, encoding='utf-8'))
         except:
-            self.recvMessageSignal.emit(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方无响应")
+            self.recvMessageSignal.emit(
+                f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方无响应，请点击返回重新连接")
             self.serverInstant.close()
             self.clientInstant.close()
 
     def close(self):
+        self.closeSign = True
         if self.serverInstant:
             self.serverInstant.close()
         if self.clientInstant:
