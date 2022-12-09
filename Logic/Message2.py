@@ -73,7 +73,7 @@ class Message2(QThread):
             elif recv_data == "AUDIO_DENY":
                 self.audioDenySignal.emit()
             elif recv_data == "AUDIO_CLOSE":
-                self.audioCloseMsgSignal.emit(self.ipToConnect)
+                self.audioCloseMsgSignal.emit()
             elif recv_data == "FILE_CLOSE":
                 self.fileCloseMsgSignal.emit()
             elif recv_data:
