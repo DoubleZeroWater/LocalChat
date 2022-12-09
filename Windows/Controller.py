@@ -126,7 +126,8 @@ class Controller:
         self.Message2Instance.fileDenySignal.connect(self.file.closeFileRequest)
 
         self.file.closeFileSignal.connect(self.close_file)
-        self.file.closeFileSignal2.connect(self.close_file)
+
+        self.Message2Instance.fileCloseMsgSignal.connect(self.file.closeFileMsg)
 
     def send_file(self, filename):
         fileInstance = self.fileInstance
@@ -141,7 +142,7 @@ class Controller:
         self.audio.show()
         self.Message2Instance.audioDenySignal.connect(self.audio.closeAudioRequest)
         self.audio.closeAudioSignal.connect(self.close_audio)
-        self.audio.closeAudioSignal2.connect(self.close_audio)
+        self.Message2Instance.audioCloseMsgSignal.connect(self.audio.closeAudioMsg)
 
     def close_audio(self):
         self.audio.close()

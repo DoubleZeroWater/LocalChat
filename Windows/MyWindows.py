@@ -152,6 +152,12 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("AUDIO_REQUEST")
         self.goAudioUI()
 
+    def closeAudioMsg(self):
+        self.sendMessageSignal.emit("AUDIO_CLOSE")
+
+    def closeFileMsg(self):
+        self.sendMessageSignal.emit("FILE_CLOSE")
+
 
 
 
@@ -194,12 +200,14 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
         self.closeFileSignal.emit()
+        self.closeFileSignal2.emit()
         reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
         print(reply)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)
         self.fileTransfer.raise_exception()
+        self.closeFileSignal.emit()
         self.closeFileSignal2.emit()
 
 
@@ -207,7 +215,6 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
 class AudioWindow(QtWidgets.QMainWindow, AudioUI):
     closeAudioSignal = pyqtSignal()
-    closeAudioSignal2 = pyqtSignal()
 
     def __init__(self, openPort, ipToConnect, portToConnect):
         super(AudioWindow, self).__init__()
@@ -224,16 +231,21 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         self.audioConnect.raise_exception()
         self.closeAudioSignal.emit()
 
+    def closeAudioMsg(self):
+        self.audioConnect.raise_exception()
+        self.closeAudioSignal.emit()
+        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断，请点击关闭按钮退出')
+
     def closeAudioRequest(self):
         self.audioConnect.raise_exception()
         reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
-        self.closeAudioSignal2.emit()
+        self.closeAudioSignal.emit()
         print(reply)
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)
         self.audioConnect.raise_exception()
-        self.closeAudioSignal2.emit()
+        self.closeAudioSignal.emit()
 
 
 class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
