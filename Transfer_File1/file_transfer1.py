@@ -5,14 +5,18 @@ import os
 import sys
 import struct
 import tarfile
+import time
 from threading import Thread
 from socket import *
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # 接收端的路径
-FILEPATH = "./data/"
+FILEPATH = "E:/test/"
 
 class File_Transfer1(QThread):
+    receiveStartSignal = pyqtSignal()
+    receiveEndSignal = pyqtSignal(str)
+
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
         super(File_Transfer1, self).__init__()
         self.openPort = openPort
@@ -37,7 +41,7 @@ class File_Transfer1(QThread):
             print(msg)
             sys.exit(1)
         print('waiting..............')
-        clientSock, addr = s.accept()
+        self.clientSock, addr = s.accept()
         Thread(target=self.receive).start()
 
     def client(self):
@@ -121,7 +125,7 @@ class File_Transfer1(QThread):
         self.clint.send(head_infor_len)
         self.clint.send(head_infor.encode("utf-8"))
         # 发送真实文件
-        with open(fileInfor, 'rb') as f:
+        with open(fileName, 'rb') as f:
             data = f.read()
             self.clint.sendall(data)
             f.close()
@@ -149,5 +153,7 @@ class File_Transfer1(QThread):
 
 
 if __name__ == '__main__':
-     file_Transfer = File_Transfer1("172.20.10.9", 5354, "172.20.10.3", 5354)
+     file_Transfer = File_Transfer1("192.168.198.152", 5354, "192.168.198.190", 5354)
      file_Transfer.run()
+     # time.sleep(5)
+     # file_Transfer.send(r"E:\biancheng\0")
