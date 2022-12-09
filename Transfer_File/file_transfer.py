@@ -23,19 +23,23 @@ class File_Transfer(QThread):
         # self.name = name
         self.ip = ip
         self.clint = None
+        self.isClose = False
 
     def run(self):
         Thread(target=self.server).start()
         Thread(target=self.client).start()
 
     def server(self):
-        sever = socket(AF_INET, SOCK_STREAM)
-        ip_port = ("", self.openPort)
-        # 监听
-        sever.bind(ip_port)
-        sever.listen()
-        self.clientSock, addr = sever.accept()
-        Thread(target=self.receive).start()
+        try:
+            self.sever = socket(AF_INET, SOCK_STREAM)
+            ip_port = ("", self.openPort)
+            # 监听
+            self.sever.bind(ip_port)
+            self.sever.listen()
+            self.clientSock, addr = self.sever.accept()
+            Thread(target=self.receive).start()
+        except:
+            pass
 
 
     # while True:
@@ -60,6 +64,10 @@ class File_Transfer(QThread):
         # clientSock, addr = sever.accept()
         # 开始通信
         while True:
+            if self.isClose:
+                self.clientSock.close()
+                self.sever.close()
+                break
             # 接收客户端发送的报头长度
             buffSize = 1024
             head_struct = self.clientSock.recv(4)
@@ -97,6 +105,7 @@ class File_Transfer(QThread):
             completed = "1"
             self.clientSock.send(bytes(completed, "utf-8"))
             self.receiveEndSignal.emit(fileName)
+
 
     # self.clientSock.close()
     # break
@@ -139,13 +148,16 @@ class File_Transfer(QThread):
                 return id
 
     def raise_exception(self):
-        thread_id = self.get_id()
-        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
-        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
-                                                         ctypes.py_object(SystemExit))
-        if res > 1:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
-            print('Exception raise failure')
+        self.isClose = True
+        print(self.isClose)
+        return self.isClose
+        # thread_id = self.get_id()
+        # # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
+        # res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
+        #                                                  ctypes.py_object(SystemExit))
+        # if res > 1:
+        #     ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+        #     print('Exception raise failure')
 
 
 # if __name__ == '__main__':
