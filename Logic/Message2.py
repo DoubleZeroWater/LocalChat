@@ -15,6 +15,8 @@ class Message2(QThread):
     fileDenySignal = pyqtSignal()
     audioRequestSignal = pyqtSignal(str)
     audioDenySignal = pyqtSignal()
+    audioCloseMsgSignal = pyqtSignal()
+    fileCloseMsgSignal = pyqtSignal()
 
 
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
@@ -77,6 +79,10 @@ class Message2(QThread):
                 self.audioRequestSignal.emit(self.ipToConnect)
             elif recv_data == "AUDIO_DENY":
                 self.audioDenySignal.emit()
+            elif recv_data == "AUDIO_CLOSE":
+                self.audioCloseMsgSignal.emit(self.ipToConnect)
+            elif recv_data == "FILE_CLOSE":
+                self.fileCloseMsgSignal.emit()
             elif recv_data:
                 self.recvMessageSignal.emit(recv_data)
                 # print('\b\b\b\b{} >>: {}\t{}\n\n>>: '.format(self.receiverIP, recv_data,strftime("%Y/%m/%d %H:%M:%S", gmtime())),end="")
