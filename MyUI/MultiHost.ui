@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MultiHostUI</class>
+    <widget class="QWidget" name="MultiHostUI">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>509</width>
+                <height>423</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>MultiHost</string>
+        </property>
+        <widget class="QLabel" name="label">
+            <property name="geometry">
+                <rect>
+                    <x>150</x>
+                    <y>30</y>
+                    <width>191</width>
+                    <height>21</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>14</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>你当前本机的IP是</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit">
+            <property name="geometry">
+                <rect>
+                    <x>130</x>
+                    <y>60</y>
+                    <width>231</width>
+                    <height>41</height>
+                </rect>
+            </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+            <property name="geometry">
+                <rect>
+                    <x>130</x>
+                    <y>120</y>
+                    <width>251</width>
+                    <height>41</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>14</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>你想开放的本机端口为</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_2">
+            <property name="geometry">
+                <rect>
+                    <x>130</x>
+                    <y>160</y>
+                    <width>231</width>
+                    <height>41</height>
+                </rect>
+            </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton">
+            <property name="geometry">
+                <rect>
+                    <x>340</x>
+                    <y>320</y>
+                    <width>91</width>
+                    <height>51</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>12</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>确定开启</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_2">
+            <property name="geometry">
+                <rect>
+                    <x>70</x>
+                    <y>330</y>
+                    <width>91</width>
+                    <height>51</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>12</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                </font>
+            </property>
+            <property name="text">
+                <string>返回</string>
+            </property>
+        </widget>
+        <widget class="QLabel" name="label_3">
+            <property name="geometry">
+                <rect>
+                    <x>180</x>
+                    <y>220</y>
+                    <width>251</width>
+                    <height>41</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>14</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>你的昵称为</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_3">
+            <property name="geometry">
+                <rect>
+                    <x>130</x>
+                    <y>270</y>
+                    <width>231</width>
+                    <height>41</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+    <resources/>
+    <connections/>
+</ui>

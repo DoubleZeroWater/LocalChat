@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'TwoConnect.ui'
+# MultiMessageUI implementation generated from reading ui file 'TwoConnect.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -73,12 +73,13 @@ class TwoConnectUI(object):
 
     def retranslateUi(self, TwoConnectUI):
         _translate = QtCore.QCoreApplication.translate
-        TwoConnectUI.setWindowTitle(_translate("TwoConnectUI", "Form"))
-        self.currentIP.setHtml(_translate("TwoConnectUI", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">你的当前IP是:</p></body></html>"))
+        TwoConnectUI.setWindowTitle(_translate("TwoConnectUI", "MultiMessageUI"))
+        self.currentIP.setHtml(_translate("TwoConnectUI",
+                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                          "p, li { white-space: pre-wrap; }\n"
+                                          "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+                                          "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">你的当前IP是:</p></body></html>"))
         self.label.setText(_translate("TwoConnectUI", "你想要连接的端口是："))
         self.label_2.setText(_translate("TwoConnectUI", "你想要连接的IP是："))
         self.label_3.setText(_translate("TwoConnectUI", "你想要开放连接端口是："))

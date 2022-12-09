@@ -1,9 +1,13 @@
 from functools import partial
+from threading import Thread
 
+from Logic.Message0 import Message0
+from Logic.Message1 import Message1
 from Logic.Message2 import Message2
-from Logic.LocalIPGet import getIP
 from Transfer_File.file_transfer import File_Transfer,transfer
-from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow
+from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
+    MultiMessageWindow, MultiClientWindow
+
 
 class Controller:
     def __init__(self):
@@ -16,6 +20,8 @@ class Controller:
     def show_hello(self):
         self.hello = HelloWindow()
         self.hello.goTwoConnectSignal.connect(self.show_two_connect)
+        self.hello.goMultiConnectSignalHost.connect(self.show_multi_host)
+        self.hello.goMultiConnectSignalClient.connect(self.show_multi_client)
         self.hello.show()
 
     # Two Connect Window
@@ -26,9 +32,49 @@ class Controller:
         self.hello.close()
         self.twoConnect.show()
 
+    def show_multi_host(self):
+        # go MultiHostWindow
+        # for MultiHostWindow to MultiMessageWindow or HelloWindow
+        self.hello.close()
+        self.multiHostWindow = MultiHostWindow()
+        self.multiHostWindow.show()
+        self.multiHostWindow.goBackHelloSignal.connect(self.back_hello_from_multi_host)
+        self.multiHostWindow.goMessage0Signal.connect(self.goMessage0)
+
+    def show_multi_client(self):
+        self.hello.close()
+        self.multiClientWindow = MultiClientWindow()
+        self.multiClientWindow.show()
+        self.multiClientWindow.goBackHelloSignal.connect(self.back_hello_from_multi_client)
+        self.multiClientWindow.goMultiMessageSignal.connect(self.goMessage1)
+
     def back_hello(self):
         self.hello.show()
         self.twoConnect.close()
+
+    def back_hello_from_multi_host(self):
+        self.hello.show()
+        self.multiHostWindow.close()
+
+    def back_hello_from_multi_client(self):
+        self.hello.show()
+        self.multiClientWindow.close()
+
+    def goMessage0(self, port, nickname):
+        self.multiMessageWindow = MultiMessageWindow()
+        self.multiMessageWindow.show()
+        self.multiHostWindow.close()
+        self.message0 = Message0(port, nickname)
+        self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
+        self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
+
+    def goMessage1(self, ip, port, nickname):
+        self.multiMessageWindow = MultiMessageWindow()
+        self.multiMessageWindow.show()
+        self.multiClientWindow.close()
+        self.message1 = Message1(ip, port, nickname)
+        self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
+        self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
 
     # Message Window
     def show_message(self, openPort, ipToConnect, portToConnect, nickName, Queue):
@@ -63,21 +109,21 @@ class Controller:
     # File Window
     def show_file(self):
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
-        self.file.nickname = self.nickName
         self.file.show()
-        self.fileInstance= self.file.fileTransfer
+        self.fileInstance = self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
         self.file.sendNameSignal.connect(self.send_file)
 
-
     def send_file(self, filename):
         fileInstance = self.fileInstance
-        fileName= filename
-        self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
-
+        fileName = filename
+        self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
 
     def show_audio(self):
         self.audio = AudioWindow(self.openPort, self.ipToConnect, self.portToConnect)
         self.audio.show()
 
+    def showMultiMessage(self):
+        self.multiMessage = MultiMessageWindow()
+        self.multiMessage.show()
