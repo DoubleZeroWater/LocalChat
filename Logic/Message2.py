@@ -56,7 +56,7 @@ class Message2(QThread):
     def server(self):
         self.serverInstant = socket(AF_INET, SOCK_STREAM)
         self.serverInstant.bind(('', self.openPort))
-        self.serverInstant.listen(60)
+        self.serverInstant.listen(300)
         self.conn, self.addr = self.serverInstant.accept()
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
