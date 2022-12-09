@@ -1,3 +1,4 @@
+import ctypes
 from socket import *
 from threading import Thread
 import pyaudio
@@ -30,41 +31,69 @@ class Audio(Thread):  # 发送声音
         Thread(target=self.client).start()
 
     def server(self):  # 发送声音
-        server = socket(AF_INET, SOCK_STREAM)
-        ip_port = ("", self.openPort)  # 开放openport等待iptoconnect来连接
-        server.bind(ip_port)
-        server.listen(60)  # 等待60s
-        print("Server bind.")
-        clientSock, addr = server.accept()
+        try:
+            server = socket(AF_INET, SOCK_STREAM)
+            ip_port = ("", self.openPort)  # 开放openport等待iptoconnect来连接
+            server.bind(ip_port)
+            server.listen(60)  # 等待60s
+            print("Server bind.")
+            clientSock, addr = server.accept()
 
-        recording_stream = self.p.open(format=self.audio_format,
-                                       channels=self.channels,
-                                       rate=self.rate, input=True,
-                                       frames_per_buffer=self.chunk_size)
-        while True:
-            try:
+            recording_stream = self.p.open(format=self.audio_format,
+                                           channels=self.channels,
+                                           rate=self.rate, input=True,
+                                           frames_per_buffer=self.chunk_size)
+            while True:
+                # try:
+                #     data = recording_stream.read(1024)
+                #     clientSock.sendall(data)
+                # except:
+                #     pass
                 data = recording_stream.read(1024)
                 clientSock.sendall(data)
-            except:
-                pass
+        except:
+            pass
 
     def client(self):  # 接收声音
         # 创建服务器
-        client = socket(AF_INET, SOCK_STREAM)
-        ip_port = (self.ipToConnect, self.portToConnect)
-        print("connecting...")
-        client.connect(ip_port)
-        playing_stream = self.p.open(format=self.audio_format,
-                                     channels=self.channels,
-                                     rate=self.rate, output=True,
-                                     frames_per_buffer=self.chunk_size)
-        print("Connected to Server")
-        while True:
-            try:
+        try:
+            client = socket(AF_INET, SOCK_STREAM)
+            ip_port = (self.ipToConnect, self.portToConnect)
+            print("connecting...")
+            client.connect(ip_port)
+            playing_stream = self.p.open(format=self.audio_format,
+                                         channels=self.channels,
+                                         rate=self.rate, output=True,
+                                         frames_per_buffer=self.chunk_size)
+            print("Connected to Server")
+            while True:
+                # try:
+                #     data = client.recv(1024)
+                #     playing_stream.write(data)
+                # except:
+                #     pass
                 data = client.recv(1024)
                 playing_stream.write(data)
-            except:
-                pass
+        except:
+            pass
+
+
+    def get_id(self):
+        # returns id of the respective thread
+        if hasattr(self, '_thread_id'):
+            return self._thread_id  # type: ignore
+        for id, thread in threading._active.items():  # type: ignore
+            if thread is self:
+                return id
+
+    def raise_exception(self):
+        thread_id = self.get_id()
+        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
+                                                         ctypes.py_object(SystemExit))
+        if res > 1:
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+            print('Exception raise failure')
 
 
 if __name__ == '__main__':

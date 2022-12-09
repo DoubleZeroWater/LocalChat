@@ -132,15 +132,15 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         else:
             self.sendMessageSignal.emit("FILE_DENY")
 
-    def startFileRequest(self):
-        self.sendMessageSignal.emit("FILE_REQUEST")
-        self.goFileUI()
+    def startAudioRequest(self):
+        self.sendMessageSignal.emit("Audio_REQUEST")
+        self.goAudioUI()
 
     def goAudioUI(self):
         self.goAudioSignal.emit()
 
     def audioRequestCheck(self):
-        reply = QtWidgets.QMessageBox.question(self, '语音通话', '是否同意进行语音通话？',
+        reply = QtWidgets.QMessageBox.question(self, '音频通话', '是否同意进行音频通话？',
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
@@ -153,7 +153,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.goAudioUI()
 
     def closeAudioRequest(self):
-        self.audioConnect.raise_exception()
+        self.Audio.raise_exception()
         reply = QtWidgets.QMessageBox.information(self.toolButton, '消息', '你的邀请已被拒绝')
         print(reply)
 
@@ -211,7 +211,7 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         self.videoButton_3.clicked.connect(self.closeAudio)
 
     def closeAudio(self):
-        self.audioConnect.raise_exception()
+        self.Audio.raise_exception()
 
 
 class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
