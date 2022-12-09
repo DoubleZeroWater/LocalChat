@@ -123,6 +123,10 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
     def goFileUI(self):
         self.goFileSignal.emit()
 
+    def startFileRequest(self):
+        self.sendMessageSignal.emit("FILE_REQUEST")
+        self.goFileUI()
+
     def fileRequestCheck(self):
         reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否同意进行文件传输？',
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
@@ -131,10 +135,6 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
             self.goFileUI()
         else:
             self.sendMessageSignal.emit("FILE_DENY")
-
-    def startAudioRequest(self):
-        self.sendMessageSignal.emit("Audio_REQUEST")
-        self.goAudioUI()
 
     def goAudioUI(self):
         self.goAudioSignal.emit()

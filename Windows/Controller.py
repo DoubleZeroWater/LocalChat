@@ -89,6 +89,7 @@ class Controller:
         self.message.sendMessageSignal.connect(self.Message2Instance.sendMessages)
         self.message.videoButton.clicked.connect(partial(self.message.startVideoRequest, ipToConnect))
         self.message.FileButton.clicked.connect(self.message.startFileRequest)
+        self.message.audioButton.clicked.connect(self.message.startAudioRequest)
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
