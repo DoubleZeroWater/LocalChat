@@ -113,8 +113,8 @@ class File_Transfer1(QThread):
         # 打包路径
         fileName = fileName + '.tar'
         with tarfile.open(fileName, 'w') as tar:
-            tar.add(fileName, arcname=os.path.basename(fileName))
-        fileSize_bytes = os.path.getsize(fileName)
+            tar.add(fileInfor, arcname=os.path.basename(fileInfor))
+        fileSize_bytes = os.stat(fileName).st_size
         # 创建字典用于报头
         dirc = {"fileName": fileName,
                 "fileSize": fileSize_bytes}
@@ -155,5 +155,5 @@ class File_Transfer1(QThread):
 if __name__ == '__main__':
      file_Transfer = File_Transfer1("192.168.198.152", 5354, "192.168.198.190", 5354)
      file_Transfer.run()
-     # time.sleep(5)
-     # file_Transfer.send(r"E:\biancheng\0")
+     time.sleep(5)
+     file_Transfer.send(r"E:\biancheng\0")
