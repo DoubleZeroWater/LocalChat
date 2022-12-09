@@ -5,9 +5,8 @@ import os
 import sys
 import struct
 import tarfile
-from socket import *
 from threading import Thread
-
+from socket import *
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # 接收端的路径
@@ -30,11 +29,11 @@ class File_Transfer1(QThread):
     def server(self):
         ip_port = ("", self.openPort)
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            s = socket(AF_INET, SOCK_STREAM)
+            s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             s.bind(ip_port)
             s.listen(2)
-        except socket.error as msg:
+        except error as msg:
             print(msg)
             sys.exit(1)
         print('waiting..............')
@@ -147,3 +146,8 @@ class File_Transfer1(QThread):
         if res > 1:
             ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
             print('Exception raise failure')
+
+
+if __name__ == '__main__':
+     file_Transfer = File_Transfer1("172.20.10.9", 5354, "172.20.10.3", 5354)
+     file_Transfer.run()
