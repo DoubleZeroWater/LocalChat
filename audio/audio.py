@@ -26,6 +26,9 @@ class Audio(Thread):  # 发送声音
         self.rate = 20000
         self.p = pyaudio.PyAudio()
 
+        #关闭线程
+        self.isClose = False
+
     def run(self):
         Thread(target=self.server).start()
         Thread(target=self.client).start()
@@ -49,6 +52,9 @@ class Audio(Thread):  # 发送声音
                 #     clientSock.sendall(data)
                 # except:
                 #     pass
+                if self.isClose:
+                    server.close()
+                    break
                 data = recording_stream.read(1024)
                 clientSock.sendall(data)
         except:
@@ -72,11 +78,14 @@ class Audio(Thread):  # 发送声音
                 #     playing_stream.write(data)
                 # except:
                 #     pass
+                if self.isClose:
+                    client.close()
+                    break
                 data = client.recv(1024)
                 playing_stream.write(data)
+                #
         except:
             pass
-
 
     def get_id(self):
         # returns id of the respective thread
@@ -87,15 +96,18 @@ class Audio(Thread):  # 发送声音
                 return id
 
     def raise_exception(self):
-        thread_id = self.get_id()
-        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
-        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
-                                                         ctypes.py_object(SystemExit))
-        if res > 1:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
-            print('Exception raise failure')
+        self.isClose = True
+        print(self.isClose)
+        return self.isClose
+        # thread_id = self.get_id()
+        # # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
+        # res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
+        #                                                  ctypes.py_object(SystemExit))
+        # if res > 1:
+        #     ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+        #     print('Exception raise failure')
 
 
 if __name__ == '__main__':
-    audio = Audio("132", "192.168.43.242", 9808, "192.168.43.20", 9808)
+    audio = Audio("132", "192.168.43.20", 9808, "192.168.43.20", 9808)
     audio.run()
