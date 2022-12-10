@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="Button2Mode">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>310</y>
-     <width>181</width>
-     <height>81</height>
+        <x>200</x>
+        <y>270</y>
+        <width>201</width>
+        <height>101</height>
     </rect>
    </property>
    <property name="font">
@@ -34,12 +34,12 @@
   </widget>
   <widget class="QPushButton" name="ButtonMutiMode">
    <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>310</y>
-     <width>181</width>
-     <height>81</height>
-    </rect>
+       <rect>
+           <x>200</x>
+           <y>400</y>
+           <width>201</width>
+           <height>91</height>
+       </rect>
    </property>
    <property name="font">
     <font>

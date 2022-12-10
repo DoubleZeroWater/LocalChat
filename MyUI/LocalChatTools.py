@@ -11,19 +11,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class LocalChatToolsUI(object):
+class LocalChatTools(object):
     def setupUi(self, LocalChatTools):
         LocalChatTools.setObjectName("LocalChatTools")
         LocalChatTools.resize(600, 558)
         self.Button2Mode = QtWidgets.QPushButton(LocalChatTools)
-        self.Button2Mode.setGeometry(QtCore.QRect(90, 310, 181, 81))
+        self.Button2Mode.setGeometry(QtCore.QRect(200, 270, 201, 101))
         font = QtGui.QFont()
         font.setFamily("等线")
         font.setPointSize(14)
         self.Button2Mode.setFont(font)
         self.Button2Mode.setObjectName("Button2Mode")
         self.ButtonMutiMode = QtWidgets.QPushButton(LocalChatTools)
-        self.ButtonMutiMode.setGeometry(QtCore.QRect(330, 310, 181, 81))
+        self.ButtonMutiMode.setGeometry(QtCore.QRect(200, 400, 201, 91))
         font = QtGui.QFont()
         font.setFamily("等线")
         font.setPointSize(14)
