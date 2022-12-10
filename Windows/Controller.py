@@ -116,6 +116,7 @@ class Controller:
 
     # File Window
     def show_file(self):
+        flag=1
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
         self.file.show()
         self.fileInstance = self.file.fileTransfer
@@ -127,7 +128,6 @@ class Controller:
 
         self.file.closeFileSignal.connect(self.close_file)
         self.file.closeFileSignal2.connect(self.message.closeFileMsgSend)
-
         self.Message2Instance.fileCloseMsgSignal.connect(self.file.closeFileMsg)
 
     def send_file(self, filename):

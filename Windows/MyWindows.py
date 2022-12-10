@@ -163,6 +163,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
 
 
+
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendNameSignal = pyqtSignal(str)
     closeFileSignal = pyqtSignal()
@@ -233,11 +234,11 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         self.audioConnect = Audio("", ip, 9808, self.ipToConnect, 9808)
         self.audioConnect.start()
         self.videoButton_3.clicked.connect(self.closeAudio)
+        self.flag=1
 
     def closeAudio(self):
         self.audioConnect.raise_exception()
         self.closeAudioSignal.emit()
-        self.closeAudioSignal2.emit()
 
     def closeAudioMsg(self):
         self.audioConnect.raise_exception()
@@ -254,7 +255,9 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         super().closeEvent(a0)
         self.audioConnect.raise_exception()
         self.closeAudioSignal.emit()
-        self.closeAudioSignal2.emit()
+        if self.flag==1:
+            self.closeAudioSignal2.emit()
+        self.flag=0
 
 
 
