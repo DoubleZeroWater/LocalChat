@@ -64,6 +64,7 @@ class Message0(QThread):  # for the host
         self.broadcastAllSocket(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
 
+
     def close(self):
         self.broadcastAllSocket(f"SYSTEM  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n房主已退出")
         self.broadcastAllSocket(">END")

@@ -7,9 +7,8 @@ from threading import Thread
 
 # 服务端 发送
 class Server():
-    def __init__(self, filename, ip, openPort):
+    def __init__(self, ip, openPort):
         super().__init__()
-        self.filename = filename
         self.openPort = openPort
         self.ip = ip
 
@@ -28,10 +27,10 @@ class Server():
         except:
             pass
 
-    def send(self):
+    def send(self, filename: str):
         buffSize = 1024
         # 上传文件
-        fileInfor = self.filename
+        fileInfor = filename
         num = fileInfor.rfind('\\')
         fileName = fileInfor[num + 1:]
         # 得到文件的大小

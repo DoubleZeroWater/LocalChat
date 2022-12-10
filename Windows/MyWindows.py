@@ -281,6 +281,7 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
         self.videoButton_3.clicked.connect(self.closeAudio)
         self.flag=1
 
+
     def closeAudio(self):
         self.audioConnect.raise_exception()
         self.closeAudioSignal.emit()
@@ -331,18 +332,45 @@ class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
 
 class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
     sendButtonSignal = QtCore.pyqtSignal(str)
+    sendMultiFileSiganl = QtCore.pyqtSignal(str)
+    sendServer = pyqtSignal()
+    receiveMultiFileSignal = pyqtSignal()
 
     def __init__(self):
         super(MultiMessageWindow, self).__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.pushButtonSlot)
+        self.pushButton_4.clicked.connect(self.openFile)
+
 
     def pushButtonSlot(self):
         self.sendButtonSignal.emit(self.lineEdit.text())
         self.lineEdit.setText("")
 
+    def openFile(self):
+        root = tk.Tk()
+        root.overrideredirect(True)
+        root.attributes("-alpha", 0)
+        fileName = filedialog.askopenfilename(title='选择文件', filetypes=[('EXE', '*.exe'), ('All Files', '*')])
+        root.destroy()
+        # 输出文件，查看文件路径
+        self.filename = fileName.replace('/', '\\')
+        self.textBrowser.append(">>>您已选取文件并发送:" + self.filename)
+        self.sendMultiFileSignal.emit(filename)
+        self.sendServer.emit(filename)
+
     def addMoreMessage(self, message):
-        self.textBrowser.append(message)
+        if (message=="SEND_FILE"):
+            reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否接受房主传输的文件?',
+                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                       QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
+                self.receiveMultiFileSignal.emit()
+        else:
+            self.textBrowser.append(message)
+
+    def showReceiveFile(self):
+        self.textBrowser.append("你已成功接受文件")
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)
@@ -366,3 +394,4 @@ class MultiClientWindow(QtWidgets.QMainWindow, MultiClientUI):
         port = self.lineEdit_2.text()
         nickname = self.lineEdit_3.text()
         self.goMultiMessageSignal.emit(ip, int(port), nickname)
+
