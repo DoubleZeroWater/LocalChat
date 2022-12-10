@@ -80,7 +80,7 @@ class Controller:
         self.multiMessageWindow.pushButton_4.setEnabled(False)
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
-        self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
+        self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
 
         self.multiMessageWindow.show()
         self.multiClientWindow.close()
