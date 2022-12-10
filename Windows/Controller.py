@@ -5,6 +5,8 @@ from Logic.Message1 import Message1
 from Logic.Message2 import Message2
 from Transfer_File.file_transfer import transfer
 from Transfer_File1.file_transfer1 import transfer1
+from File_multiple.client import Client
+from File_multiple.server import Server
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
 
@@ -65,23 +67,32 @@ class Controller:
     def goMessage0(self, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
         self.message0 = Message0(port, nickname)
+        self.fileServer = Server(port)
 
         self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
         self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
+        self.multiMessageWindow.sendServer.connect(self.sendMultiFile)
 
         self.multiMessageWindow.show()
         self.multiHostWindow.close()
 
+    def sendMultiFile(self):
+        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.send)
+        self.message0.haveMessageSignal.emit("SEND_FILE")
+
     def goMessage1(self, ip, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
         self.message1 = Message1(ip, port, nickname)
+        self.fileClient = Client(ip, port)
 
         self.multiMessageWindow.pushButton_2.setEnabled(False)
         self.multiMessageWindow.pushButton_4.setEnabled(False)
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
+        self.multiMessageWindow.receiveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
+
 
         self.multiMessageWindow.show()
         self.multiClientWindow.close()
@@ -177,3 +188,4 @@ class Controller:
             self.message1.close()
         self.multiMessageWindow.close()
         self.multiClientWindow.show()
+
