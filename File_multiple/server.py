@@ -58,5 +58,5 @@ class Server():
             print("发送成功")
 
 if __name__ == '__main__':
-    sender = Server(r'E:\test\123\1235.txt', "192.168.202.152", 22222)
+    sender = Server(r'E:\test\123\1235.txt', "172.20.10.9", 22222)
     sender.server_socket()

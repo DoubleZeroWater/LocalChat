@@ -7,18 +7,16 @@ from threading import Thread
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
-FILEPATH = "E:/test/"
+FILEPATH = "./data/"
 
 class Client():
     receiveStartSignal = pyqtSignal()
     receiveEndSignal = pyqtSignal(str)
 
-    def __init__(self, ip, openPort, ipToConnect, portToConnect):
+    def __init__(self, ipToConnect, portToConnect):
         super().__init__()
-        self.openPort = openPort
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
-        self.ip = ip
 
     def client_socket(self):
         # 创建客户端
@@ -67,5 +65,5 @@ class Client():
         # self.receiveEndSignal.emit(fileName)
 
 if __name__ == '__main__':
-    receiver = Client("192.168.202.152", 22222, "192.168.202.152", 22222)
+    receiver = Client("172.20.10.9", 22222)
     receiver.client_socket()
