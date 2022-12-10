@@ -181,6 +181,7 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.fileTransfer = File_Transfer(ip, 5453, self.ipToConnect, 5453)
         self.fileTransfer.start()
         self.videoButton_2.clicked.connect(self.fileSend)
+        self.flag=1
 
     def fileSend(self):
         root = tk.Tk()
@@ -210,7 +211,9 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         super().closeEvent(a0)
         self.fileTransfer.raise_exception()
         self.closeFileSignal.emit()
-        self.closeFileSignal2.emit()
+        if self.flag==1:
+            self.closeFileSignal2.emit()
+        self.flag=0
 
     def closeFileMsg(self):
         self.fileTransfer.raise_exception()
