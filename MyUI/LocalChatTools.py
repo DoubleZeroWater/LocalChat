@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# MultiMessageUI implementation generated from reading ui file 'untitled.ui'
+# Form implementation generated from reading ui file 'LocalChatTools.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -14,19 +14,19 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class LocalChatToolsUI(object):
     def setupUi(self, LocalChatTools):
         LocalChatTools.setObjectName("LocalChatTools")
-        LocalChatTools.resize(600, 600)
+        LocalChatTools.resize(600, 558)
         self.Button2Mode = QtWidgets.QPushButton(LocalChatTools)
         self.Button2Mode.setGeometry(QtCore.QRect(90, 310, 181, 81))
         font = QtGui.QFont()
         font.setFamily("等线")
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.Button2Mode.setFont(font)
         self.Button2Mode.setObjectName("Button2Mode")
         self.ButtonMutiMode = QtWidgets.QPushButton(LocalChatTools)
         self.ButtonMutiMode.setGeometry(QtCore.QRect(330, 310, 181, 81))
         font = QtGui.QFont()
         font.setFamily("等线")
-        font.setPointSize(12)
+        font.setPointSize(14)
         self.ButtonMutiMode.setFont(font)
         self.ButtonMutiMode.setObjectName("ButtonMutiMode")
         self.label = QtWidgets.QLabel(LocalChatTools)
