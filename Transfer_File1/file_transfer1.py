@@ -157,3 +157,6 @@ if __name__ == '__main__':
      file_Transfer.run()
      time.sleep(5)
      file_Transfer.send(r"E:\PycharmPythonProject\U-2-Net-master1.zip")
+
+def transfer1(inClass,name):
+    Thread(target=inClass.send,args=(name,)).start()

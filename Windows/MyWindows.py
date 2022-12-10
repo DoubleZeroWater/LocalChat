@@ -19,6 +19,7 @@ from MyUI.MultiHost import MultiHostUI
 from MyUI.MultiMessage import MultiMessageUI
 from MyUI.TwoConnect import TwoConnectUI
 from Transfer_File.file_transfer import File_Transfer
+from Transfer_File1.file_transfer1 import File_Transfer1
 from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
 
@@ -166,6 +167,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
 
 class FileWindow(QtWidgets.QMainWindow, FileUI):
     sendNameSignal = pyqtSignal(str)
+    sendFilesNameSignal = pyqtSignal(str)
     closeFileSignal = pyqtSignal()
     closeFileSignal2 = pyqtSignal()
 
@@ -179,8 +181,11 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.filename = ""
         ip = getIP()
         self.fileTransfer = File_Transfer(ip, 5453, self.ipToConnect, 5453)
+        self.fileTransfer1 = File_Transfer1(ip, 5453, self.ipToConnect, 5453)
         self.fileTransfer.start()
+        self.fileTransfer1.start()
         self.videoButton_2.clicked.connect(self.fileSend)
+        self.videoButton_4.clicked.connect(self.filesSend)
         self.flag=1
 
     def fileSend(self):
@@ -195,6 +200,18 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         # Thread(target=self.send, args=(self.filename,)).start()
         self.sendNameSignal.emit(self.filename)
 
+    def filesSend(self):
+        root = tk.Tk()
+        root.overrideredirect(True)
+        root.attributes("-alpha", 0)
+        fileName = filedialog.askdirectory(title='选择文件夹')
+        root.destroy()
+        # 输出文件，查看文件路径
+        self.filename = fileName.replace('/', '\\')
+        self.textBrowser_2.append(">>>您已选取文件夹：" + self.filename)
+        # Thread(target=self.send, args=(self.filename,)).start()
+        self.sendFilesNameSignal.emit(self.filename)
+
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")
 
@@ -203,18 +220,21 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
+        self.fileTransfer1.raise_exception()
         self.closeFileSignal.emit()
         reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
         print(reply)
 
     def closeFileMsg(self):
-        self.file.raise_exception()
+        self.fileTransfer.raise_exception()
+        self.fileTransfer1.raise_exception()
         reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断')
         self.closeFileSignal.emit()
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)
         self.fileTransfer.raise_exception()
+        self.fileTransfer1.raise_exception()
         self.closeFileSignal.emit()
         if self.flag==1:
             self.closeFileSignal2.emit()
@@ -222,11 +242,13 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
 
     def closeFileMsg(self):
         self.fileTransfer.raise_exception()
+        self.fileTransfer1.raise_exception()
         reply = QtWidgets.QMessageBox.information(self, '消息', '对方已断开文件传输')
         self.closeFileSignal.emit()
 
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
+        self.fileTransfer1.raise_exception()
         reply = QtWidgets.QMessageBox.information(self, '消息', '你的邀请已被拒绝')
         self.closeFileSignal.emit()
         print(reply)

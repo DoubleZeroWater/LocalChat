@@ -4,6 +4,7 @@ from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
 from Transfer_File.file_transfer import transfer
+from Transfer_File1.file_transfer1 import transfer1
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
 
@@ -128,7 +129,11 @@ class Controller:
         self.fileInstance = self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
+        self.fileInstance1 = self.file.fileTransfer1
+        self.fileInstance1.receiveStartSignal.connect(self.file.receiveStart)
+        self.fileInstance1.receiveEndSignal.connect(self.file.receiveEnd)
         self.file.sendNameSignal.connect(self.send_file)
+        self.file.sendFilesNameSignal.connect(self.send_files)
 
         self.Message2Instance.fileDenySignal.connect(self.file.closeFileRequest)
 
@@ -140,6 +145,11 @@ class Controller:
         fileInstance = self.fileInstance
         fileName = filename
         self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
+
+    def send_files(self, filename):
+        fileInstance1 = self.fileInstance1
+        fileName = filename
+        self.file.videoButton_5.clicked.connect(partial(transfer1,fileInstance1,fileName))
 
     def close_file(self):
         self.file.close()

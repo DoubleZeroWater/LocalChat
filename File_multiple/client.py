@@ -63,6 +63,7 @@ class Client():
         completed = "1"
         self.clint.send(bytes(completed, "utf-8"))
         # self.receiveEndSignal.emit(fileName)
+        self.clint.close()
 
 if __name__ == '__main__':
     receiver = Client("172.20.10.9", 22222)
