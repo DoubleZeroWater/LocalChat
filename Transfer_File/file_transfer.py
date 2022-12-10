@@ -14,6 +14,7 @@ FILEPATH = "./data/"
 class File_Transfer(QThread):
     receiveStartSignal = pyqtSignal()
     receiveEndSignal = pyqtSignal(str)
+    processSignal = pyqtSignal(str)
 
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
         super(File_Transfer, self).__init__()
@@ -93,6 +94,7 @@ class File_Transfer(QThread):
                     recv_mesg = self.clientSock.recv(buffSize)
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
+                    processSignal.emit(f"{recv_len / filesize_b*100%}")
                     print(f"{recv_len / filesize_b}")
                 else:
                     # 需要传输的文件数据小于最大传输数据大小

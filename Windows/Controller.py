@@ -72,14 +72,10 @@ class Controller:
         self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
         self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
-        self.multiMessageWindow.sendServer.connect(self.sendMultiFile)
+        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.send)
 
         self.multiMessageWindow.show()
         self.multiHostWindow.close()
-
-    def sendMultiFile(self):
-        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.send)
-        self.multiMessageWindow.sendButtonSignal.emit("SEND_FILE")
 
     def goMessage1(self, ip, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
@@ -140,6 +136,7 @@ class Controller:
         self.fileInstance = self.file.fileTransfer
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
+        self.fileInstance.processSignal.connect(self.file.receiveProcess)
         self.fileInstance1 = self.file.fileTransfer1
         self.fileInstance1.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance1.receiveEndSignal.connect(self.file.receiveEnd)

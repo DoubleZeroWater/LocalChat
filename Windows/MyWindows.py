@@ -215,6 +215,9 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
     def receiveStart(self):
         self.textBrowser_2.append(">>>正在接受文件")
 
+    def receiveProcess(self, process):
+        self.textBrowser_2.setText(">>>当前进度为："+process)
+
     def receiveEnd(self, fileName):
         self.textBrowser_2.append(">>>您已成功接受文件" + fileName)
 
@@ -333,7 +336,6 @@ class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
 class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
     sendButtonSignal = QtCore.pyqtSignal(str)
     sendMultiFileSignal = QtCore.pyqtSignal(str)
-    sendServer = pyqtSignal(str)
     receiveMultiFileSignal = pyqtSignal()
 
     def __init__(self):
@@ -357,7 +359,8 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
         self.filename = fileName.replace('/', '\\')
         self.textBrowser.append(">>>您已选取文件并发送:" + self.filename)
         self.sendMultiFileSignal.emit(self.filename)
-        self.sendServer.emit(self.filename)
+        self.sendButtonSignal.emit("SEND_FILE")
+
 
     def addMoreMessage(self, message):
         if (message=="SEND_FILE"):
