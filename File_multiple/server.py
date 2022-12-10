@@ -7,12 +7,10 @@ from threading import Thread
 
 # 服务端 发送
 class Server():
-    def __init__(self, filename, ip, openPort, ipToConnect, portToConnect):
+    def __init__(self, filename, ip, openPort):
         super().__init__()
         self.filename = filename
         self.openPort = openPort
-        self.ipToConnect = ipToConnect
-        self.portToConnect = portToConnect
         self.ip = ip
 
     def server_socket(self):
@@ -57,5 +55,5 @@ class Server():
             print("发送成功")
 
 if __name__ == '__main__':
-    sender = Server(r'E:\test\123\1235.txt',"192.168.202.152", 22222, "192.168.202.152", 22222)
+    sender = Server(r'E:\test\123\1235.txt', "192.168.202.152", 22222)
     sender.server_socket()

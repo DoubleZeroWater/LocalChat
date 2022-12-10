@@ -123,7 +123,6 @@ class Controller:
 
     # File Window
     def show_file(self):
-        flag=1
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
         self.file.show()
         self.fileInstance = self.file.fileTransfer
