@@ -39,7 +39,7 @@ class AudioMultiServer(QThread):  # 发送声音
                 (self.conn, self.addr) = self.server.accept()
                 self.socketList.append((self.conn, self.addr))
                 Thread(target=self.receiveMessage,
-                       args=(self.socketList[-1],)).start()
+                       args=(self.socketList[-1][0],)).start()
                 print("Get It.")
         except OSError:
             print("You have END your server.")
