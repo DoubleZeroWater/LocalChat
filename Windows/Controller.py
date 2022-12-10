@@ -149,7 +149,7 @@ class Controller:
     def send_files(self, filename):
         fileInstance1 = self.fileInstance1
         fileName = filename
-        self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance1,fileName))
+        self.file.videoButton_5.clicked.connect(partial(transfer1,fileInstance1,fileName))
 
     def close_file(self):
         self.file.close()
