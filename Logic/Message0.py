@@ -7,7 +7,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 class Message0(QThread):  # for the host
     haveMessageSignal = pyqtSignal(str)
-
+    closeSign = False
     def __init__(self, openPort: int, nickname: str):
         self.socketList = []
         self.openPort = openPort
@@ -25,17 +25,28 @@ class Message0(QThread):  # for the host
         Thread(target=self.repeatGetConnection).start()
 
     def repeatGetConnection(self):
-        while True:
-            (self.conn, self.addr) = self.serverInstant.accept()
-            self.socketList.append((self.conn, self.addr))
-            Thread(target=self.receiveMessage,
-                   args=(self.socketList[-1],)).start()
+        try:
+            while not self.closeSign:
+                (self.conn, self.addr) = self.serverInstant.accept()
+                self.socketList.append((self.conn, self.addr))
+                Thread(target=self.receiveMessage,
+                       args=(self.socketList[-1],)).start()
+        except OSError:
+            print("You have END your server.")
 
     def receiveMessage(self, socket):
-        while True:
-            message = socket[0].recv(1024).decode('utf-8')
-            self.tellMyself(message)
-            self.broadcastExceptOne(message, socket)
+        try:
+            while not self.closeSign:
+                message = socket[0].recv(1024).decode('utf-8')
+                if message == ">CLIENT END":
+                    self.socketList.remove(socket)
+                    self.sendMyMessage(
+                        f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{socket[1]}已经断开了连接")
+                    break
+                self.tellMyself(message)
+                self.broadcastExceptOne(message, socket)
+        except OSError:
+            print("This thread has been ended.")
 
     def broadcastAllSocket(self, message):
         for socket in self.socketList:
@@ -50,5 +61,10 @@ class Message0(QThread):  # for the host
         self.haveMessageSignal.emit(message)
 
     def sendMyMessage(self, message):
-        self.broadcastAllSocket(f"{self.nickname}@{time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>{message}")
-        self.tellMyself(f"{self.nickname}@{time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>{message}")
+        self.broadcastAllSocket(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+        self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+
+    def close(self):
+        self.broadcastAllSocket(f"SYSTEM  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n房主已退出")
+        self.broadcastAllSocket(">END")
+        self.serverInstant.close()

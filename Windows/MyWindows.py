@@ -60,18 +60,18 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
         self.setupUi(self)
         self.pushButton_2.clicked.connect(self.goMainUI)
         self.pushButton.clicked.connect(self.goConnect)
-        self.currentIP.setHtml(f"你的当前IP是:{getIP()}")
-        self.label_4.hide()
+        self.IP.setText(getIP())
+        self.Connecting.hide()
 
     def goMainUI(self):
         self.fromTwoConnectToMainSignal.emit()
 
     def goConnect(self):
-        self.label_4.show()
-        openPort = self.openPort.toPlainText()
-        ipToConnect = self.ipToConnect.toPlainText()
-        portToConnect = self.portToConnect.toPlainText()
-        nickName = self.nickNameInput.toPlainText()
+        self.Connecting.show()
+        openPort = self.OpenPort.text()
+        ipToConnect = self.IPToConnect.text()
+        portToConnect = self.PortToConnect.text()
+        nickName = self.Nickname.text()
         self.goMessageSignal.emit(openPort, ipToConnect, portToConnect, nickName, ShareData)
 
 
@@ -215,11 +215,6 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
             self.closeFileSignal2.emit()
         self.flag=0
 
-    def closeFileMsg(self):
-        self.fileTransfer.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已结束文件传输')
-        self.closeFileSignal.emit()
-
 
 
 
@@ -245,8 +240,7 @@ class AudioWindow(QtWidgets.QMainWindow, AudioUI):
 
     def closeAudioMsg(self):
         self.audioConnect.raise_exception()
-        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断')
-        self.closeAudioSignal.emit()
+        reply = QtWidgets.QMessageBox.information(self, '消息', '对方已挂断，请点击关闭按钮退出')
 
     def closeAudioRequest(self):
         self.audioConnect.raise_exception()
@@ -301,6 +295,9 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
 
     def addMoreMessage(self, message):
         self.textBrowser.append(message)
+
+    def closeEvent(self, a0: QCloseEvent) -> None:
+        super().closeEvent(a0)
 
 
 class MultiClientWindow(QtWidgets.QMainWindow, MultiClientUI):

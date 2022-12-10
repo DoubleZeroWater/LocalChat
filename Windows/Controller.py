@@ -63,25 +63,33 @@ class Controller:
 
     def goMessage0(self, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
-        self.multiMessageWindow.show()
-        self.multiHostWindow.close()
         self.message0 = Message0(port, nickname)
+
         self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
         self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
+        self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
+
+        self.multiMessageWindow.show()
+        self.multiHostWindow.close()
 
     def goMessage1(self, ip, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
-        self.multiMessageWindow.show()
-        self.multiClientWindow.close()
         self.message1 = Message1(ip, port, nickname)
+
+        self.multiMessageWindow.pushButton_2.setEnabled(False)
+        self.multiMessageWindow.pushButton_4.setEnabled(False)
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
+        self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
+
+        self.multiMessageWindow.show()
+        self.multiClientWindow.close()
 
     def backTwoConnectFromMessage(self):
         self.twoConnect.show()
         self.message.close()
         self.Message2Instance.close()
-        self.twoConnect.label_4.hide()
+        self.twoConnect.Connecting.hide()
 
     # Message Window
     def show_message(self, openPort, ipToConnect, portToConnect, nickName, Queue):
@@ -98,14 +106,13 @@ class Controller:
         self.message.FileButton.clicked.connect(self.message.startFileRequest)
         self.message.audioButton.clicked.connect(self.message.startAudioRequest)
         self.message.backButton.clicked.connect(self.backTwoConnectFromMessage)
+        self.message.goFileSignal.connect(self.show_file)
+
         self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
-
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
-        self.message.goFileSignal.connect(self.show_file)
-
 
         self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
         self.message.goAudioSignal.connect(self.show_audio)
@@ -150,5 +157,14 @@ class Controller:
     def close_audio(self):
         self.audio.close()
 
-    def showMultiMessage(self):
-        self.multiMessage = MultiMessageWindow()
+    def backMultiHostFromMultiWindow(self):
+        if self.message0:
+            self.message0.close()
+        self.multiMessageWindow.close()
+        self.multiHostWindow.show()
+
+    def backMultiClientFromMultiWindow(self):
+        if self.message1:
+            self.message1.close()
+        self.multiMessageWindow.close()
+        self.multiClientWindow.show()

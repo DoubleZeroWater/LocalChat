@@ -35,8 +35,8 @@ class Message2(QThread):
         try:
             Thread(target=self.server).start()
             Thread(target=self.client).start()
-        except Exception as e:
-            print(e)
+        except OSError as e:
+            print("System have successfully shut down your client and server.")
 
     def client(self):
         self.clientInstant = socket(AF_INET, SOCK_STREAM)
