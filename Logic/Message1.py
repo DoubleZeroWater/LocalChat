@@ -19,11 +19,21 @@ class Message1(QThread):  # for the host
         Thread(target=self.connect).start()
 
     def connect(self):
-        self.client = socket(AF_INET, SOCK_STREAM)
-        ipPort = (self.ip, self.port)
-        self.client.connect(ipPort)
-        self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname} 加入了聊天室")
-        self.receive()
+        times = 5
+        while times:
+            try:
+                self.client = socket(AF_INET, SOCK_STREAM)
+                ipPort = (self.ip, self.port)
+                self.client.connect(ipPort)
+                self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname} 加入了聊天室")
+                self.receive()
+            except ConnectionRefusedError:
+                times = times - 1
+            except OSError:
+                print("Socket has been closed.")
+                break
+            except:
+                break
 
     def send(self, message):
         try:
