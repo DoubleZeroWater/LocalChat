@@ -39,7 +39,7 @@ class AudioMultiServer(QThread):  # 发送声音
                 (self.conn, self.addr) = self.server.accept()
                 self.socketList.append((self.conn, self.addr))
                 Thread(target=self.receiveMessage,
-                       args=(self.socketList[-1][0],)).start()
+                       args=(self.socketList[-1],)).start()
                 print("Get It.")
         except OSError:
             print("You have END your server.")
@@ -47,7 +47,7 @@ class AudioMultiServer(QThread):  # 发送声音
     def receiveMessage(self, socket):
         try:
             while not self.closeSign:
-                data = socket.recv(4096)
+                data = socket[0].recv(4096)
                 self.tellMyself(data)
                 self.broadcastExceptOne(data, socket)
         except OSError:
@@ -55,12 +55,12 @@ class AudioMultiServer(QThread):  # 发送声音
 
     def broadcastAllSocket(self, message):
         for socket in self.socketList:
-            socket[0].sendall(message)
+            Thread(target=socket[0].sendall, args=(message,))
 
     def broadcastExceptOne(self, message, socket):
         for s in self.socketList:
             if s != socket:
-                s[0].sendall(message)
+                Thread(target=s[0].sendall, args=(message,))
 
     def tellMyself(self, message):
         self.playing_stream.write(message)
