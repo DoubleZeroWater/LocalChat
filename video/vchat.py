@@ -1,16 +1,11 @@
-import ctypes
-from multiprocessing import Process
+import pickle
+import struct
+import time
+import zlib
 from socket import *
 from threading import Thread
+
 import cv2
-import re
-import time
-import sys
-import os
-import struct
-import pickle
-import zlib
-import wave
 
 
 class Video_Client(Thread):
@@ -91,23 +86,6 @@ class Video_Client(Thread):
         except:
             pass
 
-    def get_id(self):
-        # returns id of the respective thread
-        if hasattr(self, '_thread_id'):
-            return self._thread_id  # type: ignore
-        for id, thread in threading._active.items():  # type: ignore
-            if thread is self:
-                return id
-
-    def raise_exception(self):
-        thread_id = self.get_id()
-        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
-        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
-                                                         ctypes.py_object(SystemExit))
-        if res > 1:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
-            print('Exception raise failure')
-
 
 class Video_Server(Thread):
     # 服务器端最终代码如下，增加了对接收到数据的解压缩处理。
@@ -169,22 +147,7 @@ class Video_Server(Thread):
         except:
             pass
 
-    def get_id(self):
-        # returns id of the respective thread
-        if hasattr(self, '_thread_id'):
-            return self._thread_id  # type: ignore
-        for id, thread in threading._active.items():  # type: ignore
-            if thread is self:
-                return id
 
-    def raise_exception(self):
-        thread_id = self.get_id()
-        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
-        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
-                                                         ctypes.py_object(SystemExit))
-        if res > 1:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
-            print('Exception raise failure')
 
 
 if __name__ == "__main__":
