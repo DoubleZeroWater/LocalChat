@@ -27,8 +27,10 @@ class Message1(QThread):  # for the host
                 self.client.connect(ipPort)
                 self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname} 加入了聊天室")
                 self.receive()
+                break
             except ConnectionRefusedError:
                 times = times - 1
+                time.sleep(2)
             except OSError:
                 print("Socket has been closed.")
                 break

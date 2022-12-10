@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LocalChatTools</class>
- <widget class="QWidget" name="LocalChatTools">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>600</width>
-    <height>558</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>LocalChatTools</string>
+    <class>LocalChatToolsUI</class>
+    <widget class="QWidget" name="LocalChatToolsUI">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>600</width>
+                <height>558</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>LocalChatTools</string>
   </property>
   <widget class="QPushButton" name="Button2Mode">
    <property name="geometry">
-    <rect>
-        <x>200</x>
-        <y>270</y>
-        <width>201</width>
-        <height>101</height>
-    </rect>
+       <rect>
+           <x>200</x>
+           <y>260</y>
+           <width>201</width>
+           <height>91</height>
+       </rect>
    </property>
    <property name="font">
     <font>
@@ -33,14 +33,14 @@
    </property>
   </widget>
   <widget class="QPushButton" name="ButtonMutiMode">
-   <property name="geometry">
-       <rect>
-           <x>200</x>
-           <y>400</y>
-           <width>201</width>
-           <height>91</height>
-       </rect>
-   </property>
+      <property name="geometry">
+          <rect>
+              <x>200</x>
+              <y>400</y>
+              <width>201</width>
+              <height>91</height>
+          </rect>
+      </property>
    <property name="font">
     <font>
      <family>等线</family>
@@ -53,12 +53,12 @@
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>120</y>
-     <width>321</width>
-     <height>111</height>
-    </rect>
+       <rect>
+           <x>180</x>
+           <y>140</y>
+           <width>234</width>
+           <height>57</height>
+       </rect>
    </property>
    <property name="font">
     <font>

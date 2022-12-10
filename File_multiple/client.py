@@ -1,13 +1,11 @@
-import ctypes
 import json
-import os
+import json
 import struct
 from socket import *
-from threading import Thread
 
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import pyqtSignal
 
-FILEPATH = "E:/test/"
+FILEPATH = "./data/"
 
 class Client():
     receiveStartSignal = pyqtSignal()
@@ -67,5 +65,5 @@ class Client():
         # self.receiveEndSignal.emit(fileName)
 
 if __name__ == '__main__':
-    receiver = Client("192.168.202.152", 22222, "192.168.202.152", 22222)
+    receiver = Client("192.168.202.152", 23345, "172.20.10.9", 22222)
     receiver.client_socket()
