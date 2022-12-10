@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class LocalChatTools(object):
+class LocalChatToolsUI(object):
     def setupUi(self, LocalChatTools):
         LocalChatTools.setObjectName("LocalChatTools")
         LocalChatTools.resize(600, 558)
