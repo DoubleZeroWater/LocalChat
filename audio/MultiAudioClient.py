@@ -6,9 +6,10 @@
 import socket
 import threading
 import pyaudio
+from PyQt5.QtCore import QThread
 
 
-class Client:
+class AudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -63,4 +64,3 @@ class Client:
                 pass
 
 
-client = Client()

@@ -6,8 +6,10 @@
 import socket
 import threading
 
+from PyQt5.QtCore import QThread
 
-class Server:
+
+class AudioServer(QThread):
     def __init__(self, port):
         self.ip = socket.gethostbyname(socket.gethostname())
         while True:
@@ -52,5 +54,3 @@ class Server:
             except socket.error:
                 c.close()
 
-
-server = Server()
