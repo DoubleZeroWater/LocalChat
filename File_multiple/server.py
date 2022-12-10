@@ -20,8 +20,11 @@ class Server():
             # 监听
             self.sever.bind(ip_port)
             self.sever.listen()
-            self.severSock, addr = self.sever.accept()
-            Thread(target=self.send).start()
+            while True:
+                self.severSock, addr = self.sever.accept()
+                Thread(target=self.send).start()
+        except IOError:
+            pass
         except:
             pass
 
