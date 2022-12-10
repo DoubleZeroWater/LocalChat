@@ -87,7 +87,7 @@ class TwoConnectUI(object):
         self.IP.setText("")
         self.IP.setObjectName("IP")
         self.layoutWidget = QtWidgets.QWidget(TwoConnectUI)
-        self.layoutWidget.setGeometry(QtCore.QRect(60, 70, 255, 281))
+        self.layoutWidget.setGeometry(QtCore.QRect(60, 70, 391, 281))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)

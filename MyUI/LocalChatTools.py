@@ -12,25 +12,25 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class LocalChatToolsUI(object):
-    def setupUi(self, LocalChatTools):
-        LocalChatTools.setObjectName("LocalChatTools")
-        LocalChatTools.resize(600, 558)
-        self.Button2Mode = QtWidgets.QPushButton(LocalChatTools)
-        self.Button2Mode.setGeometry(QtCore.QRect(200, 270, 201, 101))
+    def setupUi(self, LocalChatToolsUI):
+        LocalChatToolsUI.setObjectName("LocalChatToolsUI")
+        LocalChatToolsUI.resize(600, 558)
+        self.Button2Mode = QtWidgets.QPushButton(LocalChatToolsUI)
+        self.Button2Mode.setGeometry(QtCore.QRect(200, 260, 201, 91))
         font = QtGui.QFont()
         font.setFamily("等线")
         font.setPointSize(14)
         self.Button2Mode.setFont(font)
         self.Button2Mode.setObjectName("Button2Mode")
-        self.ButtonMutiMode = QtWidgets.QPushButton(LocalChatTools)
+        self.ButtonMutiMode = QtWidgets.QPushButton(LocalChatToolsUI)
         self.ButtonMutiMode.setGeometry(QtCore.QRect(200, 400, 201, 91))
         font = QtGui.QFont()
         font.setFamily("等线")
         font.setPointSize(14)
         self.ButtonMutiMode.setFont(font)
         self.ButtonMutiMode.setObjectName("ButtonMutiMode")
-        self.label = QtWidgets.QLabel(LocalChatTools)
-        self.label.setGeometry(QtCore.QRect(180, 120, 321, 111))
+        self.label = QtWidgets.QLabel(LocalChatToolsUI)
+        self.label.setGeometry(QtCore.QRect(180, 140, 234, 57))
         font = QtGui.QFont()
         font.setFamily("Agency FB")
         font.setPointSize(28)
@@ -39,12 +39,12 @@ class LocalChatToolsUI(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
 
-        self.retranslateUi(LocalChatTools)
-        QtCore.QMetaObject.connectSlotsByName(LocalChatTools)
+        self.retranslateUi(LocalChatToolsUI)
+        QtCore.QMetaObject.connectSlotsByName(LocalChatToolsUI)
 
-    def retranslateUi(self, LocalChatTools):
+    def retranslateUi(self, LocalChatToolsUI):
         _translate = QtCore.QCoreApplication.translate
-        LocalChatTools.setWindowTitle(_translate("LocalChatTools", "LocalChatTools"))
-        self.Button2Mode.setText(_translate("LocalChatTools", "双人通信模式"))
-        self.ButtonMutiMode.setText(_translate("LocalChatTools", "多人群聊模式"))
-        self.label.setText(_translate("LocalChatTools", "LocalChatTools"))
+        LocalChatToolsUI.setWindowTitle(_translate("LocalChatToolsUI", "LocalChatTools"))
+        self.Button2Mode.setText(_translate("LocalChatToolsUI", "双人通信模式"))
+        self.ButtonMutiMode.setText(_translate("LocalChatToolsUI", "多人群聊模式"))
+        self.label.setText(_translate("LocalChatToolsUI", "LocalChatTools"))
