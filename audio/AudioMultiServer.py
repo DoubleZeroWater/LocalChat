@@ -12,7 +12,7 @@ class AudioMultiServer(QThread):  # 发送声音
         self.openPort = openPort  # 我要开放的端口
         self.socketList = []
         # 以下是收发声音要用的变量
-        chunk_size = 1024  # 512
+        chunk_size = 4096  # 512
         audio_format = pyaudio.paInt16
         channels = 1
         rate = 20000
@@ -47,7 +47,7 @@ class AudioMultiServer(QThread):  # 发送声音
     def receiveMessage(self, socket):
         try:
             while not self.closeSign:
-                data = socket.recv(1024)
+                data = socket.recv(4096)
                 self.tellMyself(data)
                 self.broadcastExceptOne(data, socket)
         except OSError:
@@ -68,7 +68,7 @@ class AudioMultiServer(QThread):  # 发送声音
     def sendMyMessage(self):
         while not self.closeSign:
             try:
-                data = self.recording_stream.read(1024)
+                data = self.recording_stream.read(4096)
                 self.broadcastAllSocket(data)
             except:
                 pass

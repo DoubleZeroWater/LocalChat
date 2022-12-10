@@ -13,7 +13,7 @@ from PyQt5.QtCore import QThread
 class AudioMultiClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
-        chunk_size = 1024  # 512
+        chunk_size = 4096  # 512
         audio_format = pyaudio.paInt16
         channels = 1
         rate = 20000
@@ -37,7 +37,7 @@ class AudioMultiClient(QThread):
     def receiveServerData(self):
         while not self.CloseSign:
             try:
-                data = self.client.recv(1024)
+                data = self.client.recv(4096)
                 self.playing_stream.write(data)
             except:
                 pass
@@ -45,8 +45,8 @@ class AudioMultiClient(QThread):
     def sendDataToServer(self):
         while not self.CloseSign:
             try:
-                data = self.recording_stream.read(1024)
-                self.client.sendall(data)
+                data = self.recording_stream.read(4096)
+                self.client.send(data)
             except:
                 pass
 
