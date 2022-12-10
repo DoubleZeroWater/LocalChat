@@ -79,7 +79,7 @@ class Controller:
 
     def sendMultiFile(self):
         self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.send)
-        self.message0.haveMessageSignal.emit("SEND_FILE")
+        self.multiMessageWindow.sendButtonSignal.emit("SEND_FILE")
 
     def goMessage1(self, ip, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()

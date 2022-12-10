@@ -332,8 +332,8 @@ class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
 
 class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
     sendButtonSignal = QtCore.pyqtSignal(str)
-    sendMultiFileSiganl = QtCore.pyqtSignal(str)
-    sendServer = pyqtSignal()
+    sendMultiFileSignal = QtCore.pyqtSignal(str)
+    sendServer = pyqtSignal(str)
     receiveMultiFileSignal = pyqtSignal()
 
     def __init__(self):
@@ -356,8 +356,8 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
         # 输出文件，查看文件路径
         self.filename = fileName.replace('/', '\\')
         self.textBrowser.append(">>>您已选取文件并发送:" + self.filename)
-        self.sendMultiFileSignal.emit(filename)
-        self.sendServer.emit(filename)
+        self.sendMultiFileSignal.emit(self.filename)
+        self.sendServer.emit(self.filename)
 
     def addMoreMessage(self, message):
         if (message=="SEND_FILE"):

@@ -7,10 +7,9 @@ from threading import Thread
 
 # 服务端 发送
 class Server():
-    def __init__(self, ip, openPort):
+    def __init__(self, openPort):
         super().__init__()
         self.openPort = openPort
-        self.ip = ip
 
     def server_socket(self):
         try:
