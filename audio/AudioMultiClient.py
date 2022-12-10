@@ -26,8 +26,7 @@ class AudioMultiClient(QThread):
         self.recording_stream = self.p.open(format=audio_format, channels=channels, rate=rate, input=True,
                                             frames_per_buffer=chunk_size)
 
-        threading.Thread(target=self.receiveServerData).start()
-        threading.Thread(target=self.sendDataToServer).start()
+        threading.Thread(target=self.startConnecting).start()
 
     def startConnecting(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
