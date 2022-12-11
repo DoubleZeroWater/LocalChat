@@ -63,6 +63,5 @@ class MultiAudioServer(QThread):
                 break
 
     def close(self):
-        self.s.close()
         self.isClose = True
-        print(self.isClose)
+        self.s.close()
