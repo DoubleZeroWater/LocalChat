@@ -62,7 +62,8 @@ class Message1(QThread):  # for the host
                     self.audioCloseSignal.emit()
                 elif message == "SEND_FILE":
                     self.haveMultiFileSignal.emit()
-                self.haveMessageSignal.emit(message)
+                else:
+                    self.haveMessageSignal.emit(message)
         except OSError:
             print("You have successfully disconnected from server.")
 
