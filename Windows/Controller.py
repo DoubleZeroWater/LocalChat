@@ -1,7 +1,7 @@
 from functools import partial
 from threading import Thread
-
 from File_multiple.server import Server
+from File_multiple.client import Client
 from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
