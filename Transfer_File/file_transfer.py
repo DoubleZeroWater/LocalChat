@@ -27,6 +27,8 @@ class File_Transfer(QThread):
         self.ip = ip
         self.clint = None
         self.isClose = False
+        self.clientSock = None
+        self.sever = None
 
     def run(self):
         Thread(target=self.server).start()
