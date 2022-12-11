@@ -12,9 +12,11 @@ from PyQt5.QtCore import QThread
 
 
 class MultiAudioClient(QThread):
+    staticSocket = None
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        MultiAudioClient.staticSocket = self.s
         self.isClose = False
         timestamp = 0
 
@@ -34,52 +36,36 @@ class MultiAudioClient(QThread):
         self.channels = 1
         self.rate = 20000
         self.p = pyaudio.PyAudio()
-        self.playing_stream = None
-        self.recording_stream = None
 
     def receive_and_send(self):
-        self.playing_stream = self.p.open(format=self.audio_format,
-                                          channels=self.channels,
-                                          rate=self.rate, output=True,
-                                          frames_per_buffer=self.chunk_size)
-        self.recording_stream = self.p.open(format=self.audio_format,
-                                            channels=self.channels,
-                                            rate=self.rate, input=True,
-                                            frames_per_buffer=self.chunk_size)
+        self.stream = self.p.open(format=self.audio_format,
+                                  channels=self.channels,
+                                  rate=self.rate, input=True, output=True,
+                                  frames_per_buffer=self.chunk_size, stream_callback=callback)
 
         print("Connected to Server")
 
         # start threads
         threading.Thread(target=self.receive_server_data).start()
-        threading.Thread(target=self.send_data_to_server).start()
 
     def receive_server_data(self):
-        while True:
-            try:
-                if self.isClose:
-                    break
-                data = self.s.recv(1024)
-                print(data)
-                self.playing_stream.write(data)
-            except:
-                pass
-
-    def send_data_to_server(self):
-        while True:
-            try:
-                if self.isClose:
-                    break
-                data = self.recording_stream.read(1024)
-                # data = "123456789".encode('utf-8')
-                # time.sleep(1)
-                self.s.sendall(data)
-            except:
-                pass
+        try:
+            self.stream.start_stream()
+        except:
+            pass
 
     def close(self):
+        self.stream.stop_stream()
+        self.stream.close()
         self.isClose = True
         print(self.isClose)
         self.s.close()
+
+
+def callback(in_data, frame_count, time_info, status):
+    MultiAudioClient.staticSocket.sendall(in_data)
+    data = MultiAudioClient.staticSocket.recv(1024)
+    return data, pyaudio.paContinue
 
 
 if __name__ == "__main__":
