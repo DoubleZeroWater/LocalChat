@@ -218,11 +218,15 @@ class Controller:
         self.multiMessageWindow.pushButton_5.setEnabled(True)
 
     def closeMultiAudioFromMessage0(self):
-        self.multiAudioServer.close()
-        self.multiAudioClient.close()
+        if self.multiAudioClient:
+            self.multiAudioClient.close()
+        if self.multiAudioServer:
+            self.multiAudioServer.close()
+
         self.multiMessageWindow.pushButton_5.setEnabled(False)
         self.multiMessageWindow.pushButton_2.setEnabled(True)
 
     def closeMultiAudioFromMessage1(self):
-        self.multiAudioClient.close()
+        if self.multiAudioClient:
+            self.multiAudioClient.close()
         self.multiMessageWindow.pushButton_5.setEnabled(False)
