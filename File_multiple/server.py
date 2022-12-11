@@ -11,7 +11,7 @@ class Server():
         super().__init__()
         self.openPort = openPort
 
-    def server_socket(self):
+    def server_socket(self, filename: str):
         try:
             self.sever = socket(AF_INET, SOCK_STREAM)
             ip_port = ("", self.openPort)
@@ -20,13 +20,13 @@ class Server():
             self.sever.listen()
             while True:
                 self.severSock, addr = self.sever.accept()
-                Thread(target=self.send).start()
+                Thread(target=self.send, args=(filename,)).start()
         except IOError:
             pass
         except:
             pass
 
-    def send(self, filename: str):
+    def send(self):
         buffSize = 1024
         # 上传文件
         fileInfor = filename

@@ -72,7 +72,7 @@ class Controller:
         self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
         self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
-        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.send)
+        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.server_socket)
 
         self.multiMessageWindow.show()
         self.multiHostWindow.close()
