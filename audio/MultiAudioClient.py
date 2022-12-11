@@ -9,7 +9,7 @@ import pyaudio
 from PyQt5.QtCore import QThread
 
 
-class AudioClient(QThread):
+class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -30,6 +30,7 @@ class AudioClient(QThread):
         self.p = pyaudio.PyAudio()
         self.playing_stream = None
         self.recording_stream = None
+        self.isClose = False
 
     def receive_and_send(self):
         self.playing_stream = self.p.open(format=self.audio_format,
@@ -50,6 +51,8 @@ class AudioClient(QThread):
     def receive_server_data(self):
         while True:
             try:
+                if self.isClose:
+                    break
                 data = self.s.recv(1024)
                 self.playing_stream.write(data)
             except:
@@ -58,9 +61,13 @@ class AudioClient(QThread):
     def send_data_to_server(self):
         while True:
             try:
+                if self.isClose:
+                    break
                 data = self.recording_stream.read(1024)
                 self.s.sendall(data)
             except:
                 pass
 
-
+    def close(self):
+        self.isClose = True
+        print(self.isClose)
