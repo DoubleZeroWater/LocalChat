@@ -59,8 +59,8 @@ class MultiAudioClient(QThread):
                 if self.isClose:
                     break
                 data = self.s.recv(1024)
-                print(data)
-                # self.playing_stream.write(data)
+                # print(data)
+                self.playing_stream.write(data)
             except:
                 pass
 
