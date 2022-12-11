@@ -59,6 +59,7 @@ class MultiAudioClient(QThread):
                 if self.isClose:
                     break
                 data = self.s.recv(1024)
+                # print(data)
                 self.playing_stream.write(data)
             except:
                 pass
@@ -69,6 +70,8 @@ class MultiAudioClient(QThread):
                 if self.isClose:
                     break
                 data = self.recording_stream.read(1024)
+                # data = "123456789".encode('utf-8')
+                # time.sleep(1)
                 self.s.sendall(data)
             except:
                 pass
@@ -76,3 +79,8 @@ class MultiAudioClient(QThread):
     def close(self):
         self.isClose = True
         print(self.isClose)
+
+
+if __name__ == "__main__":
+    s = MultiAudioClient("172.20.10.3", 31415)
+    s.receive_and_send()
