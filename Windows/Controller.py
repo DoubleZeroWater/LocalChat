@@ -204,7 +204,6 @@ class Controller:
     def goMultiAudioFromMessage0(self):
         self.multiAudioServer = MultiAudioServer(31415)
         self.multiAudioClient = MultiAudioClient("127.0.0.1", 31415)
-        Thread(target=self.multiAudioServer.accept_connections).start()
         Thread(target=self.multiAudioClient.receive_and_send).start()
 
         self.message0.tellAudioOK()

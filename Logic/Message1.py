@@ -9,7 +9,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class Message1(QThread):  # for the host
     socketReadySignal = pyqtSignal()
     haveMessageSignal = pyqtSignal(str)
-    audioSignal = pyqtSignal()
+    audioSignal = pyqtSignal(str)
     audioCloseSignal = pyqtSignal()
     closeSign = False
 
