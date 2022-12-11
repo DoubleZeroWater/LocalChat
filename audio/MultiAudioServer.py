@@ -28,8 +28,8 @@ class MultiAudioServer(QThread):
     def accept_connections(self):
         self.s.listen(100)
 
-        print('Running on IP: ' + self.ip)
-        print('Running on port: ' + str(self.port))
+        # print('Running on IP: ' + self.ip)
+        # print('Running on port: ' + str(self.port))
 
         while True:
             if self.isClose:
