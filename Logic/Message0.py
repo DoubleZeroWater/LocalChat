@@ -40,7 +40,9 @@ class Message0(QThread):  # for the host
                 message = socket[0].recv(1024).decode('utf-8')
                 if message == ">CLIENT END":
                     self.socketList.remove(socket)
-                    self.sendMyMessage(
+                    self.broadcastAllSocket(
+                        f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{socket[1]}已经断开了连接")
+                    self.haveMessageSignal.emit(
                         f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{socket[1]}已经断开了连接")
                     break
                 self.tellMyself(message)
@@ -69,8 +71,8 @@ class Message0(QThread):  # for the host
         self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
 
     def tellAudioOK(self):
-        self.broadcastAllSocket(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经开启。")
-        self.tellMyself(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经开启。")
+        self.broadcastAllSocket(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机开启了语音。")
+        self.tellMyself(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机开启了语音。")
         self.broadcastAllSocket(">AudioOK")
 
     def tellAudioClose(self):

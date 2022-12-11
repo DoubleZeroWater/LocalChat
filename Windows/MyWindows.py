@@ -20,12 +20,8 @@ from MyUI.MultiMessage import MultiMessageUI
 from MyUI.TwoConnect import TwoConnectUI
 from Transfer_File.file_transfer import File_Transfer
 from Transfer_File1.file_transfer1 import File_Transfer1
-from File_multiple.client import Client
-from File_multiple.server import Server
 from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
-from threading import Thread
-
 
 ShareData = Queue()
 
@@ -68,6 +64,7 @@ class TwoConnectWindow(QtWidgets.QMainWindow, TwoConnectUI):
         self.IP.setText(getIP())
         self.Connecting.hide()
 
+
     def goMainUI(self):
         self.fromTwoConnectToMainSignal.emit()
 
@@ -92,6 +89,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.vServer = None
         self.setupUi(self)
         self.sendButton.clicked.connect(self.showMessage)
+        self.setWindowFlag(QtCore.Qt.WindowCloseButtonHint, False)
 
     def showMessage(self):
         message = self.toSend.toPlainText()
@@ -346,14 +344,15 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
     sendMultiFileSignal = QtCore.pyqtSignal(str)
     sendMyFileSignal = QtCore.pyqtSignal()
     receiveMultiFileSignal = pyqtSignal()
+    audioAcceptSignal = pyqtSignal()
+    closeWindowSiganl = pyqtSignal()
 
     def __init__(self):
         super(MultiMessageWindow, self).__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.pushButtonSlot)
         self.pushButton_4.clicked.connect(self.openFile)
-        self.fileReceive=None
-
+        self.fileReceive = None
 
     def pushButtonSlot(self):
         self.sendButtonSignal.emit(self.lineEdit.text())
@@ -377,15 +376,21 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
 
     def showReceiveFile(self):
         reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否接受房主传输的文件?',
-                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                   QtWidgets.QMessageBox.No)
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             self.receiveMultiFileSignal.emit()
 
-
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)
+        self.closeWindowSiganl.emit()
 
+    def showCheckAudio(self):
+        reply = QtWidgets.QMessageBox.question(self, '音频通话', '是否加入房主的音频通话?',
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.audioAcceptSignal.emit()
 
 class MultiClientWindow(QtWidgets.QMainWindow, MultiClientUI):
     goBackHelloSignal = QtCore.pyqtSignal()

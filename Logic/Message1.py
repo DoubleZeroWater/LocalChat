@@ -29,6 +29,8 @@ class Message1(QThread):  # for the host
                 ipPort = (self.ip, self.port)
                 self.client.connect(ipPort)
                 self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname} 加入了聊天室")
+                self.haveMessageSignal.emit(
+                    f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname} 加入了聊天室")
                 self.receive()
                 break
             except ConnectionRefusedError:
@@ -58,12 +60,8 @@ class Message1(QThread):  # for the host
                     break
                 elif message == ">AudioOK":
                     self.audioSignal.emit(self.ip)
-                    self.haveMessageSignal.emit(
-                        f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机开启了语音。")
                 elif message == ">AudioClose":
                     self.audioCloseSignal.emit()
-                    self.haveMessageSignal.emit(
-                        f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机关闭了语音。")
                 elif message == "FILE_SEND":
                     self.haveMultiFileSignal.emit()
                     self.haveMessageSignal.emit(
@@ -77,8 +75,13 @@ class Message1(QThread):  # for the host
         Thread(target=self.repeatReceive).start()
 
     def sendMyMessage(self, message):
-        self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.haveMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+        self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
+
+    def closeAudio(self):
+        self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname}已经退出了语音。")
+        self.haveMessageSignal.emit(
+            f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname}已经退出了语音。")
 
     def close(self):
         self.send(">CLIENT END")

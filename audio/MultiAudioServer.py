@@ -10,6 +10,7 @@ from PyQt5.QtCore import QThread
 
 
 class MultiAudioServer(QThread):
+
     def __init__(self, port):
         super().__init__()
         # self.ip = socket.gethostbyname(socket.gethostname())
@@ -31,15 +32,18 @@ class MultiAudioServer(QThread):
 
         # print('Running on IP: ' + self.ip)
         # print('Running on port: ' + str(self.port))
-
-        while True:
-            if self.isClose:
-                break
-            c, addr = self.s.accept()
-
-            self.connections.append(c)
-
-            threading.Thread(target=self.handle_client, args=(c, addr,)).start()
+        try:
+            while True:
+                if self.isClose:
+                    break
+                c, addr = self.s.accept()
+                self.connections.append(c)
+                threading.Thread(target=self.handle_client, args=(
+                    c,
+                    addr,
+                )).start()
+        except OSError:
+            print("Socket have been closed.")
 
     def broadcast(self, sock, data):
         for client in self.connections:
@@ -55,8 +59,7 @@ class MultiAudioServer(QThread):
                 break
             try:
                 data = c.recv(1024)
-                print(data)
-                self.broadcast(c, data)
+                threading.Thread(target=self.broadcast, args=(c, data,)).start()
 
             except socket.error:
                 c.close()
@@ -65,3 +68,7 @@ class MultiAudioServer(QThread):
     def close(self):
         self.isClose = True
         self.s.close()
+
+
+if __name__ == "__main__":
+    MultiAudioServer(31415)

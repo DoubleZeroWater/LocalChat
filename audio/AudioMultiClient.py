@@ -56,4 +56,4 @@ class AudioMultiClient(QThread):
 
 
 if __name__ == "__main__":
-    AudioMultiClient("127.0.0.1", 22222)
+    AudioMultiClient("127.0.0.1", 31415)

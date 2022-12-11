@@ -75,6 +75,7 @@ class AudioMultiServer(QThread):  # 发送声音
 
     def close(self):
         self.closeSign = True
+        self.server.shutdown(2)
         self.server.close()
 
 
