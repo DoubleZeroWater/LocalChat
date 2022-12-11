@@ -9,7 +9,7 @@ import threading
 from PyQt5.QtCore import QThread
 
 
-class AudioServer(QThread):
+class MultiAudioServer(QThread):
     def __init__(self, port):
         self.ip = socket.gethostbyname(socket.gethostname())
         while True:
@@ -22,6 +22,7 @@ class AudioServer(QThread):
                 print("Couldn't bind to that port")
         self.connections = []
         self.accept_connections()
+        self.isClose = False
 
     def accept_connections(self):
         self.s.listen(100)
@@ -30,6 +31,8 @@ class AudioServer(QThread):
         print('Running on port: ' + str(self.port))
 
         while True:
+            if self.isClose:
+                break
             c, addr = self.s.accept()
 
             self.connections.append(c)
@@ -46,6 +49,8 @@ class AudioServer(QThread):
 
     def handle_client(self, c, addr):
         while 1:
+            if self.isClose:
+                break
             try:
                 data = c.recv(1024)
                 print(data)
@@ -54,3 +59,6 @@ class AudioServer(QThread):
             except socket.error:
                 c.close()
 
+    def close(self):
+        self.isClose = True
+        print(self.isClose)
