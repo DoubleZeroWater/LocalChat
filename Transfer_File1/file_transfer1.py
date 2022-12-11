@@ -27,6 +27,7 @@ class File_Transfer1(QThread):
         # self.name = name
         self.ip = ip
         self.clint = None
+        self.isClose = False
 
     def run(self):
         Thread(target=self.server).start()
@@ -147,13 +148,11 @@ class File_Transfer1(QThread):
                 return id
 
     def raise_exception(self):
-        thread_id = self.get_id()
-        # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
-        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id,
-                                                         ctypes.py_object(SystemExit))
-        if res > 1:
-            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
-            print('Exception raise failure')
+        self.isClose = True
+        print(self.isClose)
+        self.clientSock.close()
+        self.sever.close()
+        return self.isClose
 
 
 if __name__ == '__main__':

@@ -68,10 +68,7 @@ class File_Transfer(QThread):
         # clientSock, addr = sever.accept()
         # 开始通信
         while True:
-            if self.isClose:
-                self.clientSock.close()
-                self.sever.close()
-                break
+
             # 接收客户端发送的报头长度
             buffSize = 1024
             head_struct = self.clientSock.recv(4)
@@ -156,6 +153,8 @@ class File_Transfer(QThread):
     def raise_exception(self):
         self.isClose = True
         print(self.isClose)
+        self.clientSock.close()
+        self.sever.close()
         return self.isClose
         # thread_id = self.get_id()
         # # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
