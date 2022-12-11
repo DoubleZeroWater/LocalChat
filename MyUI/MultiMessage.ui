@@ -100,7 +100,7 @@
             <property name="geometry">
                 <rect>
                     <x>520</x>
-                    <y>120</y>
+                    <y>140</y>
                     <width>131</width>
                     <height>71</height>
                 </rect>
@@ -113,6 +113,25 @@
             </property>
             <property name="text">
                 <string>文件传输</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" name="pushButton_5">
+            <property name="geometry">
+                <rect>
+                    <x>520</x>
+                    <y>260</y>
+                    <width>131</width>
+                    <height>71</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <family>等线</family>
+                    <pointsize>14</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>退出语音</string>
             </property>
         </widget>
     </widget>

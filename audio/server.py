@@ -14,7 +14,7 @@ class Server:
             try:
                 self.port = 9808
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.s.bind((self.ip, self.port))
+                self.s.bind(("192.168.47.160", self.port))
                 break
             except:
                 print("Couldn't bind to that port")
