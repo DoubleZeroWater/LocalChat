@@ -13,6 +13,7 @@ class Server():
 
     def server_socket(self, filename: str):
         try:
+            print(self.openPort)
             self.sever = socket(AF_INET, SOCK_STREAM)
             ip_port = ("", self.openPort)
             # 监听
@@ -55,10 +56,10 @@ class Server():
         if completed == "1":
             print("发送成功")
 
-    def killAllBugs(self,filename):
-        Thread(target=self.server_socket,args=(filename,))
+    def killAllBugs(self,filename: str):
+        Thread(target=self.server_socket,args=(filename,)).start()
 
 
 if __name__ == '__main__':
     sender = Server(22222)
-    sender.server_socket(r'E:\test\123\1235.txt')
+    sender.killAllBugs(r'E:\test\123\1235.txt')
