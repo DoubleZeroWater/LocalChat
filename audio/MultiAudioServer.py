@@ -11,18 +11,19 @@ from PyQt5.QtCore import QThread
 
 class MultiAudioServer(QThread):
     def __init__(self, port):
-        self.ip = socket.gethostbyname(socket.gethostname())
+        super().__init__()
+        # self.ip = socket.gethostbyname(socket.gethostname())
+        self.isClose = False
         while True:
             try:
                 self.port = port
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.s.bind((self.ip, self.port))
+                self.s.bind(('', self.port))
                 break
             except:
                 print("Couldn't bind to that port")
         self.connections = []
         self.accept_connections()
-        self.isClose = False
 
     def accept_connections(self):
         self.s.listen(100)

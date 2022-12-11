@@ -9,6 +9,8 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class Message1(QThread):  # for the host
     socketReadySignal = pyqtSignal()
     haveMessageSignal = pyqtSignal(str)
+    audioSignal = pyqtSignal()
+    audioCloseSignal = pyqtSignal()
     closeSign = False
 
     def __init__(self, ip, port, nickname):
@@ -53,6 +55,10 @@ class Message1(QThread):  # for the host
                     self.haveMessageSignal.emit(
                         f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机已经断开了与你的连接，请返回。")
                     break
+                elif message == ">AudioOK":
+                    self.audioSignal.emit(self.ip)
+                elif message == ">AudioClose":
+                    self.audioCloseSignal.emit()
                 self.haveMessageSignal.emit(message)
         except OSError:
             print("You have successfully disconnected from server.")

@@ -1,14 +1,17 @@
 from functools import partial
+from threading import Thread
 
+from File_multiple.client import Client
+from File_multiple.server import Server
 from Logic.Message0 import Message0
 from Logic.Message1 import Message1
 from Logic.Message2 import Message2
 from Transfer_File.file_transfer import transfer
 from Transfer_File1.file_transfer1 import transfer1
-from File_multiple.client import Client
-from File_multiple.server import Server
 from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, FileWindow, AudioWindow, MultiHostWindow, \
     MultiMessageWindow, MultiClientWindow
+from audio.MultiAudioClient import MultiAudioClient
+from audio.MultiAudioServer import MultiAudioServer
 
 
 class Controller:
@@ -69,9 +72,13 @@ class Controller:
         self.message0 = Message0(port, nickname)
         self.fileServer = Server(port)
 
+        self.multiMessageWindow.pushButton_5.setEnabled(False)
+
         self.multiMessageWindow.sendButtonSignal.connect(self.message0.sendMyMessage)
         self.message0.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
+        self.multiMessageWindow.pushButton_2.clicked.connect(self.goMultiAudioFromMessage0)
+        self.multiMessageWindow.pushButton_5.clicked.connect(self.goMultiAudioFromMessage1)
         self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.server_socket)
 
         self.multiMessageWindow.show()
@@ -84,12 +91,16 @@ class Controller:
 
         self.multiMessageWindow.pushButton_2.setEnabled(False)
         self.multiMessageWindow.pushButton_4.setEnabled(False)
+        self.multiMessageWindow.pushButton_5.setEnabled(False)
+
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
         self.multiMessageWindow.sendMyFileSignal.connect(self.message1.sendMyFile)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
         self.multiMessageWindow.receiveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
-
+        self.message1.audioSignal.connect(self.goMultiAudioFromMessage1)
+        self.message1.audioCloseSignal.connect(self.closeMultiAudioFromMessage1)
+        self.multiMessageWindow.pushButton_5.clicked.connect(self.closeMultiAudioFromMessage1)
 
         self.multiMessageWindow.show()
         self.multiClientWindow.close()
@@ -156,12 +167,12 @@ class Controller:
     def send_file(self, filename):
         fileInstance = self.fileInstance
         fileName = filename
-        self.file.videoButton_3.clicked.connect(partial(transfer,fileInstance,fileName))
+        self.file.videoButton_3.clicked.connect(partial(transfer, fileInstance, fileName))
 
     def send_files(self, filename):
         fileInstance1 = self.fileInstance1
         fileName = filename
-        self.file.videoButton_5.clicked.connect(partial(transfer1,fileInstance1,fileName))
+        self.file.videoButton_5.clicked.connect(partial(transfer1, fileInstance1, fileName))
 
     def close_file(self):
         self.file.close()
@@ -190,3 +201,28 @@ class Controller:
         self.multiMessageWindow.close()
         self.multiClientWindow.show()
 
+    def goMultiAudioFromMessage0(self):
+        self.multiAudioServer = MultiAudioServer(31415)
+        self.multiAudioClient = MultiAudioClient("127.0.0.1", 31415)
+        Thread(target=self.multiAudioServer.accept_connections).start()
+        Thread(target=self.multiAudioClient.receive_and_send).start()
+
+        self.message0.tellAudioOK()
+        self.multiMessageWindow.pushButton_2.setEnabled(False)
+        self.multiMessageWindow.pushButton_5.setEnabled(True)
+
+    def goMultiAudioFromMessage1(self, ip):
+        multiAudioClient = MultiAudioClient(ip, 31415)
+        Thread(target=multiAudioClient.receive_and_send).start()
+
+        self.multiMessageWindow.pushButton_5.setEnabled(True)
+
+    def closeMultiAudioFromMessage0(self):
+        self.multiAudioServer.close()
+        self.multiAudioClient.close()
+        self.multiMessageWindow.pushButton_5.setEnabled(False)
+        self.multiMessageWindow.pushButton_2.setEnabled(True)
+
+    def closeMultiAudioFromMessage1(self):
+        self.multiAudioClient.close()
+        self.multiMessageWindow.pushButton_5.setEnabled(False)

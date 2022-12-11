@@ -64,6 +64,15 @@ class Message0(QThread):  # for the host
         self.broadcastAllSocket(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
 
+    def tellAudioOK(self):
+        self.broadcastAllSocket(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经开启。")
+        self.tellMyself(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经开启。")
+        self.broadcastAllSocket(">AudioOK")
+
+    def tellAudioClose(self):
+        self.broadcastAllSocket(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经关闭。")
+        self.tellMyself(f"SYSTEM {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n音频已经关闭。")
+        self.broadcastAllSocket(">AudioClose")
 
     def close(self):
         self.broadcastAllSocket(f"SYSTEM  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n房主已退出")
