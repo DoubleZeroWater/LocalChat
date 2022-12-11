@@ -97,7 +97,7 @@ class File_Transfer(QThread):
                     recv_mesg = self.clientSock.recv(buffSize)
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
-                    self.processSignal.emit(f"{recv_len / filesize_b*100}"+'%')
+                    self.processSignal.emit(f"{recv_len / filesize_b*100}"+"%")
                     print(f"{(recv_len / filesize_b):.2f}")
                 else:
                     # 需要传输的文件数据小于最大传输数据大小

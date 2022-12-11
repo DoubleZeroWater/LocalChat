@@ -20,6 +20,8 @@ from MyUI.MultiMessage import MultiMessageUI
 from MyUI.TwoConnect import TwoConnectUI
 from Transfer_File.file_transfer import File_Transfer
 from Transfer_File1.file_transfer1 import File_Transfer1
+from File_multiple.client import Client
+from File_multiple.server import Server
 from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
 
@@ -364,21 +366,20 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
         self.filename = fileName.replace('/', '\\')
         self.textBrowser.append(">>>您已选取文件并发送:" + self.filename)
         self.sendMultiFileSignal.emit(self.filename)
-        self.sendMyFileSignal.emit("SEND_FILE")
+        self.sendMyFileSignal.emit()
 
 
     def addMoreMessage(self, message):
-        if (message=="SEND_FILE"):
-            reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否接受房主传输的文件?',
-                                                       QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-                                                       QtWidgets.QMessageBox.No)
-            if reply == QtWidgets.QMessageBox.Yes:
-                self.receiveMultiFileSignal.emit()
-        else:
-            self.textBrowser.append(message)
+        self.textBrowser.append(message)
 
     def showReceiveFile(self):
-        self.textBrowser.append("你已成功接受文件")
+        reply = QtWidgets.QMessageBox.question(self, '文件传输', '是否接受房主传输的文件?',
+                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                   QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            self.receiveMultiFileSignal.emit()
+            Thread(target=Client, args=(ip,64321,))
+
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         super().closeEvent(a0)

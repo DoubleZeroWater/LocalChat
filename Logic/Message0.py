@@ -60,6 +60,10 @@ class Message0(QThread):  # for the host
     def tellMyself(self, message):
         self.haveMessageSignal.emit(message)
 
+    def sendMyFile(self):
+        self.broadcastAllSocket("FILE_SEND")
+        self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n您已成功发送文件")
+
     def sendMyMessage(self, message):
         self.broadcastAllSocket(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.tellMyself(f"{self.nickname}  {time.strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")

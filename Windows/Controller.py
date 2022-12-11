@@ -70,7 +70,7 @@ class Controller:
     def goMessage0(self, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
         self.message0 = Message0(port, nickname)
-        self.fileServer = Server(port)
+        self.fileServer = Server(12346)
 
         self.multiMessageWindow.pushButton_5.setEnabled(False)
 
@@ -79,7 +79,8 @@ class Controller:
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiHostFromMultiWindow)
         self.multiMessageWindow.pushButton_2.clicked.connect(self.goMultiAudioFromMessage0)
         self.multiMessageWindow.pushButton_5.clicked.connect(self.goMultiAudioFromMessage1)
-        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.server_socket)
+        self.multiMessageWindow.sendMultiFileSignal.connect(self.fileServer.killAllBugs)
+        self.multiMessageWindow.sendMyFileSignal.connect(self.message0.sendMyFile)
 
         self.multiMessageWindow.show()
         self.multiHostWindow.close()
@@ -87,7 +88,6 @@ class Controller:
     def goMessage1(self, ip, port, nickname):
         self.multiMessageWindow = MultiMessageWindow()
         self.message1 = Message1(ip, port, nickname)
-        self.fileClient = Client(ip, port)
 
         self.multiMessageWindow.pushButton_2.setEnabled(False)
         self.multiMessageWindow.pushButton_4.setEnabled(False)
@@ -97,7 +97,8 @@ class Controller:
         self.multiMessageWindow.sendMyFileSignal.connect(self.message1.sendMyFile)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
-        self.multiMessageWindow.receiveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
+        self.message1.haveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
+        # self.multiMessageWindow.receiveMultiFileSignal.connect(self.)
         self.message1.audioSignal.connect(self.goMultiAudioFromMessage1)
         self.message1.audioCloseSignal.connect(self.closeMultiAudioFromMessage1)
         self.multiMessageWindow.pushButton_5.clicked.connect(self.closeMultiAudioFromMessage1)

@@ -23,7 +23,7 @@ class Client():
         self.clint = socket(AF_INET, SOCK_STREAM)
         ip_port = (self.ipToConnect, self.portToConnect)
         self.clint.connect(ip_port)
-        print("{0} connecting...".format(self.ip))
+        # print("{0} connecting...".format(self.ip))
         # 接收文件
         # while True:
         # 接收客户端发送的报头长度
