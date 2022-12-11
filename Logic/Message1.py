@@ -55,16 +55,21 @@ class Message1(QThread):  # for the host
                     self.close()
                     self.haveMessageSignal.emit(
                         f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机已经断开了与你的连接，请返回。")
-                    self.haveMessageSignal.emit()
                     break
                 elif message == ">AudioOK":
                     self.audioSignal.emit(self.ip)
-                    self.haveMessageSignal.emit()
+                    self.haveMessageSignal.emit(
+                        f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机开启了语音。")
                 elif message == ">AudioClose":
                     self.audioCloseSignal.emit()
-                    self.haveMessageSignal.emit()
+                    self.haveMessageSignal.emit(
+                        f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n远程主机关闭了语音。")
                 elif message == "FILE_SEND":
                     self.haveMultiFileSignal.emit()
+                    self.haveMessageSignal.emit(
+                        f"SYSTEM {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n你将要接受一个文件。")
+                else:
+                    self.haveMessageSignal.emit(message)
         except OSError:
             print("You have successfully disconnected from server.")
 
