@@ -16,6 +16,7 @@ class File_Transfer(QThread):
     receiveEndSignal = pyqtSignal(str)
     sendEndSignal = pyqtSignal()
     processSignal = pyqtSignal(str)
+    sendEndSignal = pyqtSignal()
 
 
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
@@ -97,7 +98,7 @@ class File_Transfer(QThread):
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
                     self.processSignal.emit(f"{recv_len / filesize_b*100}"+'%')
-                    print(f"{recv_len / filesize_b}")
+                    print(f"{(recv_len / filesize_b):.2f}")
                 else:
                     # 需要传输的文件数据小于最大传输数据大小
                     recv_mesg = self.clientSock.recv(filesize_b - recv_len)
