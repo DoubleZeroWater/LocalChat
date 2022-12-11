@@ -67,47 +67,49 @@ class File_Transfer(QThread):
         # print("waiting for connection......\n")
         # clientSock, addr = sever.accept()
         # 开始通信
-        while True:
+        try:
+            while True:
 
-            # 接收客户端发送的报头长度
-            buffSize = 1024
-            head_struct = self.clientSock.recv(4)
-            # 解析报头的长度
-            head_len = struct.unpack('i', head_struct)[0]
-            # 接收大小为head_len的报头内容（报头内容包括文件大小，文件名内容）
-            data = self.clientSock.recv(head_len)
-            self.receiveStartSignal.emit()
-            # 解析报头的内容, 报头为一个字典其中包含上传文件的大小和文件名，
-            head_dir = json.loads(data.decode("utf-8"))  # 将JSON字符串解码为python对象
-            filesize_b = head_dir["fileSize"]
-            fileName = head_dir["fileName"]
-            # 接收真实的文件内容
-            recv_len = 0
-            recv_mesg = b''
-            # 在服务器文件夹中创建新文件
-            fileInfor = FILEPATH + fileName
-            f = open(fileInfor, "wb")
-            # 开始接收用户上传的文件
-            while recv_len < filesize_b:
-                if filesize_b - recv_len > buffSize:
-                    # 假设未上传的文件数据大于最大传输数据
-                    recv_mesg = self.clientSock.recv(buffSize)
-                    f.write(recv_mesg)
-                    recv_len += len(recv_mesg)
-                    self.processSignal.emit(f"{recv_len / filesize_b*100}"+"%")
-                    print(f"{(recv_len / filesize_b):.2f}")
-                else:
-                    # 需要传输的文件数据小于最大传输数据大小
-                    recv_mesg = self.clientSock.recv(filesize_b - recv_len)
-                    recv_len += len(recv_mesg)
-                    f.write(recv_mesg)
-                    f.close()
-                    print("文件接收完毕！")
-            # 向用户发送信号，文件已经上传完毕
-            completed = "1"
-            self.clientSock.send(bytes(completed, "utf-8"))
-            self.receiveEndSignal.emit(fileName)
-
+                # 接收客户端发送的报头长度
+                buffSize = 1024
+                head_struct = self.clientSock.recv(4)
+                # 解析报头的长度
+                head_len = struct.unpack('i', head_struct)[0]
+                # 接收大小为head_len的报头内容（报头内容包括文件大小，文件名内容）
+                data = self.clientSock.recv(head_len)
+                self.receiveStartSignal.emit()
+                # 解析报头的内容, 报头为一个字典其中包含上传文件的大小和文件名，
+                head_dir = json.loads(data.decode("utf-8"))  # 将JSON字符串解码为python对象
+                filesize_b = head_dir["fileSize"]
+                fileName = head_dir["fileName"]
+                # 接收真实的文件内容
+                recv_len = 0
+                recv_mesg = b''
+                # 在服务器文件夹中创建新文件
+                fileInfor = FILEPATH + fileName
+                f = open(fileInfor, "wb")
+                # 开始接收用户上传的文件
+                while recv_len < filesize_b:
+                    if filesize_b - recv_len > buffSize:
+                        # 假设未上传的文件数据大于最大传输数据
+                        recv_mesg = self.clientSock.recv(buffSize)
+                        f.write(recv_mesg)
+                        recv_len += len(recv_mesg)
+                        self.processSignal.emit(f"{recv_len / filesize_b*100}"+"%")
+                        print(f"{(recv_len / filesize_b):.2f}")
+                    else:
+                        # 需要传输的文件数据小于最大传输数据大小
+                        recv_mesg = self.clientSock.recv(filesize_b - recv_len)
+                        recv_len += len(recv_mesg)
+                        f.write(recv_mesg)
+                        f.close()
+                        print("文件接收完毕！")
+                # 向用户发送信号，文件已经上传完毕
+                completed = "1"
+                self.clientSock.send(bytes(completed, "utf-8"))
+                self.receiveEndSignal.emit(fileName)
+        except:
+            pass
 
     # self.clientSock.close()
     # break
