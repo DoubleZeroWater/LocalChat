@@ -13,6 +13,7 @@ class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.isClose = False
 
         while 1:
             try:
@@ -31,7 +32,6 @@ class MultiAudioClient(QThread):
         self.p = pyaudio.PyAudio()
         self.playing_stream = None
         self.recording_stream = None
-        self.isClose = False
 
     def receive_and_send(self):
         self.playing_stream = self.p.open(format=self.audio_format,

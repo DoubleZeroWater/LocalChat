@@ -13,6 +13,7 @@ class MultiAudioServer(QThread):
     def __init__(self, port):
         super().__init__()
         self.ip = socket.gethostbyname(socket.gethostname())
+        self.isClose = False
         while True:
             try:
                 self.port = port
@@ -23,7 +24,6 @@ class MultiAudioServer(QThread):
                 print("Couldn't bind to that port")
         self.connections = []
         self.accept_connections()
-        self.isClose = False
 
     def accept_connections(self):
         self.s.listen(100)
