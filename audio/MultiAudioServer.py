@@ -59,6 +59,7 @@ class MultiAudioServer(QThread):
 
             except socket.error:
                 c.close()
+                break
 
     def close(self):
         self.isClose = True
