@@ -47,7 +47,6 @@ class Server:
         while 1:
             try:
                 data = c.recv(1024)
-                print(data)
                 self.broadcast(c, data)
 
             except socket.error:
