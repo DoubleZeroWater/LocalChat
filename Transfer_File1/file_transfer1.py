@@ -1,13 +1,13 @@
-import ctypes
 import json
-import socket
 import os
-import sys
+import socket
 import struct
+import sys
 import tarfile
 import time
-from threading import Thread
 from socket import *
+from threading import Thread
+
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # 接收端的路径
@@ -28,6 +28,8 @@ class File_Transfer1(QThread):
         self.ip = ip
         self.clint = None
         self.isClose = False
+        self.clientSock = None
+        self.s = None
 
     def run(self):
         Thread(target=self.server).start()
@@ -36,15 +38,15 @@ class File_Transfer1(QThread):
     def server(self):
         ip_port = ("", self.openPort)
         try:
-            s = socket(AF_INET, SOCK_STREAM)
-            s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-            s.bind(ip_port)
-            s.listen(2)
+            self.s = socket(AF_INET, SOCK_STREAM)
+            self.s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+            self.s.bind(ip_port)
+            self.s.listen(2)
         except error as msg:
             print(msg)
             sys.exit(1)
         print('waiting..............')
-        self.clientSock, addr = s.accept()
+        self.clientSock, addr = self.s.accept()
         Thread(target=self.receive).start()
 
     def client(self):
@@ -153,7 +155,10 @@ class File_Transfer1(QThread):
     def raise_exception(self):
         self.isClose = True
         print(self.isClose)
-        self.clientSock.close()
+        if self.clientSock:
+            self.clientSock.close()
+        if self.s:
+            self.s.close()
         return self.isClose
 
 
