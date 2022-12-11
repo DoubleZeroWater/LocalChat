@@ -1,4 +1,3 @@
-import ctypes
 import json
 import os
 import struct
@@ -155,8 +154,10 @@ class File_Transfer(QThread):
     def raise_exception(self):
         self.isClose = True
         print(self.isClose)
-        self.clientSock.close()
-        self.sever.close()
+        if self.clientSock:
+            self.clientSock.close()
+        if self.sever:
+            self.sever.close()
         return self.isClose
         # thread_id = self.get_id()
         # # 精髓就是这句话，给线程发过去一个exceptions，线程就那边响应完就停了
