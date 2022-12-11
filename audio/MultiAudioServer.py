@@ -22,6 +22,7 @@ class MultiAudioServer(QThread):
                 break
             except:
                 print("Couldn't bind to that port")
+                return
         self.connections = []
         threading.Thread(target=self.accept_connections).start()
 
