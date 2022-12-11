@@ -85,6 +85,7 @@ class Controller:
         self.multiMessageWindow.pushButton_2.setEnabled(False)
         self.multiMessageWindow.pushButton_4.setEnabled(False)
         self.multiMessageWindow.sendButtonSignal.connect(self.message1.sendMyMessage)
+        self.multiMessageWindow.sendMyFileSignal.connect(self.message1.sendMyFile)
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
         self.multiMessageWindow.receiveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
