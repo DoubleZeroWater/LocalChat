@@ -19,6 +19,8 @@ class Controller:
         self.message = None
         self.hello = None
         self.twoConnect = None
+        self.multiAudioClient = None
+        self.multiAudioServer = None
 
     # Hello Window
     def show_hello(self):
