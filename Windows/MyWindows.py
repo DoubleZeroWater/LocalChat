@@ -216,10 +216,14 @@ class FileWindow(QtWidgets.QMainWindow, FileUI):
         self.textBrowser_2.append(">>>正在接受文件")
 
     def receiveProcess(self, process):
+        print(process)
         self.textBrowser_2.setText(">>>当前进度为："+process)
 
     def receiveEnd(self, fileName):
         self.textBrowser_2.append(">>>您已成功接受文件" + fileName)
+
+    def sendEnd(self):
+        self.textBrowser_2.append(">>>您已成功发送文件")
 
     def closeFileRequest(self):
         self.fileTransfer.raise_exception()
