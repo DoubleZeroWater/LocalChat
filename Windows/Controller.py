@@ -138,9 +138,12 @@ class Controller:
         self.fileInstance.receiveStartSignal.connect(self.file.receiveStart)
         self.fileInstance.receiveEndSignal.connect(self.file.receiveEnd)
         self.fileInstance.processSignal.connect(self.file.receiveProcess)
+        self.fileInstance.sendEndSignal.connect(self.file.sendEnd)
         self.fileInstance1 = self.file.fileTransfer1
-        self.fileInstance1.receiveStartSignal.connect(self.file.receiveStart)
-        self.fileInstance1.receiveEndSignal.connect(self.file.receiveEnd)
+        self.fileInstance1.receiveStartSignal1.connect(self.file.receiveStart)
+        self.fileInstance1.receiveEndSignal1.connect(self.file.receiveEnd)
+        self.fileInstance1.sendEndSignal1.connect(self.file.sendEnd)
+        self.fileInstance1.processSignal1.connect(self.file.receiveProcess)
         self.file.sendNameSignal.connect(self.send_file)
         self.file.sendFilesNameSignal.connect(self.send_files)
 

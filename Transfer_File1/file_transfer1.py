@@ -11,11 +11,13 @@ from socket import *
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # 接收端的路径
-FILEPATH = "E:/test/"
+FILEPATH = "./data/"
 
 class File_Transfer1(QThread):
-    receiveStartSignal = pyqtSignal()
-    receiveEndSignal = pyqtSignal(str)
+    receiveStartSignal1 = pyqtSignal()
+    receiveEndSignal1 = pyqtSignal(str)
+    processSignal1 = pyqtSignal(str)
+    sendEndSignal1 = pyqtSignal()
 
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
         super(File_Transfer1, self).__init__()
@@ -60,7 +62,7 @@ class File_Transfer1(QThread):
             head_len = struct.unpack('i', head_struct)[0]
             # 接收大小为head_len的报头内容（报头内容包括文件大小，文件名内容）
             data = self.clientSock.recv(head_len)
-            self.receiveStartSignal.emit()
+            self.receiveStartSignal1.emit()
             # 解析报头的内容, 报头为一个字典其中包含上传文件的大小和文件名，
             head_dir = json.loads(data.decode("utf-8"))  # 将JSON字符串解码为python对象
             filesize_b = head_dir["fileSize"]
@@ -79,6 +81,7 @@ class File_Transfer1(QThread):
                     f.write(recv_mesg)
                     recv_len += len(recv_mesg)
                     print(f"{recv_len / filesize_b}")
+                    self.processSignal1.emit(f"{recv_len / filesize_b*100}"+'')
                 else:
                     # 需要传输的文件数据小于最大传输数据大小
                     recv_mesg = self.clientSock.recv(filesize_b - recv_len)
@@ -103,7 +106,7 @@ class File_Transfer1(QThread):
             # 向用户发送信号，文件已经上传完毕
             completed = "1"
             self.clientSock.send(bytes(completed, "utf-8"))
-            self.receiveEndSignal.emit(fileName)
+            self.receiveEndSignal1.emit(fileName)
 
     def send(self, filename):
         buffSize = 1024
@@ -133,6 +136,7 @@ class File_Transfer1(QThread):
         completed = self.clint.recv(buffSize).decode("utf-8")
         if completed == "1":
             print("发送成功")
+            self.sendEndSignal1.emit()
 
     def get_id(self):
         # returns id of the respective thread
