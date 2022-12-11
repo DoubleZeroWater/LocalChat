@@ -11,6 +11,7 @@ from PyQt5.QtCore import QThread
 
 class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
+        super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         while 1:

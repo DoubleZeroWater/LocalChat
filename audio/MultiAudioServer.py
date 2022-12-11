@@ -11,6 +11,7 @@ from PyQt5.QtCore import QThread
 
 class MultiAudioServer(QThread):
     def __init__(self, port):
+        super().__init__()
         self.ip = socket.gethostbyname(socket.gethostname())
         while True:
             try:
