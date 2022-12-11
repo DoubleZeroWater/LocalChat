@@ -5,6 +5,8 @@
 # modify time:
 import socket
 import threading
+import time
+
 import pyaudio
 from PyQt5.QtCore import QThread
 
@@ -14,16 +16,18 @@ class MultiAudioClient(QThread):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.isClose = False
+        timestamp = 0
 
-        while 1:
+        while timestamp < 5:
             try:
                 self.target_ip = ipToConnect
                 self.target_port = portToConnect
                 self.s.connect((self.target_ip, self.target_port))
-
                 break
             except:
                 print("Couldn't connect to server")
+                time.sleep(1)
+                timestamp += 1
 
         self.chunk_size = 1024  # 512
         self.audio_format = pyaudio.paInt16
