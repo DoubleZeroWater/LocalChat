@@ -98,13 +98,18 @@ class Controller:
         self.message1.haveMessageSignal.connect(self.multiMessageWindow.addMoreMessage)
         self.multiMessageWindow.pushButton_3.clicked.connect(self.backMultiClientFromMultiWindow)
         self.message1.haveMultiFileSignal.connect(self.multiMessageWindow.showReceiveFile)
-        # self.multiMessageWindow.receiveMultiFileSignal.connect(self.)
+
         self.message1.audioSignal.connect(self.goMultiAudioFromMessage1)
         self.message1.audioCloseSignal.connect(self.closeMultiAudioFromMessage1)
         self.multiMessageWindow.pushButton_5.clicked.connect(self.closeMultiAudioFromMessage1)
+        self.multiMessageWindow.receiveMultiFileSignal.connect(self.receiveMultiFile)
+        self.multiMessageWindow.fileReceive = Client(ip, 12346)
 
         self.multiMessageWindow.show()
         self.multiClientWindow.close()
+
+    def receiveMultiFile(self):
+        self.multiMessageWindow.fileReceive.killEveryBug()
 
     def backTwoConnectFromMessage(self):
         self.twoConnect.show()

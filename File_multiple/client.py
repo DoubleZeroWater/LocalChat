@@ -18,6 +18,9 @@ class Client():
         self.ipToConnect = ipToConnect
         self.portToConnect = portToConnect
 
+    def killEveryBug(self):
+        Thread(target=self.client_socket).start()
+
     def client_socket(self):
         # 创建客户端
         self.clint = socket(AF_INET, SOCK_STREAM)
@@ -66,5 +69,5 @@ class Client():
         self.clint.close()
 
 if __name__ == '__main__':
-    receiver = Client("172.20.10.9", 22222)
-    receiver.client_socket()
+    fileInstance = Client('192.168.43.32',22222)
+    fileInstance.killEveryBug()

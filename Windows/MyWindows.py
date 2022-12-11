@@ -24,6 +24,8 @@ from File_multiple.client import Client
 from File_multiple.server import Server
 from audio.audio import Audio
 from video.vchat import Video_Client, Video_Server
+from threading import Thread
+
 
 ShareData = Queue()
 
@@ -342,7 +344,7 @@ class MultiHostWindow(QtWidgets.QMainWindow, MultiHostUI):
 class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
     sendButtonSignal = QtCore.pyqtSignal(str)
     sendMultiFileSignal = QtCore.pyqtSignal(str)
-    sendMyFileSignal = QtCore.pyqtSignal(str)
+    sendMyFileSignal = QtCore.pyqtSignal()
     receiveMultiFileSignal = pyqtSignal()
 
     def __init__(self):
@@ -350,6 +352,7 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
         self.setupUi(self)
         self.pushButton.clicked.connect(self.pushButtonSlot)
         self.pushButton_4.clicked.connect(self.openFile)
+        self.fileReceive=None
 
 
     def pushButtonSlot(self):
@@ -378,7 +381,6 @@ class MultiMessageWindow(QtWidgets.QMainWindow, MultiMessageUI):
                                                    QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             self.receiveMultiFileSignal.emit()
-            Thread(target=Client, args=(ip,64321,))
 
 
     def closeEvent(self, a0: QCloseEvent) -> None:
