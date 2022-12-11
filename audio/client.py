@@ -14,7 +14,7 @@ class Client:
 
         while 1:
             try:
-                self.target_ip = '192.168.43.20'
+                self.target_ip = '192.168.47.160'
                 self.target_port = 9808
                 self.s.connect((self.target_ip, self.target_port))
 

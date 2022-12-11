@@ -26,7 +26,7 @@ class Server():
         except:
             pass
 
-    def send(self):
+    def send(self, filename):
         buffSize = 1024
         # 上传文件
         fileInfor = filename
@@ -55,6 +55,10 @@ class Server():
         if completed == "1":
             print("发送成功")
 
+    def killAllBugs(self,filename):
+        Thread(target=self.server_socket,args=(filename,))
+
+
 if __name__ == '__main__':
-    sender = Server(r'E:\test\123\1235.txt', "172.20.10.9", 22222)
-    sender.server_socket()
+    sender = Server(22222)
+    sender.server_socket(r'E:\test\123\1235.txt')

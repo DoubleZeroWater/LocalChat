@@ -11,6 +11,7 @@ class Message1(QThread):  # for the host
     haveMessageSignal = pyqtSignal(str)
     audioSignal = pyqtSignal(str)
     audioCloseSignal = pyqtSignal()
+    haveMultiFileSignal = pyqtSignal()
     closeSign = False
 
     def __init__(self, ip, port, nickname):
@@ -59,6 +60,8 @@ class Message1(QThread):  # for the host
                     self.audioSignal.emit(self.ip)
                 elif message == ">AudioClose":
                     self.audioCloseSignal.emit()
+                elif message == "SEND_FILE":
+                    self.haveMultiFileSignal.emit()
                 self.haveMessageSignal.emit(message)
         except OSError:
             print("You have successfully disconnected from server.")
@@ -69,10 +72,6 @@ class Message1(QThread):  # for the host
     def sendMyMessage(self, message):
         self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.haveMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
-
-    def sendMyFile(self, message):
-        self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{'对方已发送文件，接受中...'}")
-        self.haveMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{'你已成功发送文件'}")
 
     def close(self):
         self.send(">CLIENT END")
