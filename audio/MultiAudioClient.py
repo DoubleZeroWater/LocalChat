@@ -45,7 +45,7 @@ class MultiAudioClient(QThread):
                                   channels=self.channels,
                                   rate=self.rate, input=True, output=True,
                                   frames_per_buffer=self.chunk_size, stream_callback=callback)
-
+        self.checkMessageArrive()
         print("Connected to Server")
         self.stream.start_stream()
         while not self.isClose:
@@ -66,12 +66,17 @@ class MultiAudioClient(QThread):
 
 
 data = None
+i = 0
 
 
 def callback(in_data, frame_count, time_info, status):
     try:
         global data
+        global i
+        print(f"#{i}\n{in_data}")
+        i += 1
         Thread(target=MultiAudioClient.staticSocket.send, args=(in_data,))
+        print(f"#{i}\n send")
         temp = data
         data = None
     except socket.timeout:
