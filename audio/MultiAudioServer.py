@@ -59,7 +59,7 @@ class MultiAudioServer(QThread):
                 break
             try:
                 data = c.recv(1024)
-                print(data)
+                print(f"#{addr}\n{data}")
                 threading.Thread(target=self.broadcast, args=(c, data,)).start()
 
             except socket.error:
