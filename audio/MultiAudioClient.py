@@ -3,6 +3,7 @@
 # author  : CY
 # file    : voice_client.py
 # modify time:
+import select
 import socket
 import threading
 import time
@@ -65,9 +66,11 @@ class MultiAudioClient(QThread):
 
 def callback(in_data, frame_count, time_info, status):
     try:
+        data = b"\x00"
         MultiAudioClient.staticSocket.send(in_data)
-        MultiAudioClient.staticSocket.settimeout(0.5)
-        data = MultiAudioClient.staticSocket.recv(1024)
+        ready = select.select([MultiAudioClient.staticSocket], [], [], 0.5)
+        if ready[0]:
+            data = MultiAudioClient.staticSocket.recv(1024)
     except socket.timeout:
         data = b"\x00"
     return data, pyaudio.paContinue
