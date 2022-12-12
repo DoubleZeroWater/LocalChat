@@ -51,6 +51,10 @@ class MultiAudioClient(QThread):
         while not self.isClose:
             time.sleep(0.1)
 
+    def checkMessageArrive(self):
+        while not self.isClose:
+            checkEvent()
+
     def close(self):
         if self.stream:
             self.stream.stop_stream()
@@ -76,7 +80,7 @@ def callback(in_data, frame_count, time_info, status):
     return temp, pyaudio.paContinue
 
 
-def checkEvent(self):
+def checkEvent():
     global data
     r_list, w_list, e_list = select.select([MultiAudioClient.staticSocket], [MultiAudioClient.staticSocket], [], 5)
     if len(r_list) != 0:
