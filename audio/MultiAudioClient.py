@@ -24,7 +24,7 @@ class MultiAudioClient(QThread):
             try:
                 self.target_ip = ipToConnect
                 self.target_port = portToConnect
-                self.s.connect((self.target_ip, self.target_port))
+                # self.s.connect((self.target_ip, self.target_port))
                 break
             except:
                 print("Couldn't connect to server")
@@ -51,8 +51,11 @@ class MultiAudioClient(QThread):
     def receive_server_data(self):
         try:
             self.stream.start_stream()
-        except:
-            pass
+            while self.stream.is_active() and (not self.isClose):
+                time.sleep(0.1)
+
+        except Exception as e:
+            print(e)
 
     def close(self):
         self.stream.stop_stream()
@@ -63,7 +66,7 @@ class MultiAudioClient(QThread):
 
 
 def callback(in_data, frame_count, time_info, status):
-    MultiAudioClient.staticSocket.sendall(in_data)
+    MultiAudioClient.staticSocket.send(in_data)
     data = MultiAudioClient.staticSocket.recv(1024)
     return data, pyaudio.paContinue
 
