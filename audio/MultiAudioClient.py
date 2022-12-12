@@ -6,6 +6,7 @@
 import select
 import socket
 import time
+from threading import Thread
 
 import pyaudio
 from PyQt5.QtCore import QThread
@@ -13,9 +14,11 @@ from PyQt5.QtCore import QThread
 
 class MultiAudioClient(QThread):
     staticSocket = None
+
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         MultiAudioClient.staticSocket = self.s
         self.isClose = False
         timestamp = 0
@@ -48,8 +51,6 @@ class MultiAudioClient(QThread):
         while not self.isClose:
             time.sleep(0.1)
 
-    def receive_server_data(self):
-
     def close(self):
         if self.stream:
             self.stream.stop_stream()
@@ -60,17 +61,26 @@ class MultiAudioClient(QThread):
             self.s.close()
 
 
+data = None
+
+
 def callback(in_data, frame_count, time_info, status):
     try:
-        data = b"\x00"
-        MultiAudioClient.staticSocket.send(in_data)
-        ready = select.select([MultiAudioClient.staticSocket], [], [], 0)
-        if ready[0]:
-            data = MultiAudioClient.staticSocket.recv(1024)
+        global data
+        Thread(target=MultiAudioClient.staticSocket.send, args=(in_data,))
+        temp = data
+        data = None
     except socket.timeout:
-        data = b"\x00"
-        print("Ji")
-    return data, pyaudio.paContinue
+        temp = None
+        data = None
+    return temp, pyaudio.paContinue
+
+
+def checkEvent(self):
+    global data
+    r_list, w_list, e_list = select.select([MultiAudioClient.staticSocket], [MultiAudioClient.staticSocket], [], 5)
+    if len(r_list) != 0:
+        data = MultiAudioClient.staticSocket.recv(1024)
 
 
 if __name__ == "__main__":
