@@ -27,12 +27,10 @@ class MultiAudioClient(QThread):
                 self.target_port = portToConnect
                 self.s.connect((self.target_ip, self.target_port))
                 break
-            except BlockingIOError:
+            except:
                 print("Couldn't connect to server")
                 time.sleep(1)
                 timestamp += 1
-            except:
-                return
 
         self.chunk_size = 1024  # 512
         self.audio_format = pyaudio.paInt16
