@@ -68,11 +68,12 @@ def callback(in_data, frame_count, time_info, status):
     try:
         data = b"\x00"
         MultiAudioClient.staticSocket.send(in_data)
-        ready = select.select([MultiAudioClient.staticSocket], [], [], 0.5)
+        ready = select.select([MultiAudioClient.staticSocket], [], [], 0)
         if ready[0]:
             data = MultiAudioClient.staticSocket.recv(1024)
     except socket.timeout:
         data = b"\x00"
+        print("Ji")
     return data, pyaudio.paContinue
 
 
