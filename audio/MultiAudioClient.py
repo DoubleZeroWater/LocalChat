@@ -5,7 +5,6 @@
 # modify time:
 import select
 import socket
-import threading
 import time
 
 import pyaudio
@@ -45,14 +44,11 @@ class MultiAudioClient(QThread):
                                   frames_per_buffer=self.chunk_size, stream_callback=callback)
 
         print("Connected to Server")
-
-        # start threads
-        threading.Thread(target=self.receive_server_data).start()
-
-    def receive_server_data(self):
         self.stream.start_stream()
         while not self.isClose:
             time.sleep(0.1)
+
+    def receive_server_data(self):
 
     def close(self):
         if self.stream:
