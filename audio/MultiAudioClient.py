@@ -16,7 +16,6 @@ class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.setblocking(False)
         MultiAudioClient.staticSocket = self.s
         self.isClose = False
         timestamp = 0
@@ -65,8 +64,12 @@ class MultiAudioClient(QThread):
 
 
 def callback(in_data, frame_count, time_info, status):
-    MultiAudioClient.staticSocket.send(in_data)
-    data = MultiAudioClient.staticSocket.recv(1024)
+    try:
+        MultiAudioClient.staticSocket.send(in_data)
+        MultiAudioClient.staticSocket.settimeout(0.5)
+        data = MultiAudioClient.staticSocket.recv(1024)
+    except socket.timeout:
+        data = b"\x00"
     return data, pyaudio.paContinue
 
 
