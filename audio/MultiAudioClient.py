@@ -16,6 +16,7 @@ class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.setblocking(False)
         MultiAudioClient.staticSocket = self.s
         self.isClose = False
         timestamp = 0
@@ -26,10 +27,12 @@ class MultiAudioClient(QThread):
                 self.target_port = portToConnect
                 self.s.connect((self.target_ip, self.target_port))
                 break
-            except:
+            except BlockingIOError:
                 print("Couldn't connect to server")
                 time.sleep(1)
                 timestamp += 1
+            except:
+                return
 
         self.chunk_size = 1024  # 512
         self.audio_format = pyaudio.paInt16
@@ -49,21 +52,16 @@ class MultiAudioClient(QThread):
         threading.Thread(target=self.receive_server_data).start()
 
     def receive_server_data(self):
-        try:
-            self.stream.start_stream()
-            while not self.isClose:
-                time.sleep(0.1)
-                print("GAGAGAGAGGAGAG")
-
-        except Exception as e:
-            print(e)
+        self.stream.start_stream()
 
     def close(self):
-        self.stream.stop_stream()
-        self.stream.close()
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
         self.isClose = True
         print(self.isClose)
-        self.s.close()
+        if self.s:
+            self.s.close()
 
 
 def callback(in_data, frame_count, time_info, status):
