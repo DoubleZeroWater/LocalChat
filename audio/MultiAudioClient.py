@@ -3,13 +3,15 @@
 # author  : CY
 # file    : voice_client.py
 # modify time:
-import select
 import socket
 import time
 from threading import Thread
 
 import pyaudio
 from PyQt5.QtCore import QThread
+
+data = None
+i = 0
 
 
 class MultiAudioClient(QThread):
@@ -18,7 +20,6 @@ class MultiAudioClient(QThread):
     def __init__(self, ipToConnect, portToConnect):
         super().__init__()
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
         MultiAudioClient.staticSocket = self.s
         self.isClose = False
         timestamp = 0
@@ -40,20 +41,25 @@ class MultiAudioClient(QThread):
         self.rate = 20000
         self.p = pyaudio.PyAudio()
 
+        if timestamp == 5:
+            print("Bad connection.")
+
     def receive_and_send(self):
         self.stream = self.p.open(format=self.audio_format,
                                   channels=self.channels,
                                   rate=self.rate, input=True, output=True,
                                   frames_per_buffer=self.chunk_size, stream_callback=callback)
-        self.checkMessageArrive()
+        Thread(target=self.checkMessageArrive).start()
         print("Connected to Server")
         self.stream.start_stream()
         while not self.isClose:
+            # print("Main is running.")
             time.sleep(0.1)
 
     def checkMessageArrive(self):
         while not self.isClose:
-            checkEvent()
+            global data
+            data = self.s.recv(2048)
 
     def close(self):
         if self.stream:
@@ -65,31 +71,24 @@ class MultiAudioClient(QThread):
             self.s.close()
 
 
-data = None
-i = 0
-
-
 def callback(in_data, frame_count, time_info, status):
     try:
         global data
         global i
-        print(f"#{i}\n{in_data}")
-        i += 1
-        Thread(target=MultiAudioClient.staticSocket.send, args=(in_data,))
-        print(f"#{i}\n send")
-        temp = data
-        data = None
+        # print(len(in_data))
+        MultiAudioClient.staticSocket.send(in_data)
+        if data is None:
+            data = None
+            # print(f"#{i} Recevice None")
+            return b"\x00" * 2048, pyaudio.paContinue
+        else:
+            temp = data
+            # print(f"#{i} Recevice \n{data}")
+            data = None
+            print(f"#Haha\n{temp}")
+            return temp, pyaudio.paContinue
     except socket.timeout:
-        temp = None
-        data = None
-    return temp, pyaudio.paContinue
-
-
-def checkEvent():
-    global data
-    r_list, w_list, e_list = select.select([MultiAudioClient.staticSocket], [MultiAudioClient.staticSocket], [], 5)
-    if len(r_list) != 0:
-        data = MultiAudioClient.staticSocket.recv(1024)
+        return None, pyaudio.paComplete
 
 
 if __name__ == "__main__":

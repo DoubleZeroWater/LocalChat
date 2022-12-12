@@ -37,7 +37,7 @@ class AudioMultiClient(QThread):
     def receiveServerData(self):
         while not self.CloseSign:
             try:
-                data = self.client.recv(1024)
+                data = self.client.recv(102400)
                 self.playing_stream.write(data)
             except:
                 pass

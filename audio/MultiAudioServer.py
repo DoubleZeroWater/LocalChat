@@ -13,13 +13,13 @@ class MultiAudioServer(QThread):
 
     def __init__(self, port):
         super().__init__()
-        # self.ip = socket.gethostbyname(socket.gethostname())
         self.isClose = False
         while True:
             try:
                 self.port = port
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.s.bind(('', self.port))
+                print("Bind successfully.")
                 break
             except:
                 print("Couldn't bind to that port")
@@ -29,20 +29,16 @@ class MultiAudioServer(QThread):
 
     def accept_connections(self):
         self.s.listen(100)
-
-        # print('Running on IP: ' + self.ip)
-        # print('Running on port: ' + str(self.port))
         try:
-            while True:
-                if self.isClose:
-                    break
+            while not self.isClose:
                 c, addr = self.s.accept()
                 self.connections.append(c)
                 threading.Thread(target=self.handle_client, args=(
                     c,
                     addr,
                 )).start()
-        except OSError:
+        except OSError as e:
+            print(e)
             print("Socket have been closed.")
 
     def broadcast(self, sock, data):
@@ -50,16 +46,15 @@ class MultiAudioServer(QThread):
             if client != self.s and client != sock:
                 try:
                     client.send(data)
-                except:
-                    pass
-
+                    print(f"#{client}\n{data}")
+                except Exception as e:
+                    print(e)
     def handle_client(self, c, addr):
         while 1:
             if self.isClose:
                 break
             try:
-                data = c.recv(1024)
-                print(f"#{addr}\n{data}")
+                data = c.recv(2048)
                 threading.Thread(target=self.broadcast, args=(c, data,)).start()
 
             except socket.error:
