@@ -24,7 +24,7 @@ class MultiAudioClient(QThread):
             try:
                 self.target_ip = ipToConnect
                 self.target_port = portToConnect
-                # self.s.connect((self.target_ip, self.target_port))
+                self.s.connect((self.target_ip, self.target_port))
                 break
             except:
                 print("Couldn't connect to server")
@@ -53,6 +53,7 @@ class MultiAudioClient(QThread):
             self.stream.start_stream()
             while self.stream.is_active() and (not self.isClose):
                 time.sleep(0.1)
+                print("GAGAGAGAGGAGAG")
 
         except Exception as e:
             print(e)
