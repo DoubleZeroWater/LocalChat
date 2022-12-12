@@ -53,6 +53,8 @@ class MultiAudioClient(QThread):
 
     def receive_server_data(self):
         self.stream.start_stream()
+        while not self.isClose:
+            time.sleep(0.1)
 
     def close(self):
         if self.stream:
