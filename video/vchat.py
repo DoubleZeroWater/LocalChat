@@ -84,7 +84,7 @@ class Video_Client(Thread):
         Thread(target=self.listening).start()
         while True:
             try:
-                self.sock.connect(self.ADDR)
+                self.conn, addr = self.sock.connect(self.ADDR)
                 break
             except:
                 time.sleep(3)
@@ -104,7 +104,7 @@ class Video_Client(Thread):
 
     def listening(self):
         while True:
-            data = self.sock.recv(1024)
+            data = self.conn.recv(1024)
             if data == "Close".encode("utf-8"):
                 break
         self.close()
