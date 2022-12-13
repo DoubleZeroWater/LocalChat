@@ -12,6 +12,7 @@ from Windows.MyWindows import HelloWindow, TwoConnectWindow, MessageWindow, File
     MultiMessageWindow, MultiClientWindow
 from audio.MultiAudioClient import MultiAudioClient
 from audio.MultiAudioServer import MultiAudioServer
+from video.vchat import Video_Server, Video_Client
 
 
 class Controller:
@@ -139,11 +140,11 @@ class Controller:
         self.message.backButton.clicked.connect(self.backTwoConnectFromMessage)
         self.message.goFileSignal.connect(self.show_file)
 
-        self.Message2Instance.videoDenySignal.connect(self.message.closeVideoRequest)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
         self.Message2Instance.fileRequestSignal.connect(self.message.fileRequestCheck)
+        self.Message2Instance.videoStartSignal.connect(self.videoStart)
 
         self.Message2Instance.audioRequestSignal.connect(self.message.audioRequestCheck)
         self.message.goAudioSignal.connect(self.show_audio)
@@ -152,7 +153,13 @@ class Controller:
         self.message.show()
         self.twoConnect.close()
 
-    # File Window
+    def videoStart(self, ip):
+        self.vServer = Video_Server(9632, 4)
+        self.vServer.start()
+        self.vClient = Video_Client(ip, 9632, 1, 4)
+        self.vClient.start()
+        self.sendMessageSignal.emit("VIDEO_ACCEPT")
+
     def show_file(self):
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)
         self.file.show()

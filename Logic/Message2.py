@@ -10,7 +10,7 @@ class Message2(QThread):
     socketReadySignal = pyqtSignal()
     recvMessageSignal = pyqtSignal(str)
     videoRequestSignal = pyqtSignal(str)
-    videoDenySignal = pyqtSignal()
+    videoStartSignal = pyqtSignal(str)
     fileRequestSignal = pyqtSignal(str)
     fileDenySignal = pyqtSignal()
     audioRequestSignal = pyqtSignal(str)
@@ -69,8 +69,11 @@ class Message2(QThread):
                 break
             elif recv_data == "VIDEO_REQUEST":
                 self.videoRequestSignal.emit(self.ipToConnect)
-            elif recv_data == "VIDEO_DENY":
-                self.videoDenySignal.emit()
+            elif recv_data == "VIDEO_REFUSE":
+                self.recvMessageSignal.emit(
+                    f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方拒绝了视频连接")
+            elif recv_data == "VIDEO_ACCEPT":
+                self.videoStartSignal.emit(self.ipToConnect)
             elif recv_data == "FILE_REQUEST":
                 self.fileRequestSignal.emit(self.ipToConnect)
             elif recv_data == "FILE_DENY":

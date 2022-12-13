@@ -109,19 +109,13 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
             self.vServer.start()
             self.vClient = Video_Client(ip, 9632, 1, 4)
             self.vClient.start()
+            self.sendMessageSignal.emit("VIDEO_ACCEPT")
         else:
-            self.sendMessageSignal.emit("VIDEO_DENY")
+            self.sendMessageSignal.emit("VIDEO_REFUSE")
 
     def startVideoRequest(self, ip):
-
-        self.vServer = Video_Server(9632, 4)
-        self.vServer.start()
-        self.vClient = Video_Client(ip, 9632, 1, 4)
-        self.vClient.start()
         self.sendMessageSignal.emit("VIDEO_REQUEST")
 
-    def closeVideoRequest(self):
-        self.vClient.close()
 
     def goFileUI(self):
         self.goFileSignal.emit()
