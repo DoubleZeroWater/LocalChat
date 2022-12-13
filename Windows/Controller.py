@@ -154,11 +154,11 @@ class Controller:
         self.twoConnect.close()
 
     def videoStart(self, ip):
+        print("Twice")
         self.vServer = Video_Server(9632, 4)
         self.vServer.start()
         self.vClient = Video_Client(ip, 9632, 1, 4)
         self.vClient.start()
-        self.sendMessageSignal.emit("VIDEO_ACCEPT")
 
     def show_file(self):
         self.file = FileWindow(self.openPort, self.ipToConnect, self.portToConnect, self.nickName)

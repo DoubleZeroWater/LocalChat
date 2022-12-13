@@ -7,9 +7,12 @@ from threading import Thread
 
 import cv2
 
+CloseSign = False
 
 class Video_Server(Thread):
     def __init__(self, port, version):
+        global CloseSign
+        CloseSign = False
         Thread.__init__(self)
         self.ADDR = ('', port)
         if version == 4:
@@ -25,6 +28,7 @@ class Video_Server(Thread):
             pass
 
     def run(self):
+        global CloseSign
         print("VIDEO server starts...")
         self.sock.bind(self.ADDR)
         self.sock.listen(1)
@@ -47,11 +51,15 @@ class Video_Server(Thread):
             frame = pickle.loads(frame_data)
             cv2.imshow('Remote', frame)
             if cv2.waitKey(1) & 0xFF == 27:
+                CloseSign = True
                 break
+
 
 
 class Video_Client(Thread):
     def __init__(self, ip, port, level, version):
+        global CloseSign
+        CloseSign = False
         Thread.__init__(self)
         self.ADDR = (ip, port)
         if level <= 3:
@@ -81,7 +89,7 @@ class Video_Client(Thread):
                 time.sleep(3)
                 continue
         print("VIDEO client connected...")
-        while self.cap.isOpened():
+        while self.cap.isOpened() and not CloseSign:
             ret, frame = self.cap.read()
             sframe = cv2.resize(frame, (0, 0), fx=self.fx, fy=self.fx)
             data = pickle.dumps(sframe)

@@ -105,6 +105,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
                                                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
                                                QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
+            print("Started Once")
             self.vServer = Video_Server(9632, 4)
             self.vServer.start()
             self.vClient = Video_Client(ip, 9632, 1, 4)

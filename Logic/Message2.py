@@ -60,6 +60,7 @@ class Message2(QThread):
         self.conn, self.addr = self.serverInstant.accept()
         while not self.connect_end:
             recv_data = self.conn.recv(1024).decode('utf-8')
+            print(recv_data)
             if recv_data == "##":
                 # 自身连接
                 self.clientInstant.close()
