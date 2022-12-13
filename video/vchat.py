@@ -51,7 +51,7 @@ class Video_Server(Thread):
             frame = pickle.loads(frame_data)
             cv2.imshow('Remote', frame)
             if cv2.waitKey(1) & 0xFF == 27:
-                CloseSign = True
+                conn.send("Close".encode("utf-8"))
                 break
 
 
@@ -81,6 +81,7 @@ class Video_Client(Thread):
 
     def run(self):
         print("VIDEO client starts...")
+        Thread(target=self.listening).start()
         while True:
             try:
                 self.sock.connect(self.ADDR)
@@ -89,7 +90,7 @@ class Video_Client(Thread):
                 time.sleep(3)
                 continue
         print("VIDEO client connected...")
-        while self.cap.isOpened() and not CloseSign:
+        while self.cap.isOpened():
             ret, frame = self.cap.read()
             sframe = cv2.resize(frame, (0, 0), fx=self.fx, fy=self.fx)
             data = pickle.dumps(sframe)
@@ -100,3 +101,23 @@ class Video_Client(Thread):
                 break
             for i in range(self.interval):
                 self.cap.read()
+
+    def listening(self):
+        while True:
+            data = self.sock.recv(1024)
+            if data == "Close".encode("utf-8"):
+                break
+        self.close()
+
+    def close(self):
+        self.sock.close()
+        self.cap.release()
+
+
+if __name__ == "__main__":
+    Video_Server(9999, 4).start()
+    m = Video_Client("192.168.43.20", 9999, 1, 4)
+    m.start()
+
+    time.sleep(10)
+    m.close()
