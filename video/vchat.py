@@ -82,7 +82,6 @@ class Video_Client(Thread):
 
     def run(self):
         print("VIDEO client starts...")
-        Thread(target=self.listening).start()
         while True:
             try:
                 self.conn, addr = self.sock.connect(self.ADDR)
@@ -91,6 +90,7 @@ class Video_Client(Thread):
                 time.sleep(3)
                 continue
         print("VIDEO client connected...")
+        Thread(target=self.listening).start()
         while self.cap.isOpened():
             ret, frame = self.cap.read()
             sframe = cv2.resize(frame, (0, 0), fx=self.fx, fy=self.fx)
@@ -105,7 +105,7 @@ class Video_Client(Thread):
 
     def listening(self):
         while True:
-            data = self.conn.recv(1024)
+            data = self.sock.recv(1024)
             if data == "Close".encode("utf-8"):
                 break
         self.close()
