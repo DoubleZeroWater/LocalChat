@@ -58,6 +58,7 @@ class Video_Server(Thread):
 
 class Video_Client(Thread):
     def __init__(self, ip, port, level, version):
+        self.conn = None
         global CloseSign
         CloseSign = False
         Thread.__init__(self)
