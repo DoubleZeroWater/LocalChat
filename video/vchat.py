@@ -2,6 +2,7 @@ import pickle
 import struct
 import time
 import zlib
+from random import random
 from socket import *
 from threading import Thread
 
@@ -36,7 +37,8 @@ class Video_Server(Thread):
         print("remote VIDEO client success connected...")
         data = "".encode("utf-8")
         payload_size = struct.calcsize("L")  # 结果为4
-        cv2.namedWindow('Remote', cv2.WINDOW_NORMAL)
+        title = random.randint(0, 100)
+        cv2.namedWindow(title, cv2.WINDOW_NORMAL)
         while True:
             while len(data) < payload_size:
                 data += conn.recv(81920)
@@ -49,7 +51,7 @@ class Video_Server(Thread):
             data = data[msg_size:]
             frame_data = zlib.decompress(zframe_data)
             frame = pickle.loads(frame_data)
-            cv2.imshow('Remote', frame)
+            cv2.imshow(title, frame)
             if cv2.waitKey(1) & 0xFF == 27:
                 conn.send("Close".encode("utf-8"))
                 break
@@ -74,7 +76,7 @@ class Video_Client(Thread):
             self.sock = socket(AF_INET, SOCK_STREAM)
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     def __del__(self):
         self.sock.close()
@@ -84,7 +86,7 @@ class Video_Client(Thread):
         print("VIDEO client starts...")
         while True:
             try:
-                self.conn, addr = self.sock.connect(self.ADDR)
+                self.sock.connect(self.ADDR)
                 break
             except:
                 time.sleep(3)
@@ -117,5 +119,5 @@ class Video_Client(Thread):
 
 if __name__ == "__main__":
     Video_Server(9999, 4).start()
-    m = Video_Client("192.168.43.20", 9999, 1, 4)
+    m = Video_Client("192.168.251.190", 9999, 1, 4)
     m.start()
