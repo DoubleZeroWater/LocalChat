@@ -108,9 +108,12 @@ class Video_Client(Thread):
 
     def listening(self):
         while True:
-            data = self.sock.recv(1024)
-            if data == "Close".encode("utf-8"):
-                break
+            try:
+                data = self.sock.recv(1024)
+                if data.decode("utf-8") == "Close":
+                    break
+            except Exception as e:
+                print(e)
         self.close()
 
     def close(self):
