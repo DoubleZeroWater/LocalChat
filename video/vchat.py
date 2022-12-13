@@ -18,7 +18,7 @@ class Video_Server(QThread):
     def __init__(self, port, version):
         global CloseSign
         CloseSign = False
-        Thread.__init__(self)
+        super(Video_Server, self).__init__()
         self.ADDR = ('', port)
         if version == 4:
             self.sock = socket(AF_INET, SOCK_STREAM)
