@@ -7,10 +7,14 @@ from socket import *
 from threading import Thread
 
 import cv2
+from PyQt5.QtCore import QThread, pyqtSignal
 
 CloseSign = False
 
-class Video_Server(Thread):
+
+class Video_Server(QThread):
+    VideoEndSignal = pyqtSignal()
+
     def __init__(self, port, version):
         global CloseSign
         CloseSign = False
@@ -45,12 +49,15 @@ class Video_Server(Thread):
             frame_data = zlib.decompress(zframe_data)
             frame = pickle.loads(frame_data)
             cv2.imshow(title, frame)
-            if cv2.waitKey(1) & 0xFF == 27:
+            if cv2.waitKey(1) & 0xFF == 27 or CloseSign:
                 conn.send("Close".encode("utf-8"))
                 self.sock.close()
+                self.VideoEndSignal.emit()
                 break
 
-
+    def close(self):
+        global CloseSign
+        CloseSign = True
 
 class Video_Client(Thread):
     def __init__(self, ip, port, level, version):

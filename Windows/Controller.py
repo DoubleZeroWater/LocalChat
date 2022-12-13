@@ -140,6 +140,7 @@ class Controller:
         self.message.backButton.clicked.connect(self.backTwoConnectFromMessage)
         self.message.goFileSignal.connect(self.show_file)
 
+        self.Message2Instance.videoRequestEnd.connect(self.videoDie)
         self.Message2Instance.recvMessageSignal.connect(self.message.receiveMessage)
         self.Message2Instance.videoRequestSignal.connect(self.message.videoRequestCheck)
         self.Message2Instance.socketReadySignal.connect(self.socket_ok)
@@ -156,6 +157,7 @@ class Controller:
     def videoStart(self, ip):
         print("Twice")
         self.vServer = Video_Server(9632, 4)
+        self.vServer.VideoEndSignal.connect(self.videoEnd)
         self.vServer.start()
         self.vClient = Video_Client(ip, 9632, 1, 4)
         self.vClient.start()
@@ -191,6 +193,9 @@ class Controller:
         fileInstance1 = self.fileInstance1
         fileName = filename
         self.file.videoButton_5.clicked.connect(partial(transfer1, fileInstance1, fileName))
+
+    def videoDie(self):
+        self.vServer.close()
 
     def close_file(self):
         self.file.close()
@@ -256,3 +261,6 @@ class Controller:
         if self.multiAudioClient:
             self.multiAudioClient.close()
         self.multiMessageWindow.pushButton_5.setEnabled(False)
+
+    def videoEnd(self):
+        self.message.sendMessageSignal("VideoEnd")

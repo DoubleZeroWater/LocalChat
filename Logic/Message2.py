@@ -17,6 +17,7 @@ class Message2(QThread):
     audioDenySignal = pyqtSignal()
     audioCloseMsgSignal = pyqtSignal()
     fileCloseMsgSignal = pyqtSignal()
+    videoRequestEnd = pyqtSignal()
 
 
     def __init__(self, openPort: int, ipToConnect: str, portToConnect: int, nickName: str, Queue):
@@ -75,6 +76,8 @@ class Message2(QThread):
                     f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n对方拒绝了视频连接")
             elif recv_data == "VIDEO_ACCEPT":
                 self.videoStartSignal.emit(self.ipToConnect)
+            elif recv_data == "VideoEnd":
+                self.videoRequestEnd.emit()
             elif recv_data == "FILE_REQUEST":
                 self.fileRequestSignal.emit(self.ipToConnect)
             elif recv_data == "FILE_DENY":
