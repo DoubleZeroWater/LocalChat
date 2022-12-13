@@ -86,17 +86,13 @@ def callback(in_data, frame_count, time_info, status):
             return None, pyaudio.paComplete
         global data
         global i
-        # print(len(in_data))
         MultiAudioClient.staticSocket.send(in_data)
         if data is None:
             data = None
-            # print(f"#{i} Recevice None")
             return b"\x00" * 2048, pyaudio.paContinue
         else:
             temp = data
-            # print(f"#{i} Recevice \n{data}")
             data = None
-            print(f"#Haha\n{temp}")
             return temp, pyaudio.paContinue
     except socket.timeout:
         return None, pyaudio.paComplete

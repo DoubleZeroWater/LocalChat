@@ -120,8 +120,8 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
         self.sendMessageSignal.emit("VIDEO_REQUEST")
 
     def closeVideoRequest(self):
-        self.vServer.raise_exception()
-        self.vClient.raise_exception()
+        self.vServer.close()
+        self.vClient.close()
 
     def goFileUI(self):
         self.goFileSignal.emit()

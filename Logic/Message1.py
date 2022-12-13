@@ -78,6 +78,11 @@ class Message1(QThread):  # for the host
         self.haveMessageSignal.emit(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
         self.send(f"{self.nickname}  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{message}")
 
+    def acceptAudio(self):
+        self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname}已经加入了语音。")
+        self.haveMessageSignal.emit(
+            f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname}已经退出了语音。")
+
     def closeAudio(self):
         self.send(f"SYSTEM  {strftime('%Y/%m/%d %H:%M:%S', time.localtime())}>>\n{self.nickname}已经退出了语音。")
         self.haveMessageSignal.emit(

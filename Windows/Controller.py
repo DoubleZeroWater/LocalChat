@@ -226,7 +226,7 @@ class Controller:
     def goMultiAudioFromMessage1(self):
         self.multiAudioClient = MultiAudioClient(self.message1.ip, 31415)
         Thread(target=self.multiAudioClient.receive_and_send).start()
-
+        self.message1.acceptAudio()
         self.multiMessageWindow.pushButton_5.setEnabled(True)
 
     def closeMultiAudioFromMessage0(self):
