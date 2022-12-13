@@ -28,7 +28,7 @@ class Video_Client(Thread):
             self.sock = socket(AF_INET, SOCK_STREAM)
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0 + cv2.CAP_DSHOW)
 
     def close(self):
         global CloseSign
@@ -120,9 +120,7 @@ class Video_Server(Thread):
             if self.sock:
                 self.sock.close()
             try:
-                time.sleep(1)
-
-                cv2.destroyAllWindows()
+                pass
             except Exception as e:
                 print(e)
         except Exception as e:
@@ -157,7 +155,7 @@ class Video_Server(Thread):
                 cv2.imshow(winname, frame)
                 # 通过按Esc或者点击x可以关闭窗口
                 keyCode = cv2.waitKey(1)
-                prop = cv2.getWindowProperty(winname, cv2.WND_PROP_AUTOSIZE)
+                prop = cv2.getWindowProperty(winname, 0)
                 if keyCode != -1 or prop == -1:
                     # 退出后，向Client发送一个关闭信号
                     try:
