@@ -92,6 +92,7 @@ class Video_Client(Thread):
                 time.sleep(3)
                 continue
         print("VIDEO client connected...")
+        time.sleep(2)
         Thread(target=self.listening).start()
         while self.cap.isOpened():
             ret, frame = self.cap.read()
@@ -119,5 +120,7 @@ class Video_Client(Thread):
 
 if __name__ == "__main__":
     Video_Server(9999, 4).start()
-    m = Video_Client("192.168.251.190", 9999, 1, 4)
-    m.start()
+    Video_Client("192.168.251.190", 9999, 1, 4).start()
+    time.sleep(20)
+    Video_Server(9999, 4).start()
+    Video_Client("192.168.251.190", 9999, 1, 4).start()
