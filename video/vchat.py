@@ -119,12 +119,8 @@ class Video_Server(Thread):
                 self.conn.close()
             if self.sock:
                 self.sock.close()
-            try:
-                pass
-            except Exception as e:
-                print(e)
         except Exception as e:
-            print(e)
+            print(f"here is {e}")
 
     def run(self):
         global CloseSign
@@ -140,9 +136,8 @@ class Video_Server(Thread):
             winname = str(randint(1, 10000))
             cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
             while not CloseSign:
-                while len(data) < payload_size and not CloseSign:
+                while len(data) < payload_size:
                     data += self.conn.recv(81920)
-                    print("Doing while")
                 packed_size = data[:payload_size]
                 data = data[payload_size:]
                 msg_size = struct.unpack("L", packed_size)[0]
