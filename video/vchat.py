@@ -2,6 +2,7 @@ import pickle
 import struct
 import time
 import zlib
+from random import randint
 from socket import *
 from threading import Thread
 
@@ -12,6 +13,8 @@ CloseSign = False
 class Video_Client(Thread):
     # 视频客户端
     def __init__(self, ip, port, level, version):
+        global CloseSign
+        CloseSign = False
         super().__init__()
         self.ADDR = (ip, port)  # 连接地址
         if level <= 3:
@@ -26,10 +29,6 @@ class Video_Client(Thread):
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
         self.cap = cv2.VideoCapture(0)
-
-    def __del__(self):
-        self.sock.close()
-        self.cap.release()
 
     def close(self):
         global CloseSign
@@ -53,12 +52,10 @@ class Video_Client(Thread):
                     print('Receive close request, try to close')
                     self.close()
                     print('Close done')
-                    # break
             except:
                 self.sock.close()
                 self.cap.release()
             finally:
-                print('self.cap.isOpened(): ', self.cap.isOpened())
                 break
 
     def run(self):
@@ -70,12 +67,13 @@ class Video_Client(Thread):
                 try:
                     self.sock.connect(self.ADDR)
                     break
-                except:
+                except Exception as e:
+                    print(e)
                     if not CloseSign:
                         return
                     time.sleep(1)
                     # continue
-            print("VIDEO client connected...")
+            print(self.sock)
 
             # 同步监听摄像头关闭请求
             cl = Thread(target=self.close_listener)
@@ -83,7 +81,7 @@ class Video_Client(Thread):
 
             while self.cap.isOpened() and not CloseSign and not CloseSign:
                 ret, frame = self.cap.read()
-                # 一个矩形窗口，即相机所拍摄的窗口大小
+                print("Running caping")
                 sframe = cv2.resize(frame, (1280, 720), fx=self.fx, fy=self.fx)
                 data = pickle.dumps(sframe)
                 zdata = zlib.compress(data, zlib.Z_BEST_COMPRESSION)
@@ -102,6 +100,8 @@ class Video_Server(Thread):
     # 服务器端最终代码如下，增加了对接收到数据的解压缩处理。
     # 服务器是用来接收Client发送的图像数据并且显示的
     def __init__(self, port, version):
+        global CloseSign
+        CloseSign = False
         super().__init__()
         self.ADDR = ('', port)
         if version == 4:
@@ -109,12 +109,6 @@ class Video_Server(Thread):
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
 
-    def __del__(self):
-        self.sock.close()
-        try:
-            cv2.destroyAllWindows()
-        except:
-            pass
 
     def close(self):
         global CloseSign
@@ -122,10 +116,12 @@ class Video_Server(Thread):
         try:
             if self.conn:
                 self.conn.send(bytes('CLOSE_VIDEO_SESSION', encoding='utf-8'))
+                self.conn.close()
             if self.sock:
                 self.sock.close()
             try:
                 time.sleep(1)
+
                 cv2.destroyAllWindows()
             except Exception as e:
                 print(e)
@@ -143,7 +139,7 @@ class Video_Server(Thread):
             print("remote VEDIO client success connected...")
             data = "".encode("utf-8")
             payload_size = struct.calcsize("L")
-            winname = 'VChat'
+            winname = str(randint(1, 10000))
             cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
             while not CloseSign:
                 while len(data) < payload_size and not CloseSign:
@@ -169,7 +165,7 @@ class Video_Server(Thread):
                         self.conn.send(bytes('CLOSE_VIDEO_SESSION', encoding='utf-8'))
                         self.close()
                     except:
-                        print('Try to tell client close, but failed')
+                        pass
                     finally:
                         self.conn.close()
                         break
@@ -187,4 +183,14 @@ if __name__ == "__main__":
     vClient.start()
 
     time.sleep(5)
-    vServer.close()
+    vClient.close()
+
+    print("Done")
+    time.sleep(3)
+    vServer = Video_Server(5556, 4)
+    vServer.start()
+    vClient = Video_Client('127.0.0.1', 5556, 1, 4)
+    vClient.start()
+
+    time.sleep(5)
+    vClient.close()

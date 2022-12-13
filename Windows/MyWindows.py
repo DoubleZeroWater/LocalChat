@@ -113,6 +113,7 @@ class MessageWindow(QtWidgets.QMainWindow, MessageUI):
             self.sendMessageSignal.emit("VIDEO_DENY")
 
     def startVideoRequest(self, ip):
+
         self.vServer = Video_Server(9632, 4)
         self.vServer.start()
         self.vClient = Video_Client(ip, 9632, 1, 4)
