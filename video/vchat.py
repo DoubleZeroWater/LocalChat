@@ -21,13 +21,6 @@ class Video_Server(Thread):
         else:
             self.sock = socket(AF_INET6, SOCK_STREAM)
 
-    def __del__(self):
-        self.sock.close()
-        try:
-            cv2.destroyAllWindows()
-        except:
-            pass
-
     def run(self):
         global CloseSign
         print("VIDEO server starts...")
@@ -78,9 +71,6 @@ class Video_Client(Thread):
             self.sock = socket(AF_INET6, SOCK_STREAM)
         self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-    def __del__(self):
-        self.sock.close()
-        self.cap.release()
 
     def run(self):
         print("VIDEO client starts...")
