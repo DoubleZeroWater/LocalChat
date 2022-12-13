@@ -38,7 +38,6 @@ class MultiAudioServer(QThread):
                     addr,
                 )).start()
         except OSError as e:
-            print(e)
             print("Socket have been closed.")
 
     def broadcast(self, sock, data):
@@ -46,9 +45,8 @@ class MultiAudioServer(QThread):
             if client != self.s and client != sock:
                 try:
                     client.send(data)
-                    print(f"#{client}\n{data}")
-                except Exception as e:
-                    print(e)
+                except socket.error:
+                    self.connections.remove(client)
     def handle_client(self, c, addr):
         while 1:
             if self.isClose:

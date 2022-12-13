@@ -12,6 +12,7 @@ from PyQt5.QtCore import QThread
 
 data = None
 i = 0
+status = True
 
 
 class MultiAudioClient(QThread):
@@ -47,8 +48,11 @@ class MultiAudioClient(QThread):
     def receive_and_send(self):
         self.stream = self.p.open(format=self.audio_format,
                                   channels=self.channels,
-                                  rate=self.rate, input=True, output=True,
-                                  frames_per_buffer=self.chunk_size, stream_callback=callback)
+                                  rate=self.rate,
+                                  input=True,
+                                  output=True,
+                                  frames_per_buffer=self.chunk_size,
+                                  stream_callback=callback)
         Thread(target=self.checkMessageArrive).start()
         print("Connected to Server")
         self.stream.start_stream()
@@ -57,15 +61,20 @@ class MultiAudioClient(QThread):
             time.sleep(0.1)
 
     def checkMessageArrive(self):
-        while not self.isClose:
-            global data
-            data = self.s.recv(2048)
+        try:
+            while not self.isClose:
+                global data
+                data = self.s.recv(2048)
+        except socket.error:
+            pass
 
     def close(self):
+        global status
         if self.stream:
             self.stream.stop_stream()
             self.stream.close()
         self.isClose = True
+        status = False
         print(self.isClose)
         if self.s:
             self.s.close()
@@ -73,6 +82,8 @@ class MultiAudioClient(QThread):
 
 def callback(in_data, frame_count, time_info, status):
     try:
+        if status:
+            return None, pyaudio.paComplete
         global data
         global i
         # print(len(in_data))
@@ -93,4 +104,5 @@ def callback(in_data, frame_count, time_info, status):
 
 if __name__ == "__main__":
     s = MultiAudioClient("127.0.0.1", 31415)
-    s.receive_and_send()
+    Thread(target=s.receive_and_send).start()
+    s.close()
