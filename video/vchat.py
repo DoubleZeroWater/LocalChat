@@ -47,6 +47,7 @@ class Video_Server(Thread):
             cv2.imshow(title, frame)
             if cv2.waitKey(1) & 0xFF == 27:
                 conn.send("Close".encode("utf-8"))
+                self.sock.close()
                 break
 
 
@@ -73,6 +74,7 @@ class Video_Client(Thread):
 
 
     def run(self):
+
         print("VIDEO client starts...")
         while True:
             try:
@@ -99,7 +101,7 @@ class Video_Client(Thread):
     def listening(self):
         while True:
             try:
-                data = self.sock.recv(1024)
+                data = self.sock.recv(10)
                 if data.decode("utf-8") == "Close":
                     break
             except Exception as e:
