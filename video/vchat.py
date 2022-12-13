@@ -119,6 +119,3 @@ if __name__ == "__main__":
     Video_Server(9999, 4).start()
     m = Video_Client("192.168.43.20", 9999, 1, 4)
     m.start()
-
-    time.sleep(10)
-    m.close()
