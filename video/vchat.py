@@ -30,7 +30,7 @@ class Video_Server(Thread):
         print("remote VIDEO client success connected...")
         data = "".encode("utf-8")
         payload_size = struct.calcsize("L")  # 结果为4
-        title = str(randint(0, 100))
+        title = str(randint(0, 10000))
         cv2.namedWindow(title, cv2.WINDOW_NORMAL)
         while True:
             while len(data) < payload_size:
