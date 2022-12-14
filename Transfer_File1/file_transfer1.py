@@ -78,14 +78,17 @@ class File_Transfer1(QThread):
                 fileInfor = FILEPATH + fileName
                 f = open(fileInfor, "wb")
                 # 开始接收用户上传的文件
+                count = 0
                 while recv_len < filesize_b:
                     if filesize_b - recv_len > buffSize:
                         # 假设未上传的文件数据大于最大传输数据
                         recv_mesg = self.clientSock.recv(buffSize)
                         f.write(recv_mesg)
                         recv_len += len(recv_mesg)
-                        print(f"{recv_len / filesize_b}")
-                        self.processSignal1.emit(f"{recv_len / filesize_b*100}"+'')
+                        if count > 30000:
+                            count = count % 30000
+                            print(f"{recv_len / filesize_b}")
+                            self.processSignal1.emit(f"{recv_len / filesize_b * 100}" + '%')
                     else:
                         # 需要传输的文件数据小于最大传输数据大小
                         recv_mesg = self.clientSock.recv(filesize_b - recv_len)

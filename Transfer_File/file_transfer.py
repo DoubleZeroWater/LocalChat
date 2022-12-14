@@ -17,7 +17,6 @@ class File_Transfer(QThread):
     processSignal = pyqtSignal(str)
     sendEndSignal = pyqtSignal()
 
-
     def __init__(self, ip, openPort, ipToConnect, portToConnect):
         super(File_Transfer, self).__init__()
         self.openPort = openPort
@@ -45,7 +44,6 @@ class File_Transfer(QThread):
             Thread(target=self.receive).start()
         except:
             pass
-
 
     # while True:
     # 	# 连接客户端
@@ -89,15 +87,19 @@ class File_Transfer(QThread):
                 # 在服务器文件夹中创建新文件
                 fileInfor = FILEPATH + fileName
                 f = open(fileInfor, "wb")
+                count = 0
                 # 开始接收用户上传的文件
                 while recv_len < filesize_b:
+                    count = count + 1
                     if filesize_b - recv_len > buffSize:
                         # 假设未上传的文件数据大于最大传输数据
                         recv_mesg = self.clientSock.recv(buffSize)
                         f.write(recv_mesg)
                         recv_len += len(recv_mesg)
-                        self.processSignal.emit(f"{recv_len / filesize_b*100}"+"%")
-                        print(f"{(recv_len / filesize_b):.2f}")
+                        if count > 30000:
+                            self.processSignal.emit(f"{(recv_len / filesize_b * 100):.2f}%")
+                            count = count % 30000
+                            print(f"{(recv_len / filesize_b):.2f}")
                     else:
                         # 需要传输的文件数据小于最大传输数据大小
                         recv_mesg = self.clientSock.recv(filesize_b - recv_len)
@@ -175,5 +177,5 @@ class File_Transfer(QThread):
 #     file_Transfer.run()
 
 
-def transfer(inClass,name):
-    Thread(target=inClass.send,args=(name,)).start()
+def transfer(inClass, name):
+    Thread(target=inClass.send, args=(name,)).start()
