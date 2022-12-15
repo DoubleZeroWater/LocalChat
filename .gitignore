@@ -10,3 +10,7 @@ dist
 /Transfer_File1/data/
 /data/
 /File_multiple/data/
+/PyQt5/
+/PyQt5-5.15.7.dist-info/
+/PyQt5_Qt5-5.15.2.dist-info/
+/PyQt5_sip-12.11.0.dist-info/
